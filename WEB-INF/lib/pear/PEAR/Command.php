@@ -14,38 +14,32 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
-
 /**
  * Needed for error handling
  */
 require_once 'PEAR.php';
 require_once 'PEAR/Frontend.php';
 require_once 'PEAR/XMLParser.php';
-
 /**
  * List of commands and what classes they are implemented in.
  * @var array command => implementing class
  */
 $GLOBALS['_PEAR_Command_commandlist'] = array();
-
 /**
  * List of commands and their descriptions
  * @var array command => description
  */
 $GLOBALS['_PEAR_Command_commanddesc'] = array();
-
 /**
  * List of shortcuts to common commands.
  * @var array shortcut => command
  */
 $GLOBALS['_PEAR_Command_shortcuts'] = array();
-
 /**
  * Array of command objects
  * @var array class => object
  */
 $GLOBALS['_PEAR_Command_objects'] = array();
-
 /**
  * PEAR command class, a simple factory class for administrative
  * commands.
@@ -101,7 +95,6 @@ $GLOBALS['_PEAR_Command_objects'] = array();
 class PEAR_Command
 {
     // {{{ factory()
-
     /**
      * Get the right object for executing a command.
      *
@@ -137,7 +130,6 @@ class PEAR_Command
         $obj = &new $class($ui, $config);
         return $obj;
     }
-
     // }}}
     // {{{ & getObject()
     function &getObject($command)
@@ -154,10 +146,8 @@ class PEAR_Command
         $obj = &new $class($ui, $config);
         return $obj;
     }
-
     // }}}
     // {{{ & getFrontendObject()
-
     /**
      * Get instance of frontend object.
      *
@@ -169,10 +159,8 @@ class PEAR_Command
         $a = &PEAR_Frontend::singleton();
         return $a;
     }
-
     // }}}
     // {{{ & setFrontendClass()
-
     /**
      * Load current frontend class.
      *
@@ -186,10 +174,8 @@ class PEAR_Command
         $a = &PEAR_Frontend::setFrontendClass($uiclass);
         return $a;
     }
-
     // }}}
     // {{{ setFrontendType()
-
     /**
      * Set current frontend.
      *
@@ -203,10 +189,8 @@ class PEAR_Command
         $uiclass = 'PEAR_Frontend_' . $uitype;
         return PEAR_Command::setFrontendClass($uiclass);
     }
-
     // }}}
     // {{{ registerCommands()
-
     /**
      * Scan through the Command directory looking for classes
      * and see what commands they implement.
@@ -241,31 +225,26 @@ class PEAR_Command
         if (!$merge) {
             $GLOBALS['_PEAR_Command_commandlist'] = array();
         }
-
         while ($file = readdir($dp)) {
             if ($file{0} == '.' || substr($file, -4) != '.xml') {
                 continue;
             }
-
             $f = substr($file, 0, -4);
             $class = "PEAR_Command_" . $f;
             // List of commands
             if (empty($GLOBALS['_PEAR_Command_objects'][$class])) {
                 $GLOBALS['_PEAR_Command_objects'][$class] = "$dir/" . $f . '.php';
             }
-
             $parser->parse(file_get_contents("$dir/$file"));
             $implements = $parser->getData();
             foreach ($implements as $command => $desc) {
                 if ($command == 'attribs') {
                     continue;
                 }
-
                 if (isset($GLOBALS['_PEAR_Command_commandlist'][$command])) {
                     return PEAR::raiseError('Command "' . $command . '" already registered in ' .
                         'class "' . $GLOBALS['_PEAR_Command_commandlist'][$command] . '"');
                 }
-
                 $GLOBALS['_PEAR_Command_commandlist'][$command] = $class;
                 $GLOBALS['_PEAR_Command_commanddesc'][$command] = $desc['summary'];
                 if (isset($desc['shortcut'])) {
@@ -277,7 +256,6 @@ class PEAR_Command
                     }
                     $GLOBALS['_PEAR_Command_shortcuts'][$shortcut] = $command;
                 }
-
                 if (isset($desc['options']) && $desc['options']) {
                     foreach ($desc['options'] as $oname => $option) {
                         if (isset($option['shortopt']) && strlen($option['shortopt']) > 1) {
@@ -290,16 +268,13 @@ class PEAR_Command
                 }
             }
         }
-
         ksort($GLOBALS['_PEAR_Command_shortcuts']);
         ksort($GLOBALS['_PEAR_Command_commandlist']);
         @closedir($dp);
         return true;
     }
-
     // }}}
     // {{{ getCommands()
-
     /**
      * Get the list of currently supported commands, and what
      * classes implement them.
@@ -316,10 +291,8 @@ class PEAR_Command
         }
         return $GLOBALS['_PEAR_Command_commandlist'];
     }
-
     // }}}
     // {{{ getShortcuts()
-
     /**
      * Get the list of command shortcuts.
      *
@@ -335,10 +308,8 @@ class PEAR_Command
         }
         return $GLOBALS['_PEAR_Command_shortcuts'];
     }
-
     // }}}
     // {{{ getGetoptArgs()
-
     /**
      * Compiles arguments for getopt.
      *
@@ -365,10 +336,8 @@ class PEAR_Command
         $obj = &PEAR_Command::getObject($command);
         return $obj->getGetoptArgs($command, $short_args, $long_args);
     }
-
     // }}}
     // {{{ getDescription()
-
     /**
      * Get description for a command.
      *
@@ -386,10 +355,8 @@ class PEAR_Command
         }
         return $GLOBALS['_PEAR_Command_commanddesc'][$command];
     }
-
     // }}}
     // {{{ getHelp()
-
     /**
      * Get help for command.
      *

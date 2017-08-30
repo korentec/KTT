@@ -43,7 +43,6 @@
 // +----------------------------------------------------------------------+
 //
 // $Id: Iterator.php 327310 2012-08-27 15:16:18Z danielc $
-
 /**
  * PHP5 Iterator
  *
@@ -59,9 +58,7 @@ class MDB2_Iterator implements Iterator
      */
     protected $result;
     protected $row;
-
     // {{{ constructor
-
     /**
      * Constructor
      */
@@ -71,9 +68,7 @@ class MDB2_Iterator implements Iterator
         $this->fetchmode = $fetchmode;
     }
     // }}}
-
     // {{{ seek()
-
     /**
      * Seek forward to a specific row in a result set
      *
@@ -90,9 +85,7 @@ class MDB2_Iterator implements Iterator
         }
     }
     // }}}
-
     // {{{ next()
-
     /**
      * Fetch next row of data
      *
@@ -104,9 +97,7 @@ class MDB2_Iterator implements Iterator
         $this->row = null;
     }
     // }}}
-
     // {{{ current()
-
     /**
      * return a row of data
      *
@@ -125,9 +116,7 @@ class MDB2_Iterator implements Iterator
         return $this->row;
     }
     // }}}
-
     // {{{ valid()
-
     /**
      * Check if the end of the result set has been reached
      *
@@ -139,9 +128,7 @@ class MDB2_Iterator implements Iterator
         return (bool)$this->current();
     }
     // }}}
-
     // {{{ free()
-
     /**
      * Free the internal resources associated with result.
      *
@@ -158,9 +145,7 @@ class MDB2_Iterator implements Iterator
         return false;
     }
     // }}}
-
     // {{{ key()
-
     /**
      * Returns the row number
      *
@@ -175,9 +160,7 @@ class MDB2_Iterator implements Iterator
         return false;
     }
     // }}}
-
     // {{{ rewind()
-
     /**
      * Seek to the first row in a result set
      *
@@ -188,9 +171,7 @@ class MDB2_Iterator implements Iterator
     {
     }
     // }}}
-
     // {{{ destructor
-
     /**
      * Destructor
      */
@@ -200,7 +181,6 @@ class MDB2_Iterator implements Iterator
     }
     // }}}
 }
-
 /**
  * PHP5 buffered Iterator
  *
@@ -211,7 +191,6 @@ class MDB2_Iterator implements Iterator
 class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
 {
     // {{{ valid()
-
     /**
      * Check if the end of the result set has been reached
      *
@@ -226,9 +205,7 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
         return false;
     }
     // }}}
-
     // {{{count()
-
     /**
      * Returns the number of rows in a result object
      *
@@ -243,9 +220,7 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
         return false;
     }
     // }}}
-
     // {{{ rewind()
-
     /**
      * Seek to the first row in a result set
      *
@@ -258,5 +233,4 @@ class MDB2_BufferedIterator extends MDB2_Iterator implements SeekableIterator
     }
     // }}}
 }
-
 ?>

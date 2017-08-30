@@ -377,7 +377,6 @@ function get_time() {
 </style>
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['timeRecordForm']['open'];?>
-
 <table cellspacing="4" cellpadding="0" border="0">
   <tr>
     <td valign="top">
@@ -598,6 +597,5 @@ if ($_smarty_tpl->_count($_from) > 0){
 </table>
 <?php }?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['timeRecordForm']['close'];?>
-
 
 

@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {html_select_time} function plugin
  * 
@@ -26,7 +25,6 @@ function smarty_function_html_select_time($params, $template)
 {
     require_once(SMARTY_PLUGINS_DIR . 'shared.make_timestamp.php');
     require_once(SMARTY_PLUGINS_DIR . 'function.html_options.php');
-
     /* Default values. */
     $prefix = "Time_";
     $time = time();
@@ -47,7 +45,6 @@ function smarty_function_html_select_time($params, $template)
     $minute_extra = null;
     $second_extra = null;
     $meridian_extra = null;
-
     foreach ($params as $_key => $_value) {
         switch ($_key) {
             case 'prefix':
@@ -60,7 +57,6 @@ function smarty_function_html_select_time($params, $template)
             case 'meridian_extra':
                 $$_key = (string)$_value;
                 break;
-
             case 'display_hours':
             case 'display_minutes':
             case 'display_seconds':
@@ -68,21 +64,16 @@ function smarty_function_html_select_time($params, $template)
             case 'use_24_hours':
                 $$_key = (bool)$_value;
                 break;
-
             case 'minute_interval':
             case 'second_interval':
                 $$_key = (int)$_value;
                 break;
-
             default:
                 trigger_error("[html_select_time] unknown parameter $_key", E_USER_WARNING);
         } 
     } 
-
     $time = smarty_make_timestamp($time);
-
     $html_result = '';
-
     if ($display_hours) {
         $hours = $use_24_hours ? range(0, 23) : range(1, 12);
         $hour_fmt = $use_24_hours ? '%H' : '%I';
@@ -108,7 +99,6 @@ function smarty_function_html_select_time($params, $template)
             $template);
         $html_result .= "</select>\n";
     } 
-
     if ($display_minutes) {
         $all_minutes = range(0, 59);
         for ($i = 0, $for_max = count($all_minutes); $i < $for_max; $i += $minute_interval)
@@ -127,7 +117,6 @@ function smarty_function_html_select_time($params, $template)
             $html_result .= ' ' . $all_extra;
         } 
         $html_result .= '>' . "\n";
-
         $html_result .= smarty_function_html_options(array('output' => $minutes,
                 'values' => $minutes,
                 'selected' => $selected,
@@ -135,7 +124,6 @@ function smarty_function_html_select_time($params, $template)
               $template);
         $html_result .= "</select>\n";
     } 
-
     if ($display_seconds) {
         $all_seconds = range(0, 59);
         for ($i = 0, $for_max = count($all_seconds); $i < $for_max; $i += $second_interval)
@@ -147,7 +135,6 @@ function smarty_function_html_select_time($params, $template)
         } else {
             $html_result .= '"' . $prefix . 'Second"';
         } 
-
         if (null !== $second_extra) {
             $html_result .= ' ' . $second_extra;
         } 
@@ -155,7 +142,6 @@ function smarty_function_html_select_time($params, $template)
             $html_result .= ' ' . $all_extra;
         } 
         $html_result .= '>' . "\n";
-
         $html_result .= smarty_function_html_options(array('output' => $seconds,
                 'values' => $seconds,
                 'selected' => $selected,
@@ -163,7 +149,6 @@ function smarty_function_html_select_time($params, $template)
              $template);
         $html_result .= "</select>\n";
     } 
-
     if ($display_meridian && !$use_24_hours) {
         $html_result .= '<select name=';
         if (null !== $field_array) {
@@ -171,7 +156,6 @@ function smarty_function_html_select_time($params, $template)
         } else {
             $html_result .= '"' . $prefix . 'Meridian"';
         } 
-
         if (null !== $meridian_extra) {
             $html_result .= ' ' . $meridian_extra;
         } 
@@ -179,7 +163,6 @@ function smarty_function_html_select_time($params, $template)
             $html_result .= ' ' . $all_extra;
         } 
         $html_result .= '>' . "\n";
-
         $html_result .= smarty_function_html_options(array('output' => array('AM', 'PM'),
                 'values' => array('am', 'pm'),
                 'selected' => strtolower(strftime('%p', $time)),
@@ -187,8 +170,6 @@ function smarty_function_html_select_time($params, $template)
             $template);
         $html_result .= "</select>\n";
     } 
-
     return $html_result;
 } 
-
 ?>

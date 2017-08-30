@@ -12,7 +12,6 @@ body, h1, h2, td, th, p {
     margin: 1px;
     padding: 0;
 }
-
 h1 {
     margin: 0;
     text-align: left;
@@ -22,7 +21,6 @@ h1 {
     font-weight: bold;
     font-size: 1.2em;
  }
-
 h2 {
     background-color: #9B410E;
     color: white;
@@ -31,53 +29,42 @@ h2 {
     padding: 2px;
     border-top: 1px solid black;
 }
-
 body {
     background: black; 
 }
-
 p, table, div {
     background: #f0ead8;
 } 
-
 p {
     margin: 0;
     font-style: italic;
     text-align: center;
 }
-
 table {
     width: 100%;
 }
-
 th, td {
     font-family: monospace;
     vertical-align: top;
     text-align: left;
     width: 50%;
 }
-
 td {
     color: green;
 }
-
 .odd {
     background-color: #eeeeee;
 }
-
 .even {
     background-color: #fafafa;
 }
-
 .exectime {
     font-size: 0.8em;
     font-style: italic;
 }
-
 #table_assigned_vars th {
     color: blue;
 }
-
 #table_config_vars th {
     color: maroon;
 }
@@ -85,12 +72,9 @@ td {
 </style>
 </head>
 <body>
-
 <h1>Smarty Debug Console  -  {if isset($template_name)}{$template_name|debug_print_var}{else}Total Time {$execution_time|string_format:"%.5f"}{/if}</h1>
-
 {if !empty($template_data)}
 <h2>included templates &amp; config files (load time in seconds)</h2>
-
 <div>
 {foreach $template_data as $template}
   <font color=brown>{$template.name}</font>
@@ -101,9 +85,7 @@ td {
 {/foreach}
 </div>
 {/if}
-
 <h2>assigned template variables</h2>
-
 <table id="table_assigned_vars">
     {foreach $assigned_vars as $vars}
        <tr class="{if $vars@iteration % 2 eq 0}odd{else}even{/if}">   
@@ -111,16 +93,13 @@ td {
        <td>{$vars|debug_print_var}</td></tr>
     {/foreach}
 </table>
-
 <h2>assigned config file variables (outer template scope)</h2>
-
 <table id="table_config_vars">
     {foreach $config_vars as $vars}
        <tr class="{if $vars@iteration % 2 eq 0}odd{else}even{/if}">   
        <th>{$vars@key|escape:'html'}</th>
        <td>{$vars|debug_print_var}</td></tr>
     {/foreach}
-
 </table>
 </body>
 </html>

@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Function Plugin Class
  */
@@ -16,7 +15,6 @@ class Smarty_Internal_Compile_Private_Function_Plugin extends Smarty_Internal_Co
 	// attribute definitions
     public $required_attributes = array();
     public $optional_attributes = array('_any'); 
-
     /**
      * Compiles code for the execution of function plugin
      * 
@@ -32,7 +30,6 @@ class Smarty_Internal_Compile_Private_Function_Plugin extends Smarty_Internal_Co
         $this->compiler = $compiler; 
         // This tag does create output
         $this->compiler->has_output = true;
-
         // check and get attributes
         $_attr = $this->_get_attributes($args); 
         if ($_attr['nocache'] === true) {
@@ -54,5 +51,4 @@ class Smarty_Internal_Compile_Private_Function_Plugin extends Smarty_Internal_Co
         return $output;
     } 
 } 
-
 ?>

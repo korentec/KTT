@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        smarty_internal_wrapper.php
@@ -31,15 +30,12 @@
  * @subpackage PluginsInternal
  * @version 3-SVN$Rev: 3286 $
  */
-
 /*
  * Smarty Backward Compatability Wrapper
  */
-
 class Smarty_Internal_Wrapper {
   
     protected $smarty;
-
     function __construct($smarty) {
       $this->smarty = $smarty;
     }
@@ -116,7 +112,6 @@ class Smarty_Internal_Wrapper {
        }
        throw new SmartyException("unknown method '$name'");
     }
-
     /**
      * trigger Smarty error
      *

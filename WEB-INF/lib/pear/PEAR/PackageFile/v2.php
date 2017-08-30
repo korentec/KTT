@@ -29,35 +29,30 @@ require_once 'PEAR/ErrorStack.php';
  */
 class PEAR_PackageFile_v2
 {
-
     /**
      * Parsed package information
      * @var array
      * @access private
      */
     var $_packageInfo = array();
-
     /**
      * path to package .tgz or false if this is a local/extracted package.xml
      * @var string|false
      * @access private
      */
     var $_archiveFile;
-
     /**
      * path to package .xml or false if this is an abstract parsed-from-string xml
      * @var string|false
      * @access private
      */
     var $_packageFile;
-
     /**
      * This is used by file analysis routines to log progress information
      * @var PEAR_Common
      * @access protected
      */
     var $_logger;
-
     /**
      * This is set to the highest validation level that has been validated
      *
@@ -71,43 +66,36 @@ class PEAR_PackageFile_v2
      * @access private
      */
     var $_isValid = 0;
-
     /**
      * True if the filelist has been validated
      * @param bool
      */
     var $_filesValid = false;
-
     /**
      * @var PEAR_Registry
      * @access protected
      */
     var $_registry;
-
     /**
      * @var PEAR_Config
      * @access protected
      */
     var $_config;
-
     /**
      * Optional Dependency group requested for installation
      * @var string
      * @access private
      */
     var $_requestedGroup = false;
-
     /**
      * @var PEAR_ErrorStack
      * @access protected
      */
     var $_stack;
-
     /**
      * Namespace prefix used for tasks in this package.xml - use tasks: whenever possible
      */
     var $_tasksNs;
-
     /**
      * Determines whether this packagefile was initialized only with partial package info
      *
@@ -120,12 +108,10 @@ class PEAR_PackageFile_v2
      * @access private
      */
     var $_incomplete = true;
-
     /**
      * @var PEAR_PackageFile_v2_Validator
      */
     var $_v2Validator;
-
     /**
      * The constructor merely sets up the private error stack
      */
@@ -134,7 +120,6 @@ class PEAR_PackageFile_v2
         $this->_stack = new PEAR_ErrorStack('PEAR_PackageFile_v2', false, null);
         $this->_isValid = false;
     }
-
     /**
      * To make unit-testing easier
      * @param PEAR_Frontend_*
@@ -148,7 +133,6 @@ class PEAR_PackageFile_v2
         $z = &new PEAR_Downloader($i, $o, $c);
         return $z;
     }
-
     /**
      * To make unit-testing easier
      * @param PEAR_Config
@@ -166,13 +150,11 @@ class PEAR_PackageFile_v2
         $z = &new PEAR_Dependency2($c, $o, $p, $s);
         return $z;
     }
-
     function getInstalledBinary()
     {
         return isset($this->_packageInfo['#binarypackage']) ? $this->_packageInfo['#binarypackage'] :
             false;
     }
-
     /**
      * Installation of source package has failed, attempt to download and install the
      * binary version of this package.
@@ -253,7 +235,6 @@ class PEAR_PackageFile_v2
         $a = false;
         return $a;
     }
-
     /**
      * @return string|false Extension name
      */
@@ -267,7 +248,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @param string Extension name
      * @return bool
@@ -280,7 +260,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Tests whether every part of the package.xml 1.0 is represented in
      * this package.xml 2.0
@@ -369,49 +348,42 @@ class PEAR_PackageFile_v2
         }
         return $pass;
     }
-
     function _differentPackage($package)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('package' => $package,
             'self' => $this->getPackage()),
             'package.xml 1.0 package "%package%" does not match "%self%"');
     }
-
     function _differentVersion($version)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('version' => $version,
             'self' => $this->getVersion()),
             'package.xml 1.0 version "%version%" does not match "%self%"');
     }
-
     function _differentState($state)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('state' => $state,
             'self' => $this->getState()),
             'package.xml 1.0 state "%state%" does not match "%self%"');
     }
-
     function _differentRole($handle, $role, $selfrole)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
             'role' => $role, 'self' => $selfrole),
             'package.xml 1.0 maintainer "%handle%" role "%role%" does not match "%self%"');
     }
-
     function _differentEmail($handle, $email, $selfemail)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
             'email' => $email, 'self' => $selfemail),
             'package.xml 1.0 maintainer "%handle%" email "%email%" does not match "%self%"');
     }
-
     function _differentName($handle, $name, $selfname)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
             'name' => $name, 'self' => $selfname),
             'package.xml 1.0 maintainer "%handle%" name "%name%" does not match "%self%"');
     }
-
     function _unmatchedMaintainers($my, $yours)
     {
         if ($my) {
@@ -425,7 +397,6 @@ class PEAR_PackageFile_v2
                 'package.xml 1.0 has unmatched extra maintainers "%handles%"');
         }
     }
-
     function _differentNotes($notes)
     {
         $truncnotes = strlen($notes) < 25 ? $notes : substr($notes, 0, 24) . '...';
@@ -435,7 +406,6 @@ class PEAR_PackageFile_v2
             'self' => $truncmynotes),
             'package.xml 1.0 release notes "%notes%" do not match "%self%"');
     }
-
     function _differentSummary($summary)
     {
         $truncsummary = strlen($summary) < 25 ? $summary : substr($summary, 0, 24) . '...';
@@ -445,7 +415,6 @@ class PEAR_PackageFile_v2
             'self' => $truncmysummary),
             'package.xml 1.0 summary "%summary%" does not match "%self%"');
     }
-
     function _differentDescription($description)
     {
         $truncdescription = trim(strlen($description) < 25 ? $description : substr($description, 0, 24) . '...');
@@ -455,13 +424,11 @@ class PEAR_PackageFile_v2
             'self' => $truncmydescription),
             'package.xml 1.0 description "%description%" does not match "%self%"');
     }
-
     function _missingFile($file)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('file' => $file),
             'package.xml 1.0 file "%file%" is not present in <contents>');
     }
-
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
@@ -472,7 +439,6 @@ class PEAR_PackageFile_v2
         }
         $this->_packageInfo['stability']['release'] = $state;
     }
-
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
@@ -480,7 +446,6 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['compatible'] = $compatible;
     }
-
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
@@ -488,7 +453,6 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['name'] = $package;
     }
-
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
@@ -496,12 +460,10 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['channel'] = $channel;
     }
-
     function setRequestedGroup($group)
     {
         $this->_requestedGroup = $group;
     }
-
     function getRequestedGroup()
     {
         if (isset($this->_requestedGroup)) {
@@ -509,7 +471,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * For saving in the registry.
      *
@@ -520,7 +481,6 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['_lastversion'] = $version;
     }
-
     /**
      * @return string|false
      */
@@ -531,7 +491,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Determines whether this package.xml has post-install scripts or not
      * @return array|false
@@ -575,7 +534,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Initialize post-install scripts for running
      *
@@ -633,7 +591,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function runPostinstallScripts()
     {
         if ($this->initPostinstallScripts()) {
@@ -643,7 +600,6 @@ class PEAR_PackageFile_v2
             }
         }
     }
-
 
     /**
      * Convert a recursive set of <dir> and <file> tags into a single <dir> tag with
@@ -682,7 +638,6 @@ class PEAR_PackageFile_v2
             }
         }
     }
-
     /**
      * @param array the final flattened file list
      * @param array the current directory being processed
@@ -730,13 +685,11 @@ class PEAR_PackageFile_v2
             }
         }
     }
-
     function setConfig(&$config)
     {
         $this->_config = &$config;
         $this->_registry = &$config->getRegistry();
     }
-
     function setLogger(&$logger)
     {
         if (!is_object($logger) || !method_exists($logger, 'log')) {
@@ -744,7 +697,6 @@ class PEAR_PackageFile_v2
         }
         $this->_logger = &$logger;
     }
-
     /**
      * WARNING - do not use this function directly unless you know what you're doing
      */
@@ -752,7 +704,6 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['dependencies'] = $deps;
     }
-
     /**
      * WARNING - do not use this function directly unless you know what you're doing
      */
@@ -760,13 +711,11 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['compatible'] = $compat;
     }
-
     function setPackagefile($file, $archive = false)
     {
         $this->_packageFile = $file;
         $this->_archiveFile = $archive ? $archive : $file;
     }
-
     /**
      * Wrapper to {@link PEAR_ErrorStack::getErrors()}
      * @param boolean determines whether to purge the error stack after retrieving
@@ -776,17 +725,14 @@ class PEAR_PackageFile_v2
     {
         return $this->_stack->getErrors($purge);
     }
-
     function getPackageFile()
     {
         return $this->_packageFile;
     }
-
     function getArchiveFile()
     {
         return $this->_archiveFile;
     }
-
 
     /**
      * Directly set the array that defines this packagefile
@@ -806,12 +752,10 @@ class PEAR_PackageFile_v2
         $this->_incomplete = false;
         $this->_packageInfo = $pinfo;
     }
-
     function isIncomplete()
     {
         return $this->_incomplete;
     }
-
     /**
      * @return array
      */
@@ -822,7 +766,6 @@ class PEAR_PackageFile_v2
         }
         return $this->getArray($forreg);
     }
-
     function getArray($forReg = false)
     {
         if ($forReg) {
@@ -849,7 +792,6 @@ class PEAR_PackageFile_v2
             return $info;
         }
     }
-
     function packageInfo($field)
     {
         $arr = $this->getArray(true);
@@ -876,12 +818,10 @@ class PEAR_PackageFile_v2
         }
         return null;
     }
-
     function getName()
     {
         return $this->getPackage();
     }
-
     function getPackage()
     {
         if (isset($this->_packageInfo['name'])) {
@@ -889,7 +829,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getChannel()
     {
         if (isset($this->_packageInfo['uri'])) {
@@ -900,7 +839,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getUri()
     {
         if (isset($this->_packageInfo['uri'])) {
@@ -908,7 +846,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getExtends()
     {
         if (isset($this->_packageInfo['extends'])) {
@@ -916,7 +853,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getSummary()
     {
         if (isset($this->_packageInfo['summary'])) {
@@ -924,7 +860,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getDescription()
     {
         if (isset($this->_packageInfo['description'])) {
@@ -932,7 +867,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getMaintainers($raw = false)
     {
         if (!isset($this->_packageInfo['lead'])) {
@@ -998,7 +932,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getLeads()
     {
         if (isset($this->_packageInfo['lead'])) {
@@ -1006,7 +939,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getDevelopers()
     {
         if (isset($this->_packageInfo['developer'])) {
@@ -1014,7 +946,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getContributors()
     {
         if (isset($this->_packageInfo['contributor'])) {
@@ -1022,7 +953,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getHelpers()
     {
         if (isset($this->_packageInfo['helper'])) {
@@ -1030,7 +960,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function setDate($date)
     {
         if (!isset($this->_packageInfo['date'])) {
@@ -1045,7 +974,6 @@ class PEAR_PackageFile_v2
         $this->_packageInfo['date'] = $date;
         $this->_isValid = 0;
     }
-
     function setTime($time)
     {
         $this->_isValid = 0;
@@ -1060,7 +988,6 @@ class PEAR_PackageFile_v2
         }
         $this->_packageInfo['time'] = $time;
     }
-
     function getDate()
     {
         if (isset($this->_packageInfo['date'])) {
@@ -1068,7 +995,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getTime()
     {
         if (isset($this->_packageInfo['time'])) {
@@ -1076,7 +1002,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @param package|api version category to return
      */
@@ -1087,7 +1012,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getStability()
     {
         if (isset($this->_packageInfo['stability'])) {
@@ -1095,7 +1019,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getState($key = 'release')
     {
         if (isset($this->_packageInfo['stability'][$key])) {
@@ -1103,7 +1026,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getLicense($raw = false)
     {
         if (isset($this->_packageInfo['license'])) {
@@ -1118,7 +1040,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getLicenseLocation()
     {
         if (!isset($this->_packageInfo['license']) || !is_array($this->_packageInfo['license'])) {
@@ -1126,7 +1047,6 @@ class PEAR_PackageFile_v2
         }
         return $this->_packageInfo['license']['attribs'];
     }
-
     function getNotes()
     {
         if (isset($this->_packageInfo['notes'])) {
@@ -1134,7 +1054,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Return the <usesrole> tag contents, if any
      * @return array|false
@@ -1146,7 +1065,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Return the <usestask> tag contents, if any
      * @return array|false
@@ -1158,7 +1076,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * This should only be used to retrieve filenames and install attributes
      */
@@ -1190,7 +1107,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Return configure options array, if any
      *
@@ -1201,27 +1117,21 @@ class PEAR_PackageFile_v2
         if ($this->getPackageType() != 'extsrc' && $this->getPackageType() != 'zendextsrc') {
             return false;
         }
-
         $releases = $this->getReleases();
         if (isset($releases[0])) {
             $releases = $releases[0];
         }
-
         if (isset($releases['configureoption'])) {
             if (!isset($releases['configureoption'][0])) {
                 $releases['configureoption'] = array($releases['configureoption']);
             }
-
             for ($i = 0; $i < count($releases['configureoption']); $i++) {
                 $releases['configureoption'][$i] = $releases['configureoption'][$i]['attribs'];
             }
-
             return $releases['configureoption'];
         }
-
         return false;
     }
-
     /**
      * This is only used at install-time, after all serialization
      * is over.
@@ -1230,7 +1140,6 @@ class PEAR_PackageFile_v2
     {
         $this->_packageInfo['filelist'] = array();
     }
-
     /**
      * Retrieve a list of files that should be installed on this computer
      * @return array
@@ -1318,7 +1227,6 @@ class PEAR_PackageFile_v2
         return PEAR::raiseError('No releases in package.xml matched the existing operating ' .
             'system, extensions installed, or architecture, cannot install');
     }
-
     /**
      * This is only used at install-time, after all serialization
      * is over.
@@ -1332,7 +1240,6 @@ class PEAR_PackageFile_v2
         }
         unset($this->_packageInfo['filelist'][$file]['installed_as']);
     }
-
     function getInstalledLocation($file)
     {
         if (isset($this->_packageInfo['filelist'][$file]['installed_as'])) {
@@ -1340,7 +1247,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * This is only used at install-time, after all serialization
      * is over.
@@ -1354,7 +1260,6 @@ class PEAR_PackageFile_v2
             $this->_packageInfo['filelist'][$file] = $atts['attribs'];
         }
     }
-
     /**
      * Retrieve the contents tag
      */
@@ -1365,7 +1270,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @param string full path to file
      * @param string attribute name
@@ -1409,7 +1313,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function setDirtree($path)
     {
         if (!isset($this->_packageInfo['dirtree'])) {
@@ -1417,7 +1320,6 @@ class PEAR_PackageFile_v2
         }
         $this->_packageInfo['dirtree'][$path] = true;
     }
-
     function getDirtree()
     {
         if (isset($this->_packageInfo['dirtree']) && count($this->_packageInfo['dirtree'])) {
@@ -1425,12 +1327,10 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function resetDirtree()
     {
         unset($this->_packageInfo['dirtree']);
     }
-
     /**
      * Determines whether this package claims it is compatible with the version of
      * the package that has a recommended version dependency
@@ -1477,7 +1377,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @return array|false
      */
@@ -1488,7 +1387,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getDependencies()
     {
         if (isset($this->_packageInfo['dependencies'])) {
@@ -1496,12 +1394,10 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function isSubpackageOf($p)
     {
         return $p->isSubpackage($this);
     }
-
     /**
      * Determines whether the passed in package is a subpackage of this package.
      *
@@ -1555,7 +1451,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function dependsOn($package, $channel)
     {
         if (!($deps = $this->getDependencies())) {
@@ -1598,7 +1493,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Get the contents of a dependency group
      * @param string
@@ -1621,7 +1515,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Retrieve a partial package.xml 1.0 representation of dependencies
      *
@@ -1740,7 +1633,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @return php|extsrc|extbin|zendextsrc|zendextbin|bundle|false
      */
@@ -1766,7 +1658,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @return array|false
      */
@@ -1781,7 +1672,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * @return array
      */
@@ -1792,12 +1682,10 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function hasDeps()
     {
         return isset($this->_packageInfo['dependencies']);
     }
-
     function getPackagexmlVersion()
     {
         if (isset($this->_packageInfo['zendextsrcrelease'])) {
@@ -1808,7 +1696,6 @@ class PEAR_PackageFile_v2
         }
         return '2.0';
     }
-
     /**
      * @return array|false
      */
@@ -1821,7 +1708,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getBundledPackages()
     {
         if (isset($this->_packageInfo['bundle'])) {
@@ -1829,7 +1715,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     function getLastModified()
     {
         if (isset($this->_packageInfo['_lastmodified'])) {
@@ -1837,7 +1722,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Get the contents of a file listed within the package.xml
      * @param string
@@ -1867,7 +1751,6 @@ class PEAR_PackageFile_v2
             return $file;
         }
     }
-
     function &getRW()
     {
         if (!class_exists('PEAR_PackageFile_v2_rw')) {
@@ -1887,7 +1770,6 @@ class PEAR_PackageFile_v2
         }
         return $a;
     }
-
     function &getDefaultGenerator()
     {
         if (!class_exists('PEAR_PackageFile_Generator_v2')) {
@@ -1896,7 +1778,6 @@ class PEAR_PackageFile_v2
         $a = &new PEAR_PackageFile_Generator_v2($this);
         return $a;
     }
-
     function analyzeSourceCode($file, $string = false)
     {
         if (!isset($this->_v2Validator) ||
@@ -1908,7 +1789,6 @@ class PEAR_PackageFile_v2
         }
         return $this->_v2Validator->analyzeSourceCode($file, $string);
     }
-
     function validate($state = PEAR_VALIDATE_NORMAL)
     {
         if (!isset($this->_packageInfo) || !is_array($this->_packageInfo)) {
@@ -1926,7 +1806,6 @@ class PEAR_PackageFile_v2
         }
         return $this->_v2Validator->validate($this, $state);
     }
-
     function getTasksNs()
     {
         if (!isset($this->_tasksNs)) {
@@ -1941,7 +1820,6 @@ class PEAR_PackageFile_v2
         }
         return $this->_tasksNs;
     }
-
     /**
      * Determine whether a task name is a valid task.  Custom tasks may be defined
      * using subdirectories by putting a "-" in the name, as in <tasks:mycustom-task>
@@ -1970,7 +1848,6 @@ class PEAR_PackageFile_v2
         }
         return false;
     }
-
     /**
      * Key-friendly array_splice
      * @param tagname to splice a value in before
@@ -1985,7 +1862,6 @@ class PEAR_PackageFile_v2
         $before[$newkey] = $value;
         return array_merge($before, $after);
     }
-
     /**
      * @param array a list of possible keys, in the order they may occur
      * @param mixed contents of the new package.xml tag
@@ -2002,7 +1878,6 @@ class PEAR_PackageFile_v2
         $array[$newkey] = $contents;
         return $array;
     }
-
     /**
      * @param subsection of {@link $_packageInfo}
      * @param array|string tag contents

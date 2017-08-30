@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Append
  * 
@@ -13,7 +12,6 @@
  * Smarty Internal Plugin Compile Append Class
  */
 class Smarty_Internal_Compile_Append extends Smarty_Internal_Compile_Assign {
-
     /**
      * Compiles code for the {append} tag
      * 
@@ -46,5 +44,4 @@ class Smarty_Internal_Compile_Append extends Smarty_Internal_Compile_Assign {
         return parent::compile($_new_attr, $compiler, $_params);
     } 
 } 
-
 ?>

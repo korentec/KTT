@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Include PHP
  * 
@@ -9,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Insert Class
  */
@@ -18,7 +16,6 @@ class Smarty_Internal_Compile_Include_Php extends Smarty_Internal_CompileBase {
     public $required_attributes = array('file');
    	public $shorttag_order = array('file');
     public $optional_attributes = array('once', 'assign'); 
-
     /**
      * Compiles code for the {include_php} tag
      * 
@@ -34,9 +31,7 @@ class Smarty_Internal_Compile_Include_Php extends Smarty_Internal_CompileBase {
         $this->compiler = $compiler;
         // check and get attributes
         $_attr = $this->_get_attributes($args);
-
         $_output = '<?php '; 
-
         $_smarty_tpl = $compiler->template; 
         $_filepath = false;
         eval('$_file = ' . $_attr['file'] . ';'); 
@@ -63,11 +58,9 @@ class Smarty_Internal_Compile_Include_Php extends Smarty_Internal_CompileBase {
         if ($_filepath == false) {
             $this->compiler->trigger_template_error("{include_php} file '{$_file}' is not readable", $this->compiler->lex->taglineno);
         } 
-
         if (isset($this->compiler->smarty->security_policy)) {
             $this->compiler->smarty->security_policy->isTrustedPHPDir($_filepath);
         } 
-
         if (isset($_attr['assign'])) {
             // output will be stored in a smarty variable instead of being displayed
             $_assign = $_attr['assign'];
@@ -78,7 +71,6 @@ class Smarty_Internal_Compile_Include_Php extends Smarty_Internal_CompileBase {
                 $_once = '';
             } 
         } 
-
         if (isset($_assign)) {
             return "<?php ob_start(); include{$_once} ('{$_filepath}'); \$_smarty_tpl->assign({$_assign},ob_get_contents()); ob_end_clean();?>";
         } else {
@@ -86,5 +78,4 @@ class Smarty_Internal_Compile_Include_Php extends Smarty_Internal_CompileBase {
         } 
     } 
 } 
-
 ?>

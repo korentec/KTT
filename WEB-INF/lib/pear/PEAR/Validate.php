@@ -24,7 +24,6 @@ define('PEAR_VALIDATE_PACKAGING', 7);
 /**#@-*/
 require_once 'PEAR/Common.php';
 require_once 'PEAR/Validator/PECL.php';
-
 /**
  * Validation class for package.xml - channel-level advanced validation
  * @category   pear
@@ -53,7 +52,6 @@ class PEAR_Validate
      * @access private
      */
     var $_failures = array('error' => array(), 'warning' => array());
-
     /**
      * Override this method to handle validation of normal package names
      * @param string
@@ -64,7 +62,6 @@ class PEAR_Validate
     {
         return (bool) preg_match('/^' . $this->packageregex . '\\z/', $name);
     }
-
     /**
      * @param string package name to validate
      * @param string name of channel-specific validation package
@@ -79,7 +76,6 @@ class PEAR_Validate
         }
         return $this->_validPackageName($name);
     }
-
     /**
      * This validates a bundle name, and bundle names must conform
      * to the PEAR naming convention, so the method is final and static.
@@ -91,7 +87,6 @@ class PEAR_Validate
     {
         return (bool) preg_match('/^' . _PEAR_COMMON_PACKAGE_NAME_PREG . '\\z/', $name);
     }
-
     /**
      * Determine whether $state represents a valid stability level
      * @param string
@@ -103,7 +98,6 @@ class PEAR_Validate
     {
         return in_array($state, array('snapshot', 'devel', 'alpha', 'beta', 'stable'));
     }
-
     /**
      * Get a list of valid stability levels
      * @return array
@@ -114,7 +108,6 @@ class PEAR_Validate
     {
         return array('snapshot', 'devel', 'alpha', 'beta', 'stable');
     }
-
     /**
      * Determine whether a version is a properly formatted version number that can be used
      * by version_compare
@@ -127,7 +120,6 @@ class PEAR_Validate
     {
         return (bool) preg_match(PEAR_COMMON_PACKAGE_VERSION_PREG, $ver);
     }
-
     /**
      * @param PEAR_PackageFile_v1|PEAR_PackageFile_v2
      */
@@ -135,7 +127,6 @@ class PEAR_Validate
     {
         $this->_packagexml = &$pf;
     }
-
     /**
      * @access private
      */
@@ -143,7 +134,6 @@ class PEAR_Validate
     {
         $this->_failures['errors'][] = array('field' => $field, 'reason' => $reason);
     }
-
     /**
      * @access private
      */
@@ -151,14 +141,12 @@ class PEAR_Validate
     {
         $this->_failures['warnings'][] = array('field' => $field, 'reason' => $reason);
     }
-
     function getFailures()
     {
         $failures = $this->_failures;
         $this->_failures = array('warnings' => array(), 'errors' => array());
         return $failures;
     }
-
     /**
      * @param int one of the PEAR_VALIDATE_* constants
      */
@@ -194,7 +182,6 @@ class PEAR_Validate
         }
         return !((bool) count($this->_failures['errors']));
     }
-
     /**
      * @access protected
      */
@@ -238,7 +225,6 @@ class PEAR_Validate
             return false;
         }
     }
-
     /**
      * @access protected
      */
@@ -423,7 +409,6 @@ class PEAR_Validate
             break;
         }
     }
-
     /**
      * @access protected
      */
@@ -433,7 +418,6 @@ class PEAR_Validate
         // but allow this customization for those who wish it
         return true;
     }
-
     /**
      * @access protected
      */
@@ -441,7 +425,6 @@ class PEAR_Validate
     {
         if ($this->_state == PEAR_VALIDATE_NORMAL ||
               $this->_state == PEAR_VALIDATE_PACKAGING) {
-
             if (!preg_match('/(\d\d\d\d)\-(\d\d)\-(\d\d)/',
                   $this->_packagexml->getDate(), $res) ||
                   count($res) < 4
@@ -451,7 +434,6 @@ class PEAR_Validate
                     $this->_packagexml->getDate() . '"');
                 return false;
             }
-
             if ($this->_state == PEAR_VALIDATE_PACKAGING &&
                   $this->_packagexml->getDate() != date('Y-m-d')) {
                 $this->_addWarning('date', 'Release Date "' .
@@ -460,7 +442,6 @@ class PEAR_Validate
         }
         return true;
     }
-
     /**
      * @access protected
      */
@@ -470,7 +451,6 @@ class PEAR_Validate
             // default of no time value set
             return true;
         }
-
         // packager automatically sets time, so only validate if pear validate is called
         if ($this->_state = PEAR_VALIDATE_NORMAL) {
             if (!preg_match('/\d\d:\d\d:\d\d/',
@@ -479,7 +459,6 @@ class PEAR_Validate
                     $this->_packagexml->getTime() . '"');
                 return false;
             }
-
             $result = preg_match('|\d{2}\:\d{2}\:\d{2}|', $this->_packagexml->getTime(), $matches);
             if ($result === false || empty($matches)) {
                 $this->_addFailure('time', 'invalid release time "' .
@@ -487,10 +466,8 @@ class PEAR_Validate
                 return false;
             }
         }
-
         return true;
     }
-
     /**
      * @access protected
      */
@@ -509,7 +486,6 @@ class PEAR_Validate
         }
         return true;
     }
-
     /**
      * @access protected
      */
@@ -534,7 +510,6 @@ class PEAR_Validate
         }
         return $ret;
     }
-
     /**
      * @access protected
      */
@@ -542,7 +517,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * @access protected
      */
@@ -550,7 +524,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * @access protected
      */
@@ -558,7 +531,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * @access protected
      */
@@ -566,7 +538,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * for package.xml 2.0 only - channels can't use package.xml 1.0
      * @access protected
@@ -575,7 +546,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * for package.xml 1.0 only
      * @access private
@@ -584,7 +554,6 @@ class PEAR_Validate
     {
         return true; // placeholder for now
     }
-
     /**
      * for package.xml 2.0 only
      * @access protected
@@ -593,7 +562,6 @@ class PEAR_Validate
     {
         return true; // placeholder for now
     }
-
     /**
      * for package.xml 2.0 only
      * @access protected
@@ -602,7 +570,6 @@ class PEAR_Validate
     {
         return true; // placeholder for now
     }
-
     /**
      * @access protected
      */
@@ -610,7 +577,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * @access protected
      */
@@ -618,7 +584,6 @@ class PEAR_Validate
     {
         return true;
     }
-
     /**
      * @access protected
      */

@@ -35,7 +35,6 @@ $_smarty_tpl->decodeProperties(array (
   <script src="js/strftime.js"></script>
   <script>
     <?php echo $_smarty_tpl->getVariable('js_date_locale')->value;?>
-
   </script>
   <script src="js/strptime.js"></script>
 </head>

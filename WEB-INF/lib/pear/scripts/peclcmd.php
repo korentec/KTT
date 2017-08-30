@@ -15,7 +15,6 @@
  * @version    CVS: $Id: peclcmd.php 313023 2011-07-06 19:17:11Z dufuz $
  * @link       http://pear.php.net/package/PEAR
  */
-
 /**
  * @nodep Gtk
  */
@@ -37,5 +36,4 @@ require_once 'pearcmd.php';
  * End:
  */
 // vim600:syn=php
-
 ?>

@@ -13,7 +13,6 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
-
 /**
  * base xml parser class
  */
@@ -35,30 +34,25 @@ class PEAR_ChannelFile_Parser extends PEAR_XMLParser
     var $_config;
     var $_logger;
     var $_registry;
-
     function setConfig(&$c)
     {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
-
     function setLogger(&$l)
     {
         $this->_logger = &$l;
     }
-
     function parse($data, $file)
     {
         if (PEAR::isError($err = parent::parse($data, $file))) {
             return $err;
         }
-
         $ret = new PEAR_ChannelFile;
         $ret->setConfig($this->_config);
         if (isset($this->_logger)) {
             $ret->setLogger($this->_logger);
         }
-
         $ret->fromArray($this->_unserializedData);
         // make sure the filelist is in the easy to read format needed
         $ret->flattenFilelist();

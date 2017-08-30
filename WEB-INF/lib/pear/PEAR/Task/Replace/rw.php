@@ -37,22 +37,18 @@ class PEAR_Task_Replace_rw extends PEAR_Task_Replace
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
-
     function validate()
     {
         return $this->validateXml($this->_pkg, $this->_params, $this->config, $this->_contents);
     }
-
     function setInfo($from, $to, $type)
     {
         $this->_params = array('attribs' => array('from' => $from, 'to' => $to, 'type' => $type));
     }
-
     function getName()
     {
         return 'replace';
     }
-
     function getXml()
     {
         return $this->_params;

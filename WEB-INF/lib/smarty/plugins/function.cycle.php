@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {cycle} function plugin
  *
@@ -42,7 +41,6 @@
  * @param object $template template object
  * @return string|null
  */
-
 function smarty_function_cycle($params, $template)
 {
     static $cycle_vars;
@@ -64,7 +62,6 @@ function smarty_function_cycle($params, $template)
         }
         $cycle_vars[$name]['values'] = $params['values'];
     }
-
     if (isset($params['delimiter'])) {
         $cycle_vars[$name]['delimiter'] = $params['delimiter'];
     } elseif (!isset($cycle_vars[$name]['delimiter'])) {
@@ -91,7 +88,6 @@ function smarty_function_cycle($params, $template)
     } else {
         $retval = null;
     }
-
     if($advance) {
         if ( $cycle_vars[$name]['index'] >= count($cycle_array) -1 ) {
             $cycle_vars[$name]['index'] = 0;
@@ -102,5 +98,4 @@ function smarty_function_cycle($params, $template)
     
     return $retval;
 }
-
 ?>

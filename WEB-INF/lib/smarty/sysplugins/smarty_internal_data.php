@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Data
  * 
@@ -9,14 +8,12 @@
  * @subpackage Templates
  * @author Uwe Tews 
  */
-
 /**
  * Base class with template and variable methodes
  */
 class Smarty_Internal_Data {
     // class used for templates
     public $template_class = 'Smarty_Internal_Template';
-
     /**
      * assigns a Smarty variable
      * 
@@ -66,7 +63,6 @@ class Smarty_Internal_Data {
             $this->tpl_vars[$tpl_var]->value = &$value;
         } 
     } 
-
     /**
      * wrapper function for Smarty 2 BC
      * 
@@ -136,7 +132,6 @@ class Smarty_Internal_Data {
             } 
         } 
     } 
-
     /**
      * appends values to template variables by reference
      * 
@@ -217,7 +212,6 @@ class Smarty_Internal_Data {
             return $_result;
         } 
     } 
-
     /**
      * clear the given assigned template variable.
      * 
@@ -233,7 +227,6 @@ class Smarty_Internal_Data {
             unset($this->tpl_vars[$tpl_var]);
         } 
     } 
-
     /**
      * clear all the assigned template variables.
      */
@@ -241,7 +234,6 @@ class Smarty_Internal_Data {
     {
         $this->tpl_vars = array();
     } 
-
     /**
      * load a config file, optionally load just selected sections
      * 
@@ -254,7 +246,6 @@ class Smarty_Internal_Data {
         $config = new Smarty_Internal_Config($config_file, $this->smarty, $this);
         $config->loadConfigVars($sections);
     } 
-
     /**
      * gets the object of a Smarty variable
      * 
@@ -318,7 +309,6 @@ class Smarty_Internal_Data {
             return null;
         } 
     } 
-
     /**
      * gets  a stream variable
      * 
@@ -335,14 +325,12 @@ class Smarty_Internal_Data {
             fclose($fp);
             return $_result;
         } 
-
         if ($this->smarty->error_unassigned) {
             throw new SmartyException('Undefined stream variable "' . $variable . '"');
         } else {
             return null;
         } 
     } 
-
     /**
      * Returns a single or all config variables
      * 
@@ -375,7 +363,6 @@ class Smarty_Internal_Data {
             return $var_array;
         } 
     } 
-
     /**
      * Deassigns a single or all config variables
      * 
@@ -391,9 +378,7 @@ class Smarty_Internal_Data {
             return;
         } 
     } 
-
 } 
-
 /**
  * class for the Smarty data object
  * 
@@ -452,13 +437,11 @@ class Smarty_Variable {
         $this->nocache = $nocache;
         $this->scope = $scope;
     } 
-
     public function __toString ()
     {
         return $this->value;
     } 
 } 
-
 /**
  * class for undefined variable object
  * 
@@ -475,5 +458,4 @@ class Undefined_Smarty_Variable {
         } 
     } 
 } 
-
 ?>

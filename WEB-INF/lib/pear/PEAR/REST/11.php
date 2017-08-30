@@ -13,12 +13,10 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.3
  */
-
 /**
  * For downloading REST xml/txt files
  */
 require_once 'PEAR/REST.php';
-
 /**
  * Implement REST 1.1
  *
@@ -37,48 +35,38 @@ class PEAR_REST_11
      * @var PEAR_REST
      */
     var $_rest;
-
     function PEAR_REST_11($config, $options = array())
     {
         $this->_rest = &new PEAR_REST($config, $options);
     }
-
     function listAll($base, $dostable, $basic = true, $searchpackage = false, $searchsummary = false, $channel = false)
     {
         $categorylist = $this->_rest->retrieveData($base . 'c/categories.xml', false, false, $channel);
         if (PEAR::isError($categorylist)) {
             return $categorylist;
         }
-
         $ret = array();
         if (!is_array($categorylist['c']) || !isset($categorylist['c'][0])) {
             $categorylist['c'] = array($categorylist['c']);
         }
-
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-
         foreach ($categorylist['c'] as $progress => $category) {
             $category = $category['_content'];
             $packagesinfo = $this->_rest->retrieveData($base .
                 'c/' . urlencode($category) . '/packagesinfo.xml', false, false, $channel);
-
             if (PEAR::isError($packagesinfo)) {
                 continue;
             }
-
             if (!is_array($packagesinfo) || !isset($packagesinfo['pi'])) {
                 continue;
             }
-
             if (!is_array($packagesinfo['pi']) || !isset($packagesinfo['pi'][0])) {
                 $packagesinfo['pi'] = array($packagesinfo['pi']);
             }
-
             foreach ($packagesinfo['pi'] as $packageinfo) {
                 if (empty($packageinfo)) {
                     continue;
                 }
-
                 $info     = $packageinfo['p'];
                 $package  = $info['n'];
                 $releases = isset($packageinfo['a']) ? $packageinfo['a'] : false;
@@ -86,12 +74,10 @@ class PEAR_REST_11
                 unset($unstable);
                 unset($stable);
                 unset($state);
-
                 if ($releases) {
                     if (!isset($releases['r'][0])) {
                         $releases['r'] = array($releases['r']);
                     }
-
                     foreach ($releases['r'] as $release) {
                         if (!isset($latest)) {
                             if ($dostable && $release['s'] == 'stable') {
@@ -103,34 +89,28 @@ class PEAR_REST_11
                                 $state = $release['s'];
                             }
                         }
-
                         if (!isset($stable) && $release['s'] == 'stable') {
                             $stable = $release['v'];
                             if (!isset($unstable)) {
                                 $unstable = $stable;
                             }
                         }
-
                         if (!isset($unstable) && $release['s'] != 'stable') {
                             $unstable = $release['v'];
                             $state = $release['s'];
                         }
-
                         if (isset($latest) && !isset($state)) {
                             $state = $release['s'];
                         }
-
                         if (isset($latest) && isset($stable) && isset($unstable)) {
                             break;
                         }
                     }
                 }
-
                 if ($basic) { // remote-list command
                     if (!isset($latest)) {
                         $latest = false;
                     }
-
                     if ($dostable) {
                         // $state is not set if there are no releases
                         if (isset($state) && $state == 'stable') {
@@ -141,10 +121,8 @@ class PEAR_REST_11
                     } else {
                         $ret[$package] = array('stable' => $latest);
                     }
-
                     continue;
                 }
-
                 // list-all command
                 if (!isset($unstable)) {
                     $unstable = false;
@@ -155,11 +133,9 @@ class PEAR_REST_11
                 } else {
                     $latest = $unstable;
                 }
-
                 if (!isset($latest)) {
                     $latest = false;
                 }
-
                 $deps = array();
                 if ($latest && isset($packageinfo['deps'])) {
                     if (!is_array($packageinfo['deps']) ||
@@ -167,40 +143,33 @@ class PEAR_REST_11
                     ) {
                         $packageinfo['deps'] = array($packageinfo['deps']);
                     }
-
                     $d = false;
                     foreach ($packageinfo['deps'] as $dep) {
                         if ($dep['v'] == $latest) {
                             $d = unserialize($dep['d']);
                         }
                     }
-
                     if ($d) {
                         if (isset($d['required'])) {
                             if (!class_exists('PEAR_PackageFile_v2')) {
                                 require_once 'PEAR/PackageFile/v2.php';
                             }
-
                             if (!isset($pf)) {
                                 $pf = new PEAR_PackageFile_v2;
                             }
-
                             $pf->setDeps($d);
                             $tdeps = $pf->getDeps();
                         } else {
                             $tdeps = $d;
                         }
-
                         foreach ($tdeps as $dep) {
                             if ($dep['type'] !== 'pkg') {
                                 continue;
                             }
-
                             $deps[] = $dep;
                         }
                     }
                 }
-
                 $info = array(
                     'stable'      => $latest,
                     'summary'     => $info['s'],
@@ -213,11 +182,9 @@ class PEAR_REST_11
                 $ret[$package] = $info;
             }
         }
-
         PEAR::popErrorHandling();
         return $ret;
     }
-
     /**
      * List all categories of a REST server
      *
@@ -230,19 +197,15 @@ class PEAR_REST_11
         if (PEAR::isError($categorylist)) {
             return $categorylist;
         }
-
         if (!is_array($categorylist) || !isset($categorylist['c'])) {
             return array();
         }
-
         if (isset($categorylist['c']['_content'])) {
             // only 1 category
             $categorylist['c'] = array($categorylist['c']);
         }
-
         return $categorylist['c'];
     }
-
     /**
      * List packages in a category of a REST server
      *
@@ -261,7 +224,6 @@ class PEAR_REST_11
         $url = sprintf($url,
                     $base,
                     urlencode($category));
-
         // gives '404 Not Found' error when category doesn't exist
         $packagelist = $this->_rest->retrieveData($url, false, false, $channel);
         if (PEAR::isError($packagelist)) {
@@ -270,7 +232,6 @@ class PEAR_REST_11
         if (!is_array($packagelist)) {
             return array();
         }
-
         if ($info == false) {
             if (!isset($packagelist['p'])) {
                 return array();
@@ -283,19 +244,16 @@ class PEAR_REST_11
             }
             return $packagelist;
         }
-
         // info == true
         if (!isset($packagelist['pi'])) {
             return array();
         }
-
         if (!is_array($packagelist['pi']) ||
             !isset($packagelist['pi'][0])) { // only 1 pkg
             $packagelist_pre = array($packagelist['pi']);
         } else {
             $packagelist_pre = $packagelist['pi'];
         }
-
         $packagelist = array();
         foreach ($packagelist_pre as $i => $item) {
             // compatibility with r/<latest.txt>.xml
@@ -308,15 +266,12 @@ class PEAR_REST_11
                 $item['p']['v'] = $item['a']['r']['v'];
                 $item['p']['st'] = $item['a']['r']['s'];
             }
-
             $packagelist[$i] = array('attribs' => $item['p']['r'],
                                      '_content' => $item['p']['n'],
                                      'info' => $item['p']);
         }
-
         return $packagelist;
     }
-
     /**
      * Return an array containing all of the states that are more stable than
      * or equal to the passed in state

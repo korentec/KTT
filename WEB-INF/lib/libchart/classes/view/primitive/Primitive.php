@@ -47,7 +47,6 @@
 			imagefilledpolygon($this->img, array($x1, $y1 - $width / 2, $x1, $y1 + $width / 2, $x2, $y2 + $width / 2, $x2, $y2 - $width / 2), 4, $color->getColor($this->img));
 			// imageline($this->img, $x1, $y1, $x2, $y2, $color->getColor($this->img));
 		}
-
 		/**
 		 * Draw a filled gray box with thick borders and darker corners.
 		 *
@@ -65,6 +64,5 @@
 			imagerectangle($this->img, $x1, $y2 - 1, $x1 + 1, $y2, $color1->getColor($this->img));
 			imagerectangle($this->img, $x2 - 1, $y2 - 1, $x2, $y2, $color1->getColor($this->img));
 		}
-
 	}
 ?>

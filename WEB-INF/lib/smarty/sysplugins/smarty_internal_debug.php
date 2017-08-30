@@ -1,5 +1,4 @@
 <?php
-
 /**
 * Smarty Internal Plugin Debug
 *
@@ -9,14 +8,12 @@
 * @subpackage Debug
 * @author Uwe Tews
 */
-
 /**
 * Smarty Internal Plugin Debug Class
 */
 class Smarty_Internal_Debug extends Smarty_Internal_Data {
 	// template data
 	static $template_data = array();
-
 	/**
 	* Start logging of compile time
 	*/
@@ -25,7 +22,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		$key = self::get_key($template);
 		self::$template_data[$key]['start_time'] = microtime(true);
 	}
-
 	/**
 	* End logging of compile time
 	*/
@@ -34,7 +30,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		$key = self::get_key($template);
 		self::$template_data[$key]['compile_time'] += microtime(true) - self::$template_data[$key]['start_time'];
 	}
-
 	/**
 	* Start logging of render time
 	*/
@@ -43,7 +38,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		$key = self::get_key($template);
 		self::$template_data[$key]['start_time'] = microtime(true);
 	}
-
 	/**
 	* End logging of compile time
 	*/
@@ -52,7 +46,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		$key = self::get_key($template);
 		self::$template_data[$key]['render_time'] += microtime(true) - self::$template_data[$key]['start_time'];
 	}
-
 	/**
 	* Start logging of cache time
 	*/
@@ -61,7 +54,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		$key = self::get_key($template);
 		self::$template_data[$key]['start_time'] = microtime(true);
 	}
-
 	/**
 	* End logging of cache time
 	*/
@@ -128,7 +120,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 				$tpl_vars[$key]->scope = 'Smarty root';
 			}
 		}
-
 		if (isset($obj->parent)) {
 			$parent = self::get_debug_vars($obj->parent);
 			$tpl_vars = array_merge($parent->tpl_vars, $tpl_vars);
@@ -144,7 +135,6 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		}
 		return (object) array('tpl_vars' => $tpl_vars, 'config_vars' => $config_vars);
 	}
-
 	/**
 	* get_key
 	*/
@@ -166,5 +156,4 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
 		}
 	}
 }
-
 ?>

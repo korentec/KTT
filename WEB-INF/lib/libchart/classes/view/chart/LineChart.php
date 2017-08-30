@@ -32,10 +32,8 @@
 		 */
 		public function LineChart($width = 600, $height = 250) {
 			parent::BarChart($width, $height);
-
 			$this->plot->setGraphPadding(new Padding(5, 30, 50, 50));
 		}
-
 		/**
 		 * Computes the layout.
 		 */
@@ -53,7 +51,6 @@
 			$minValue = $this->axis->getLowerBoundary();
 			$maxValue = $this->axis->getUpperBoundary();
 			$stepValue = $this->axis->getTics();
-
 			// Get graphical obects
 			$img = $this->plot->getImg();
 			$palette = $this->plot->getPalette();
@@ -65,13 +62,10 @@
 			// Vertical axis
 			for ($value = $minValue; $value <= $maxValue; $value += $stepValue) {
 				$y = $graphArea->y2 - ($value - $minValue) * ($graphArea->y2 - $graphArea->y1) / ($this->axis->displayDelta);
-
 				imagerectangle($img, $graphArea->x1 - 3, $y, $graphArea->x1 - 2, $y + 1, $palette->axisColor[0]->getColor($img));
 				imagerectangle($img, $graphArea->x1 - 1, $y, $graphArea->x1, $y + 1, $palette->axisColor[1]->getColor($img));
-
 				$text->printText($img, $graphArea->x1 - 5, $y, $this->plot->getTextColor(), $value, $text->fontCondensed, $text->HORIZONTAL_RIGHT_ALIGN | $text->VERTICAL_CENTER_ALIGN);
 			}
-
 			// Get first serie of a list
 			$pointList = $this->getFirstSerieOfList();
 			
@@ -79,22 +73,16 @@
 			$pointCount = count($pointList);
 			reset($pointList);
 			$columnWidth = ($graphArea->x2 - $graphArea->x1) / ($pointCount - 1);
-
 			for ($i = 0; $i < $pointCount; $i++) {
 				$x = $graphArea->x1 + $i * $columnWidth;
-
 				imagerectangle($img, $x - 1, $graphArea->y2 + 2, $x, $graphArea->y2 + 3, $palette->axisColor[0]->getColor($img));
 				imagerectangle($img, $x - 1, $graphArea->y2, $x, $graphArea->y2 + 1, $palette->axisColor[1]->getColor($img));
-
 				$point = current($pointList);
 				next($pointList);
-
 				$label = $point->getX();
-
 				$text->printDiagonal($img, $x - 5, $graphArea->y2 + 10, $this->plot->getTextColor(), $label);
 			}
 		}
-
 		/**
 		 * Print the lines.
 		 */
@@ -121,9 +109,7 @@
 				$pointList = $serie->getPointList();
 				$pointCount = count($pointList);
 				reset($pointList);
-
 				$columnWidth = ($graphArea->x2 - $graphArea->x1) / ($pointCount - 1);
-
 				$lineColor = $lineColorSet->currentColor();
 				$lineColorShadow = $lineColorSet->currentShadowColor();
 				$lineColorSet->next();
@@ -131,14 +117,11 @@
 				$y1 = null;
 				for ($i = 0; $i < $pointCount; $i++) {
 					$x2 = $graphArea->x1 + $i * $columnWidth;
-
 					$point = current($pointList);
 					next($pointList);
-
 					$value = $point->getY();
 					
 					$y2 = $graphArea->y2 - ($value - $minValue) * ($graphArea->y2 - $graphArea->y1) / ($this->axis->displayDelta);
-
 					// Draw line 
 					if ($x1) {
 						$primitive->line($x1, $y1, $x2, $y2, $lineColor, 4);
@@ -170,7 +153,6 @@
 			// Render the caption
 			$caption->render();
 		}
-
 		/**
 		 * Render the chart image.
 		 *
@@ -179,7 +161,6 @@
 		public function render($fileName = null) {
 			// Check the data model
 			$this->checkDataModel();
-
 			$this->bound->computeBound($this->dataSet);
 			$this->computeAxis();
 			$this->computeLayout();
@@ -193,7 +174,6 @@
 					$this->printCaption();
 				}
 			}
-
 			$this->plot->render($fileName);
 		}
 	}

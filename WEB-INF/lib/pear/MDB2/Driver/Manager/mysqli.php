@@ -44,9 +44,7 @@
 //
 // $Id: mysqli.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 require_once 'MDB2/Driver/Manager/Common.php';
-
 /**
  * MDB2 MySQLi driver for the management modules
  *
@@ -56,10 +54,8 @@ require_once 'MDB2/Driver/Manager/Common.php';
  */
 class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
 {
-
     // }}}
     // {{{ createDatabase()
-
     /**
      * create a new database
      *
@@ -75,7 +71,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $name  = $db->quoteIdentifier($name, true);
         $query = 'CREATE DATABASE ' . $name;
         if (!empty($options['charset'])) {
@@ -86,10 +81,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $db->standaloneQuery($query, null, true);
     }
-
     // }}}
     // {{{ alterDatabase()
-
     /**
      * alter an existing database
      *
@@ -105,7 +98,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = 'ALTER DATABASE '. $db->quoteIdentifier($name, true);
         if (!empty($options['charset'])) {
             $query .= ' DEFAULT CHARACTER SET ' . $db->quote($options['charset'], 'text');
@@ -115,10 +107,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $db->standaloneQuery($query, null, true);
     }
-
     // }}}
     // {{{ dropDatabase()
-
     /**
      * drop an existing database
      *
@@ -132,15 +122,12 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $name = $db->quoteIdentifier($name, true);
         $query = "DROP DATABASE $name";
         return $db->standaloneQuery($query, null, true);
     }
-
     // }}}
     // {{{ _getAdvancedFKOptions()
-
     /**
      * Return the FOREIGN KEY query section dealing with non-standard options
      * as MATCH, INITIALLY DEFERRED, ON UPDATE, ...
@@ -163,10 +150,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $query;
     }
-
     // }}}
     // {{{ createTable()
-
     /**
      * create a new table
      *
@@ -208,7 +193,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         // if we have an AUTO_INCREMENT column and a PK on more than one field,
         // we have to handle it differently...
         $autoincrement = null;
@@ -229,30 +213,24 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $autoincrement = null;
             }
         }
-
         $query = $this->_getCreateTableQuery($name, $fields, $options);
         if (MDB2::isError($query)) {
             return $query;
         }
-
         if (null !== $autoincrement) {
             // we have to remove the PK clause added by _getIntegerDeclaration()
             $query = str_replace('AUTO_INCREMENT PRIMARY KEY', 'AUTO_INCREMENT', $query);
         }
-
         $options_strings = array();
-
         if (!empty($options['comment'])) {
             $options_strings['comment'] = 'COMMENT = '.$db->quote($options['comment'], 'text');
         }
-
         if (!empty($options['charset'])) {
             $options_strings['charset'] = 'DEFAULT CHARACTER SET '.$options['charset'];
             if (!empty($options['collate'])) {
                 $options_strings['charset'].= ' COLLATE '.$options['collate'];
             }
         }
-
         $type = false;
         if (!empty($options['type'])) {
             $type = $options['type'];
@@ -262,7 +240,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if ($type) {
             $options_strings[] = "ENGINE = $type";
         }
-
         if (!empty($options_strings)) {
             $query .= ' '.implode(' ', $options_strings);
         }
@@ -272,10 +249,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ dropTable()
-
     /**
      * drop an existing table
      *
@@ -289,7 +264,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         //delete the triggers associated to existing FK constraints
         $constraints = $this->listTableConstraints($name);
         if (!MDB2::isError($constraints) && !empty($constraints)) {
@@ -304,13 +278,10 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 }
             }
         }
-
         return parent::dropTable($name);
     }
-
     // }}}
     // {{{ truncateTable()
-
     /**
      * Truncate an existing table (if the TRUNCATE TABLE syntax is not supported,
      * it falls back to a DELETE FROM TABLE query)
@@ -325,7 +296,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $name = $db->quoteIdentifier($name, true);
         $result = $db->exec("TRUNCATE TABLE $name");
         if (MDB2::isError($result)) {
@@ -333,10 +303,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ vacuum()
-
     /**
      * Optimize (vacuum) all the tables in the db (or only the specified table)
      * and optionally run ANALYZE.
@@ -357,7 +325,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if (empty($table)) {
             $table = $this->listTables();
             if (MDB2::isError($table)) {
@@ -372,7 +339,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         } else {
             $table = $db->quoteIdentifier($table, true);
         }
-
         $result = $db->exec('OPTIMIZE TABLE '.$table);
         if (MDB2::isError($result)) {
             return $result;
@@ -385,10 +351,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ alterTable()
-
     /**
      * alter an existing table
      *
@@ -485,7 +449,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         foreach ($changes as $change_name => $change) {
             switch ($change_name) {
             case 'add':
@@ -499,17 +462,14 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                     'change type "'.$change_name.'" not yet supported', __FUNCTION__);
             }
         }
-
         if ($check) {
             return MDB2_OK;
         }
-
         $query = '';
         if (!empty($changes['name'])) {
             $change_name = $db->quoteIdentifier($changes['name'], true);
             $query .= 'RENAME TO ' . $change_name;
         }
-
         if (!empty($changes['add']) && is_array($changes['add'])) {
             foreach ($changes['add'] as $field_name => $field) {
                 if ($query) {
@@ -518,7 +478,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $query.= 'ADD ' . $db->getDeclaration($field['type'], $field_name, $field);
             }
         }
-
         if (!empty($changes['remove']) && is_array($changes['remove'])) {
             foreach ($changes['remove'] as $field_name => $field) {
                 if ($query) {
@@ -528,14 +487,12 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $query.= 'DROP ' . $field_name;
             }
         }
-
         $rename = array();
         if (!empty($changes['rename']) && is_array($changes['rename'])) {
             foreach ($changes['rename'] as $field_name => $field) {
                 $rename[$field['name']] = $field_name;
             }
         }
-
         if (!empty($changes['change']) && is_array($changes['change'])) {
             foreach ($changes['change'] as $field_name => $field) {
                 if ($query) {
@@ -551,7 +508,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $query.= "CHANGE $old_field_name " . $db->getDeclaration($field['definition']['type'], $field_name, $field['definition']);
             }
         }
-
         if (!empty($rename) && is_array($rename)) {
             foreach ($rename as $rename_name => $renamed_field) {
                 if ($query) {
@@ -562,11 +518,9 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $query.= 'CHANGE ' . $renamed_field . ' ' . $db->getDeclaration($field['definition']['type'], $field['name'], $field['definition']);
             }
         }
-
         if (!$query) {
             return MDB2_OK;
         }
-
         $name = $db->quoteIdentifier($name, true);
         $result = $db->exec("ALTER TABLE $name $query");
         if (MDB2::isError($result)) {
@@ -574,10 +528,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ listDatabases()
-
     /**
      * list all databases
      *
@@ -590,7 +542,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $result = $db->queryCol('SHOW DATABASES');
         if (MDB2::isError($result)) {
             return $result;
@@ -600,10 +551,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ listUsers()
-
     /**
      * list all users
      *
@@ -616,13 +565,10 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         return $db->queryCol('SELECT DISTINCT USER FROM mysql.USER');
     }
-
     // }}}
     // {{{ listFunctions()
-
     /**
      * list all functions in the current database
      *
@@ -635,7 +581,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = "SELECT name FROM mysql.proc";
         /*
         SELECT ROUTINE_NAME
@@ -651,10 +596,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ listTableTriggers()
-
     /**
      * list all triggers in the database that reference a given table
      *
@@ -668,7 +611,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = 'SHOW TRIGGERS';
         if (null !== $table) {
             $table = $db->quote($table, 'text');
@@ -683,10 +625,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ listTables()
-
     /**
      * list all tables in the current database
      *
@@ -700,18 +640,15 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = "SHOW /*!50002 FULL*/ TABLES";
         if (null !== $database) {
             $query .= " FROM $database";
         }
         $query.= "/*!50002  WHERE Table_type = 'BASE TABLE'*/";
-
         $table_names = $db->queryAll($query, null, MDB2_FETCHMODE_ORDERED);
         if (MDB2::isError($table_names)) {
             return $table_names;
         }
-
         $result = array();
         foreach ($table_names as $table) {
             if (!$this->_fixSequenceName($table[0], true)) {
@@ -723,10 +660,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ listViews()
-
     /**
      * list all views in the current database
      *
@@ -740,27 +675,22 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = 'SHOW FULL TABLES';
         if (null !== $database) {
             $query.= " FROM $database";
         }
         $query.= " WHERE Table_type = 'VIEW'";
-
         $result = $db->queryCol($query);
         if (MDB2::isError($result)) {
             return $result;
         }
-
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
             $result = array_map(($db->options['field_case'] == CASE_LOWER ? 'strtolower' : 'strtoupper'), $result);
         }
         return $result;
     }
-
     // }}}
     // {{{ listTableFields()
-
     /**
      * list all fields in a table in the current database
      *
@@ -774,7 +704,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $table = $db->quoteIdentifier($table, true);
         $result = $db->queryCol("SHOW COLUMNS FROM $table");
         if (MDB2::isError($result)) {
@@ -785,10 +714,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ createIndex()
-
     /**
      * Get the stucture of a field into an array
      *
@@ -830,7 +757,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $table = $db->quoteIdentifier($table, true);
         $name = $db->quoteIdentifier($db->getIndexName($name), true);
         $query = "CREATE INDEX $name ON $table";
@@ -849,10 +775,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ dropIndex()
-
     /**
      * drop existing index
      *
@@ -867,7 +791,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $table = $db->quoteIdentifier($table, true);
         $name = $db->quoteIdentifier($db->getIndexName($name), true);
         $result = $db->exec("DROP INDEX $name ON $table");
@@ -876,10 +799,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ listTableIndexes()
-
     /**
      * list all indexes in a table
      *
@@ -893,7 +814,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $key_name = 'Key_name';
         $non_unique = 'Non_unique';
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -905,30 +825,25 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $non_unique = strtoupper($non_unique);
             }
         }
-
         $table = $db->quoteIdentifier($table, true);
         $query = "SHOW INDEX FROM $table";
         $indexes = $db->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
         if (MDB2::isError($indexes)) {
             return $indexes;
         }
-
         $result = array();
         foreach ($indexes as $index_data) {
             if ($index_data[$non_unique] && ($index = $this->_fixIndexName($index_data[$key_name]))) {
                 $result[$index] = true;
             }
         }
-
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
             $result = array_change_key_case($result, $db->options['field_case']);
         }
         return array_keys($result);
     }
-
     // }}}
     // {{{ createConstraint()
-
     /**
      * create a constraint on a table
      *
@@ -957,7 +872,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $type = '';
         $idx_name = $db->quoteIdentifier($db->getIndexName($name), true);
         if (!empty($definition['primary'])) {
@@ -972,7 +886,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
             return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
                 'invalid definition, could not create constraint', __FUNCTION__);
         }
-
         $table_quoted = $db->quoteIdentifier($table, true);
         $query = "ALTER TABLE $table_quoted ADD $type $idx_name";
         if (!empty($definition['foreign'])) {
@@ -995,7 +908,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
             }
             $query .= ' ('. implode(', ', $referenced_fields) . ')';
             $query .= $this->_getAdvancedFKOptions($definition);
-
             // add index on FK column(s) or we can't add a FK constraint
             // @see http://forums.mysql.com/read.php?22,19755,226009
             $result = $this->createIndex($table, $name.'_fkidx', $definition);
@@ -1012,10 +924,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ dropConstraint()
-
     /**
      * drop existing constraint
      *
@@ -1060,7 +970,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
             }
             return MDB2_OK;
         }
-
         $table = $db->quoteIdentifier($table, true);
         $name = $db->quoteIdentifier($db->getIndexName($name), true);
         $query = "ALTER TABLE $table DROP INDEX $name";
@@ -1070,10 +979,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ _createFKTriggers()
-
     /**
      * Create triggers to enforce the FOREIGN KEY constraint on the table
      *
@@ -1103,7 +1010,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 //set actions to default if not set
                 $fkdef['onupdate'] = empty($fkdef['onupdate']) ? $db->options['default_fk_action_onupdate'] : strtoupper($fkdef['onupdate']);
                 $fkdef['ondelete'] = empty($fkdef['ondelete']) ? $db->options['default_fk_action_ondelete'] : strtoupper($fkdef['ondelete']);
-
                 $trigger_names = array(
                     'insert'    => $fkname.'_insert_trg',
                     'update'    => $fkname.'_update_trg',
@@ -1112,7 +1018,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 );
                 $table_fields = array_keys($fkdef['fields']);
                 $referenced_fields = array_keys($fkdef['references']['fields']);
-
                 //create the ON [UPDATE|DELETE] triggers on the primary table
                 $restrict_action = ' IF (SELECT ';
                 $aliased_fields = array();
@@ -1134,19 +1039,15 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 for ($i=0; $i<count($referenced_fields); $i++) {
                     $conditions2[]  = 'NEW.'.$referenced_fields[$i] .' <> OLD.'.$referenced_fields[$i];
                 }
-
                 $restrict_action .= implode(' AND ', $conditions).') IS NOT NULL';
                 $restrict_action2 = empty($conditions2) ? '' : ' AND (' .implode(' OR ', $conditions2) .')';
                 $restrict_action3 = ' THEN CALL %s_ON_TABLE_'.$table.'_VIOLATES_FOREIGN_KEY_CONSTRAINT();'
                                    .' END IF;';
-
                 $restrict_action_update = $restrict_action . $restrict_action2 . $restrict_action3;
                 $restrict_action_delete = $restrict_action . $restrict_action3; // There is no NEW row in on DELETE trigger
-
                 $cascade_action_update = 'UPDATE '.$table_quoted.' SET '.implode(', ', $new_values) .' WHERE '.implode(' AND ', $conditions). ';';
                 $cascade_action_delete = 'DELETE FROM '.$table_quoted.' WHERE '.implode(' AND ', $conditions). ';';
                 $setnull_action        = 'UPDATE '.$table_quoted.' SET '.implode(', ', $null_values).' WHERE '.implode(' AND ', $conditions). ';';
-
                 if ('SET DEFAULT' == $fkdef['onupdate'] || 'SET DEFAULT' == $fkdef['ondelete']) {
                     $db->loadModule('Reverse', null, true);
                     $default_values = array();
@@ -1159,12 +1060,10 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                     }
                     $setdefault_action = 'UPDATE '.$table_quoted.' SET '.implode(', ', $default_values).' WHERE '.implode(' AND ', $conditions). ';';
                 }
-
                 $query = 'CREATE TRIGGER %s'
                         .' %s ON '.$fkdef['references']['table']
                         .' FOR EACH ROW BEGIN '
                         .' SET FOREIGN_KEY_CHECKS = 0; ';  //only really needed for ON UPDATE CASCADE
-
                 if ('CASCADE' == $fkdef['onupdate']) {
                     $sql_update = sprintf($query, $trigger_names['pk_update'], 'BEFORE UPDATE',  'update') . $cascade_action_update;
                 } elseif ('SET NULL' == $fkdef['onupdate']) {
@@ -1189,7 +1088,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 }
                 $sql_update .= ' SET FOREIGN_KEY_CHECKS = 1; END;';
                 $sql_delete .= ' SET FOREIGN_KEY_CHECKS = 1; END;';
-
                 $db->pushErrorHandling(PEAR_ERROR_RETURN);
                 $db->expectError(MDB2_ERROR_CANNOT_CREATE); 
                 $result = $db->exec($sql_delete);
@@ -1217,10 +1115,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ _dropFKTriggers()
-
     /**
      * Drop the triggers created to enforce the FOREIGN KEY constraint on the table
      *
@@ -1237,7 +1133,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $triggers  = $this->listTableTriggers($table);
         $triggers2 = $this->listTableTriggers($referenced_table);
         if (!MDB2::isError($triggers2) && !MDB2::isError($triggers)) {
@@ -1254,10 +1149,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ listTableConstraints()
-
     /**
      * list all constraints in a table
      *
@@ -1271,7 +1164,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $key_name = 'Key_name';
         $non_unique = 'Non_unique';
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
@@ -1283,13 +1175,11 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 $non_unique = strtoupper($non_unique);
             }
         }
-
         $query = 'SHOW INDEX FROM ' . $db->quoteIdentifier($table, true);
         $indexes = $db->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
         if (MDB2::isError($indexes)) {
             return $indexes;
         }
-
         $result = array();
         foreach ($indexes as $index_data) {
             if (!$index_data[$non_unique]) {
@@ -1303,7 +1193,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 }
             }
         }
-
         //list FOREIGN KEY constraints...
         $query = 'SHOW CREATE TABLE '. $db->escape($table);
         $definition = $db->queryOne($query, 'text', 1);
@@ -1315,16 +1204,13 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
                 }
             }
         }
-
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
             $result = array_change_key_case($result, $db->options['field_case']);
         }
         return array_keys($result);
     }
-
     // }}}
     // {{{ createSequence()
-
     /**
      * create sequence
      *
@@ -1346,23 +1232,19 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $sequence_name = $db->quoteIdentifier($db->getSequenceName($seq_name), true);
         $seqcol_name = $db->quoteIdentifier($db->options['seqcol_name'], true);
         
         $options_strings = array();
-
         if (!empty($options['comment'])) {
             $options_strings['comment'] = 'COMMENT = '.$db->quote($options['comment'], 'text');
         }
-
         if (!empty($options['charset'])) {
             $options_strings['charset'] = 'DEFAULT CHARACTER SET '.$options['charset'];
             if (!empty($options['collate'])) {
                 $options_strings['charset'].= ' COLLATE '.$options['collate'];
             }
         }
-
         $type = false;
         if (!empty($options['type'])) {
             $type = $options['type'];
@@ -1372,7 +1254,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if ($type) {
             $options_strings[] = "ENGINE = $type";
         }
-
         $query = "CREATE TABLE $sequence_name ($seqcol_name INT NOT NULL AUTO_INCREMENT, PRIMARY KEY ($seqcol_name))";
         if (!empty($options_strings)) {
             $query .= ' '.implode(' ', $options_strings);
@@ -1381,31 +1262,25 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($res)) {
             return $res;
         }
-
         if ($start == 1) {
             return MDB2_OK;
         }
-
         $query = "INSERT INTO $sequence_name ($seqcol_name) VALUES (".($start-1).')';
         $res = $db->exec($query);
         if (!MDB2::isError($res)) {
             return MDB2_OK;
         }
-
         // Handle error
         $result = $db->exec("DROP TABLE $sequence_name");
         if (MDB2::isError($result)) {
             return $db->raiseError($result, null, null,
                 'could not drop inconsistent sequence table', __FUNCTION__);
         }
-
         return $db->raiseError($res, null, null,
             'could not create sequence table', __FUNCTION__);
     }
-
     // }}}
     // {{{ dropSequence()
-
     /**
      * drop existing sequence
      *
@@ -1419,7 +1294,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $sequence_name = $db->quoteIdentifier($db->getSequenceName($seq_name), true);
         $result = $db->exec("DROP TABLE $sequence_name");
         if (MDB2::isError($result)) {
@@ -1427,10 +1301,8 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ listSequences()
-
     /**
      * list all sequences in the current database
      *
@@ -1444,7 +1316,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = "SHOW TABLES";
         if (null !== $database) {
             $query .= " FROM $database";
@@ -1453,7 +1324,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         if (MDB2::isError($table_names)) {
             return $table_names;
         }
-
         $result = array();
         foreach ($table_names as $table_name) {
             if ($sqn = $this->_fixSequenceName($table_name, true)) {
@@ -1465,7 +1335,6 @@ class MDB2_Driver_Manager_mysqli extends MDB2_Driver_Manager_Common
         }
         return $result;
     }
-
     // }}}
 }
 ?>

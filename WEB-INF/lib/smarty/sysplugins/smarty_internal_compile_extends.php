@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile extend
  * 
@@ -9,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile extend Class
  */
@@ -17,7 +15,6 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
 	// attribute definitions
     public $required_attributes = array('file');
     public $shorttag_order = array('file');
-
     /**
      * Compiles code for the {extends} tag
      * 
@@ -37,7 +34,6 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
         if ($_attr['nocache'] === true) {
         	$this->compiler->trigger_template_error('nocache option not allowed', $this->compiler->lex->taglineno);
         }
-
         $_smarty_tpl = $compiler->template; 
         $include_file = null;
         if (strpos($_attr['file'],'$_tmp') !== false) {
@@ -85,6 +81,5 @@ class Smarty_Internal_Compile_Extends extends Smarty_Internal_CompileBase {
         $compiler->abort_and_recompile = true;
         return '';
     } 
-
 } 
 ?>

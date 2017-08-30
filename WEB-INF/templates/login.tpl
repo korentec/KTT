@@ -15,7 +15,6 @@ function get_date() {
     </td>
   </tr>
 </table>
-
 {if !empty($about_text)}
   <div id="LoginAboutText"> {$about_text} </div>
 {/if}

@@ -17,13 +17,11 @@
  * TODO: log output parameters in PECL command line
  * TODO: msdev path in configuration
  */
-
 /**
  * Needed for extending PEAR_Builder
  */
 require_once 'PEAR/Common.php';
 require_once 'PEAR/PackageFile.php';
-
 /**
  * Class to handle building (compiling) extensions.
  *
@@ -43,19 +41,15 @@ class PEAR_Builder extends PEAR_Common
     var $php_api_version = 0;
     var $zend_module_api_no = 0;
     var $zend_extension_api_no = 0;
-
     var $extensions_built = array();
-
     /**
      * @var string Used for reporting when it is not possible to pass function
      *             via extra parameter, e.g. log, msdevCallback
      */
     var $current_callback = null;
-
     // used for msdev builds
     var $_lastline = null;
     var $_firstline = null;
-
     /**
      * PEAR_Builder constructor.
      *
@@ -68,7 +62,6 @@ class PEAR_Builder extends PEAR_Common
         parent::PEAR_Common();
         $this->setFrontendObject($ui);
     }
-
     /**
      * Build an extension from source on windows.
      * requires msdev
@@ -87,35 +80,28 @@ class PEAR_Builder extends PEAR_Common
         }
         $dir = dirname($descfile);
         $old_cwd = getcwd();
-
         if (!file_exists($dir) || !is_dir($dir) || !chdir($dir)) {
             return $this->raiseError("could not chdir to $dir");
         }
-
         // packages that were in a .tar have the packagefile in this directory
         $vdir = $pkg->getPackage() . '-' . $pkg->getVersion();
         if (file_exists($dir) && is_dir($vdir)) {
             if (!chdir($vdir)) {
                 return $this->raiseError("could not chdir to " . realpath($vdir));
             }
-
             $dir = getcwd();
         }
-
         $this->log(2, "building in $dir");
-
         $dsp = $pkg->getPackage().'.dsp';
         if (!file_exists("$dir/$dsp")) {
             return $this->raiseError("The DSP $dsp does not exist.");
         }
         // XXX TODO: make release build type configurable
         $command = 'msdev '.$dsp.' /MAKE "'.$pkg->getPackage(). ' - Release"';
-
         $err = $this->_runCommand($command, array(&$this, 'msdevCallback'));
         if (PEAR::isError($err)) {
             return $err;
         }
-
         // figure out the build platform and type
         $platform = 'Win32';
         $buildtype = 'Release';
@@ -123,7 +109,6 @@ class PEAR_Builder extends PEAR_Common
             $platform = $matches[1];
             $buildtype = $matches[2];
         }
-
         if (preg_match('/(.*)?\s-\s(\d+).*?(\d+)/', $this->_lastline, $matches)) {
             if ($matches[2]) {
                 // there were errors in the build
@@ -133,11 +118,9 @@ class PEAR_Builder extends PEAR_Common
         } else {
             return $this->raiseError("Did not understand the completion status returned from msdev.exe.");
         }
-
         // msdev doesn't tell us the output directory :/
         // open the dsp, find /out and use that directory
         $dsptext = join(file($dsp),'');
-
         // this regex depends on the build platform and type having been
         // correctly identified above.
         $regex ='/.*?!IF\s+"\$\(CFG\)"\s+==\s+("'.
@@ -145,7 +128,6 @@ class PEAR_Builder extends PEAR_Common
                     $platform.'\s'.
                     $buildtype.'").*?'.
                     '\/out:"(.*?)"/is';
-
         if ($dsptext && preg_match($regex, $dsptext, $matches)) {
             // what we get back is a relative path to the output file itself.
             $outfile = realpath($matches[2]);
@@ -156,18 +138,15 @@ class PEAR_Builder extends PEAR_Common
         if ($outfile && copy($outfile, "$dir/$out")) {
             $outfile = "$dir/$out";
         }
-
         $built_files[] = array(
             'file' => "$outfile",
             'php_api' => $this->php_api_version,
             'zend_mod_api' => $this->zend_module_api_no,
             'zend_ext_api' => $this->zend_extension_api_no,
             );
-
         return $built_files;
     }
     // }}}
-
     // {{{ msdevCallback()
     function msdevCallback($what, $data)
     {
@@ -176,7 +155,6 @@ class PEAR_Builder extends PEAR_Common
         $this->_lastline = $data;
         call_user_func($this->current_callback, $what, $data);
     }
-
     /**
      * @param string
      * @param string
@@ -188,12 +166,10 @@ class PEAR_Builder extends PEAR_Common
         $d = opendir($dirname);
         if (!$d)
             return false;
-
         $ret = true;
         while (($ent = readdir($d)) !== false) {
             if ($ent{0} == '.')
                 continue;
-
             $full = $dirname . DIRECTORY_SEPARATOR . $ent;
             if (is_dir($full)) {
                 if (!$this->_harvestInstDir(
@@ -216,7 +192,6 @@ class PEAR_Builder extends PEAR_Common
         closedir($d);
         return $ret;
     }
-
     /**
      * Build an extension from source.  Runs "phpize" in the source
      * directory, but compiles in a temporary directory
@@ -250,7 +225,6 @@ class PEAR_Builder extends PEAR_Common
                            ' appears to have a prefix ' . $matches[2] . ', but' .
                            ' config variable php_prefix does not match');
             }
-
             if (isset($matches[3]) && strlen($matches[3]) &&
                 trim($matches[3]) != trim($this->config->get('php_suffix'))) {
                 $this->log(0, 'WARNING: php_bin ' . $this->config->get('php_bin') .
@@ -258,16 +232,13 @@ class PEAR_Builder extends PEAR_Common
                            ' config variable php_suffix does not match');
             }
         }
-
         $this->current_callback = $callback;
         if (PEAR_OS == "Windows") {
             return $this->_build_win32($descfile, $callback);
         }
-
         if (PEAR_OS != 'Unix') {
             return $this->raiseError("building extensions not supported on this platform");
         }
-
         if (is_object($descfile)) {
             $pkg = $descfile;
             $descfile = $pkg->getPackageFile();
@@ -286,7 +257,6 @@ class PEAR_Builder extends PEAR_Common
             }
             $dir = dirname($descfile);
         }
-
         // Find config. outside of normal path - e.g. config.m4
         foreach (array_keys($pkg->getInstallationFileList()) as $item) {
           if (stristr(basename($item), 'config.m4') && dirname($item) != '.') {
@@ -294,17 +264,14 @@ class PEAR_Builder extends PEAR_Common
             break;
           }
         }
-
         $old_cwd = getcwd();
         if (!file_exists($dir) || !is_dir($dir) || !chdir($dir)) {
             return $this->raiseError("could not chdir to $dir");
         }
-
         $vdir = $pkg->getPackage() . '-' . $pkg->getVersion();
         if (is_dir($vdir)) {
             chdir($vdir);
         }
-
         $dir = getcwd();
         $this->log(2, "building in $dir");
         putenv('PATH=' . $this->config->get('bin_dir') . ':' . getenv('PATH'));
@@ -315,11 +282,9 @@ class PEAR_Builder extends PEAR_Common
         if (PEAR::isError($err)) {
             return $err;
         }
-
         if (!$err) {
             return $this->raiseError("`phpize' failed");
         }
-
         // {{{ start of interactive part
         $configure_command = "$dir/configure";
         $configure_options = $pkg->getConfigureOptions();
@@ -339,12 +304,10 @@ class PEAR_Builder extends PEAR_Common
             }
         }
         // }}} end of interactive part
-
         // FIXME make configurable
         if (!$user=getenv('USER')) {
             $user='defaultuser';
         }
-
         $tmpdir = $this->config->get('temp_dir');
         $build_basedir = System::mktemp(' -t "' . $tmpdir . '" -d "pear-build-' . $user . '"');
         $build_dir = "$build_basedir/$vdir";
@@ -353,19 +316,15 @@ class PEAR_Builder extends PEAR_Common
         if (is_dir($build_dir)) {
             System::rm(array('-rf', $build_dir));
         }
-
         if (!System::mkDir(array('-p', $build_dir))) {
             return $this->raiseError("could not create build dir: $build_dir");
         }
-
         $this->addTempFile($build_dir);
         if (!System::mkDir(array('-p', $inst_dir))) {
             return $this->raiseError("could not create temporary install dir: $inst_dir");
         }
         $this->addTempFile($inst_dir);
-
         $make_command = getenv('MAKE') ? getenv('MAKE') : 'make';
-
         $to_run = array(
             $configure_command,
             $make_command,
@@ -399,7 +358,6 @@ class PEAR_Builder extends PEAR_Common
         chdir($old_cwd);
         return $built_files;
     }
-
     /**
      * Message callback function used when running the "phpize"
      * program.  Extracts the API numbers used.  Ignores other message
@@ -432,7 +390,6 @@ class PEAR_Builder extends PEAR_Common
             }
         }
     }
-
     /**
      * Run an external command, using a message callback to report
      * output.  The command will be run through popen and output is
@@ -460,7 +417,6 @@ class PEAR_Builder extends PEAR_Common
             $olddbg = $callback[0]->debug;
             $callback[0]->debug = 2;
         }
-
         while ($line = fgets($pp, 1024)) {
             if ($callback) {
                 call_user_func($callback, 'cmdoutput', $line);
@@ -471,11 +427,9 @@ class PEAR_Builder extends PEAR_Common
         if ($callback && isset($olddbg)) {
             $callback[0]->debug = $olddbg;
         }
-
         $exitcode = is_resource($pp) ? pclose($pp) : -1;
         return ($exitcode == 0);
     }
-
     function log($level, $msg)
     {
         if ($this->current_callback) {

@@ -37,17 +37,14 @@ class PEAR_Task_Windowseol_rw extends PEAR_Task_Windowseol
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
-
     function validate()
     {
         return true;
     }
-
     function getName()
     {
         return 'windowseol';
     }
-
     function getXml()
     {
         return '';

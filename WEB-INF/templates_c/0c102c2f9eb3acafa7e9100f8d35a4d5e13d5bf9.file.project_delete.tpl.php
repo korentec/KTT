@@ -19,7 +19,6 @@ $_smarty_tpl->decodeProperties(array (
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php if (!is_callable('smarty_modifier_escape')) include '/home/korentecco/public_html/ktt/WEB-INF/lib/smarty/plugins/modifier.escape.php';
 ?><?php echo $_smarty_tpl->getVariable('forms')->value['projectDeleteForm']['open'];?>
-
 <table cellspacing="4" cellpadding="7" border="0">
   <tr>
     <td>

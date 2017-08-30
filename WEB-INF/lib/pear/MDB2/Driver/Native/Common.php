@@ -44,7 +44,6 @@
 //
 // $Id: Common.php 242348 2007-09-09 13:47:36Z quipo $
 //
-
 /**
  * Base class for the natuve modules that is extended by each MDB2 driver
  *

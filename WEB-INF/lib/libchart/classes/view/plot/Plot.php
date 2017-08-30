@@ -102,15 +102,12 @@
 		 * GD image
 		 */
 		protected $img;
-
 		/**
 		 * Drawing primitives
 		 */
 		protected $primitive;
-
 		protected $backGroundColor;
 		protected $textColor;
-
 		/**
 		 * Constructor of Plot.
 		 *
@@ -120,7 +117,6 @@
 		public function Plot($width, $height) {
 			$this->width = $width;
 			$this->height = $height;
-
 			$this->text = new Text();
 			$this->palette = new Palette();
 			
@@ -134,7 +130,6 @@
 			$this->graphPadding = new Padding(50);
 			$this->captionPadding = new Padding(15);
 		}
-
 		/**
 		 * Compute the area inside the outer padding (outside is white).
 		 */
@@ -217,16 +212,13 @@
 			$this->img = imagecreatetruecolor($this->width, $this->height);
 			
 			$this->primitive = new Primitive($this->img);
-
 			$this->backGroundColor = new Color(255, 255, 255);
 			$this->textColor = new Color(0, 0, 0);
-
 			// White background
 			imagefilledrectangle($this->img, 0, 0, $this->width - 1, $this->height - 1, $this->backGroundColor->getColor($this->img));
 			
 			//imagerectangle($this->img, $this->imageArea->x1, $this->imageArea->y1, $this->imageArea->x2, $this->imageArea->y2, $this->palette->red->getColor($this->img));
 		}
-
 		/**
 		 * Print the title to the image.
 		 */
@@ -234,18 +226,15 @@
 			$yCenter = $this->titleArea->y1 + ($this->titleArea->y2 - $this->titleArea->y1) / 2;
 			$this->text->printCentered($this->img, $yCenter, $this->textColor, $this->title, $this->text->fontCondensedBold);
 		}
-
 		/**
 		 * Print the logo image to the image.
 		 */
 		public function printLogo() {
 			@$logoImage = imageCreateFromPNG($this->logoFileName);
-
 			if ($logoImage) {
 				imagecopymerge($this->img, $logoImage, 2 * $this->outerPadding->left, $this->outerPadding->top, 0, 0, imagesx($logoImage), imagesy($logoImage), 100);
 			}
 		}
-
 		/**
 		 * Renders to a file or to standard output.
 		 *
@@ -258,7 +247,6 @@
 				imagepng($this->img);
 			}
 		}
-
 		/**
 		 * Sets the title.
 		 *
@@ -267,7 +255,6 @@
 		public function setTitle($title) {
 			$this->title = $title;
 		}
-
 		/**
 		 * Sets the logo image file name.
 		 *
@@ -276,7 +263,6 @@
 		public function setLogoFileName($logoFileName) {
 			$this->logoFileName = $logoFileName;
 		}
-
 		/**
 		 * Return the GD image.
 		 *
@@ -285,7 +271,6 @@
 		public function getImg() {
 			return $this->img;
 		}
-
 		/**
 		 * Return the palette.
 		 *
@@ -294,7 +279,6 @@
 		public function getPalette() {
 			return $this->palette;
 		}
-
 		/**
 		 * Return the text.
 		 *
@@ -303,7 +287,6 @@
 		public function getText() {
 			return $this->text;
 		}
-
 		/**
 		 * Return the primitive.
 		 *
@@ -312,7 +295,6 @@
 		public function getPrimitive() {
 			return $this->primitive;
 		}
-
 		/**
 		 * Return the outer padding.
 		 *
@@ -321,7 +303,6 @@
 		public function getOuterPadding() {
 			return $outerPadding;
 		}
-
 		/**
 		 * Set the outer padding.
 		 *
@@ -330,7 +311,6 @@
 		public function setOuterPadding($outerPadding) {
 			$this->outerPadding = $outerPadding;
 		}
-
 		/**
 		 * Return the title height.
 		 *
@@ -339,7 +319,6 @@
 		public function setTitleHeight($titleHeight) {
 			$this->titleHeight = $titleHeight;
 		}
-
 		/**
 		 * Return the title padding.
 		 *
@@ -348,7 +327,6 @@
 		public function setTitlePadding($titlePadding) {
 			$this->titlePadding = $titlePadding;
 		}
-
 		/**
 		 * Return the graph padding.
 		 *
@@ -357,7 +335,6 @@
 		public function setGraphPadding($graphPadding) {
 			$this->graphPadding = $graphPadding;
 		}
-
 		/**
 		 * Set if the graph has a caption.
 		 *
@@ -366,7 +343,6 @@
 		public function setHasCaption($hasCaption) {
 			$this->hasCaption = $hasCaption;
 		}
-
 		/**
 		 * Set the caption padding.
 		 *
@@ -375,7 +351,6 @@
 		public function setCaptionPadding($captionPadding) {
 			$this->captionPadding = $captionPadding;
 		}
-
 		/**
 		 * Set the graph/caption ratio.
 		 *
@@ -384,7 +359,6 @@
 		public function setGraphCaptionRatio($graphCaptionRatio) {
 			$this->graphCaptionRatio = $graphCaptionRatio;
 		}
-
 		/**
 		 * Return the graph area.
 		 *
@@ -393,7 +367,6 @@
 		public function getGraphArea() {
 			return $this->graphArea;
 		}
-
 		/**
 		 * Return the caption area.
 		 *
@@ -402,7 +375,6 @@
 		public function getCaptionArea() {
 			return $this->captionArea;
 		}
-
 		/**
 		 * Return the text color.
 		 *

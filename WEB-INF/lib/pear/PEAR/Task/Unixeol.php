@@ -33,7 +33,6 @@ class PEAR_Task_Unixeol extends PEAR_Task_Common
     var $type = 'simple';
     var $phase = PEAR_TASK_PACKAGE;
     var $_replacements;
-
     /**
      * Validate the raw xml at parsing-time.
      * @param PEAR_PackageFile_v2
@@ -48,7 +47,6 @@ class PEAR_Task_Unixeol extends PEAR_Task_Common
         }
         return true;
     }
-
     /**
      * Initialize a task instance with the parameters
      * @param array raw, parsed xml
@@ -57,7 +55,6 @@ class PEAR_Task_Unixeol extends PEAR_Task_Common
     function init($xml, $attribs)
     {
     }
-
     /**
      * Replace all line endings with line endings customized for the current OS
      *

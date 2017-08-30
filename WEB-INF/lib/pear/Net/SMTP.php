@@ -19,10 +19,8 @@
 // +----------------------------------------------------------------------+
 //
 // $Id: SMTP.php 293948 2010-01-24 21:46:00Z jon $
-
 require_once 'PEAR.php';
 require_once 'Net/Socket.php';
-
 /**
  * Provides an implementation of the SMTP protocol using PEAR's
  * Net_Socket:: class.
@@ -42,28 +40,24 @@ class Net_SMTP
      * @access public
      */
     var $host = 'localhost';
-
     /**
      * The port to connect to.
      * @var int
      * @access public
      */
     var $port = 25;
-
     /**
      * The value to give when sending EHLO or HELO.
      * @var string
      * @access public
      */
     var $localhost = 'localhost';
-
     /**
      * List of supported authentication methods, in preferential order.
      * @var array
      * @access public
      */
     var $auth_methods = array('DIGEST-MD5', 'CRAM-MD5', 'LOGIN', 'PLAIN');
-
     /**
      * Use SMTP command pipelining (specified in RFC 2920) if the SMTP
      * server supports it.
@@ -76,63 +70,54 @@ class Net_SMTP
      * @access public
      */
     var $pipelining = false;
-
     /**
      * Number of pipelined commands.
      * @var int
      * @access private
      */
     var $_pipelined_commands = 0;
-
     /**
      * Should debugging output be enabled?
      * @var boolean
      * @access private
      */
     var $_debug = false;
-
     /**
      * Debug output handler.
      * @var callback
      * @access private
      */
     var $_debug_handler = null;
-
     /**
      * The socket resource being used to connect to the SMTP server.
      * @var resource
      * @access private
      */
     var $_socket = null;
-
     /**
      * The most recent server response code.
      * @var int
      * @access private
      */
     var $_code = -1;
-
     /**
      * The most recent server response arguments.
      * @var array
      * @access private
      */
     var $_arguments = array();
-
     /**
      * Stores the SMTP server's greeting string.
      * @var string
      * @access private
      */
     var $_greeting = null;
-
     /**
      * Stores detected features of the SMTP server.
      * @var array
      * @access private
      */
     var $_esmtp = array();
-
     /**
      * Instantiates a new Net_SMTP object, overriding any defaults
      * with parameters that are passed in.
@@ -164,9 +149,7 @@ class Net_SMTP
             $this->localhost = $localhost;
         }
         $this->pipelining = $pipelining;
-
         $this->_socket = new Net_Socket();
-
         /* Include the Auth_SASL package.  If the package is not
          * available, we disable the authentication methods that
          * depend upon it. */
@@ -177,7 +160,6 @@ class Net_SMTP
             unset($this->auth_methods[$pos]);
         }
     }
-
     /**
      * Set the value of the debugging flag.
      *
@@ -191,7 +173,6 @@ class Net_SMTP
         $this->_debug = $debug;
         $this->_debug_handler = $handler;
     }
-
     /**
      * Write the given debug text to the current debug output handler.
      *
@@ -211,7 +192,6 @@ class Net_SMTP
             }
         }
     }
-
     /**
      * Send the given string of data to the server.
      *
@@ -225,16 +205,13 @@ class Net_SMTP
     function _send($data)
     {
         $this->_debug("Send: $data");
-
         $error = $this->_socket->write($data);
         if ($error === false || PEAR::isError($error)) {
             $msg = ($error) ? $error->getMessage() : "unknown error";
             return PEAR::raiseError("Failed to write to socket: $msg");
         }
-
         return true;
     }
-
     /**
      * Send a command to the server with an optional string of
      * arguments.  A carriage return / linefeed (CRLF) sequence will
@@ -257,14 +234,11 @@ class Net_SMTP
         if (!empty($args)) {
             $command .= ' ' . $args;
         }
-
         if (strcspn($command, "\r\n") !== strlen($command)) {
             return PEAR::raiseError('Commands cannot contain newlines');
         }
-
         return $this->_send($command . "\r\n");
     }
-
     /**
      * Read a reply from the SMTP server.  The reply consists of a response
      * code and a response message.
@@ -288,26 +262,21 @@ class Net_SMTP
     {
         $this->_code = -1;
         $this->_arguments = array();
-
         if ($later) {
             $this->_pipelined_commands++;
             return true;
         }
-
         for ($i = 0; $i <= $this->_pipelined_commands; $i++) {
             while ($line = $this->_socket->readLine()) {
                 $this->_debug("Recv: $line");
-
                 /* If we receive an empty line, the connection has been closed. */
                 if (empty($line)) {
                     $this->disconnect();
                     return PEAR::raiseError('Connection was unexpectedly closed');
                 }
-
                 /* Read the code and store the rest in the arguments array. */
                 $code = substr($line, 0, 3);
                 $this->_arguments[] = trim(substr($line, 4));
-
                 /* Check the syntax of the response code. */
                 if (is_numeric($code)) {
                     $this->_code = (int)$code;
@@ -315,27 +284,22 @@ class Net_SMTP
                     $this->_code = -1;
                     break;
                 }
-
                 /* If this is not a multiline response, we're done. */
                 if (substr($line, 3, 1) != '-') {
                     break;
                 }
             }
         }
-
         $this->_pipelined_commands = 0;
-
         /* Compare the server's response code with the valid code/codes. */
         if (is_int($valid) && ($this->_code === $valid)) {
             return true;
         } elseif (is_array($valid) && in_array($this->_code, $valid, true)) {
             return true;
         }
-
         return PEAR::raiseError('Invalid response code received from server',
                                 $this->_code);
     }
-
     /**
      * Return a 2-tuple containing the last response from the SMTP server.
      *
@@ -350,7 +314,6 @@ class Net_SMTP
     {
         return array($this->_code, join("\n", $this->_arguments));
     }
-
     /**
      * Return the SMTP server's greeting string.
      *
@@ -364,7 +327,6 @@ class Net_SMTP
     {
         return $this->_greeting;
     }
-
     /**
      * Attempt to connect to the SMTP server.
      *
@@ -387,21 +349,16 @@ class Net_SMTP
             return PEAR::raiseError('Failed to connect socket: ' .
                                     $result->getMessage());
         }
-
         if (PEAR::isError($error = $this->_parseResponse(220))) {
             return $error;
         }
-
         /* Extract and store a copy of the server's greeting string. */
         list(, $this->_greeting) = $this->getResponse();
-
         if (PEAR::isError($error = $this->_negotiate())) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Attempt to disconnect from the SMTP server.
      *
@@ -422,10 +379,8 @@ class Net_SMTP
             return PEAR::raiseError('Failed to disconnect socket: ' .
                                     $error->getMessage());
         }
-
         return true;
     }
-
     /**
      * Attempt to send the EHLO command and obtain a list of ESMTP
      * extensions available, and failing that just send HELO.
@@ -441,13 +396,11 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_put('EHLO', $this->localhost))) {
             return $error;
         }
-
         if (PEAR::isError($this->_parseResponse(250))) {
             /* If we receive a 503 response, we're already authenticated. */
             if ($this->_code === 503) {
                 return true;
             }
-
             /* If the EHLO failed, try the simpler HELO command. */
             if (PEAR::isError($error = $this->_put('HELO', $this->localhost))) {
                 return $error;
@@ -455,24 +408,19 @@ class Net_SMTP
             if (PEAR::isError($this->_parseResponse(250))) {
                 return PEAR::raiseError('HELO was not accepted: ', $this->_code);
             }
-
             return true;
         }
-
         foreach ($this->_arguments as $argument) {
             $verb = strtok($argument, ' ');
             $arguments = substr($argument, strlen($verb) + 1,
                                 strlen($argument) - strlen($verb) - 1);
             $this->_esmtp[$verb] = $arguments;
         }
-
         if (!isset($this->_esmtp['PIPELINING'])) {
             $this->pipelining = false;
         }
-
         return true;
     }
-
     /**
      * Returns the name of the best authentication method that the server
      * has advertised.
@@ -486,16 +434,13 @@ class Net_SMTP
     function _getBestAuthMethod()
     {
         $available_methods = explode(' ', $this->_esmtp['AUTH']);
-
         foreach ($this->auth_methods as $method) {
             if (in_array($method, $available_methods)) {
                 return $method;
             }
         }
-
         return PEAR::raiseError('No supported authentication methods');
     }
-
     /**
      * Attempt to do SMTP authentication.
      *
@@ -532,16 +477,13 @@ class Net_SMTP
             } elseif ($result !== true) {
                 return PEAR::raiseError('STARTTLS failed');
             }
-
             /* Send EHLO again to recieve the AUTH string from the
              * SMTP server. */
             $this->_negotiate();
         }
-
         if (empty($this->_esmtp['AUTH'])) {
             return PEAR::raiseError('SMTP server does not support authentication');
         }
-
         /* If no method has been specified, get the name of the best
          * supported method advertised by the SMTP server. */
         if (empty($method)) {
@@ -555,37 +497,29 @@ class Net_SMTP
                 return PEAR::raiseError("$method is not a supported authentication method");
             }
         }
-
         switch ($method) {
         case 'DIGEST-MD5':
             $result = $this->_authDigest_MD5($uid, $pwd);
             break;
-
         case 'CRAM-MD5':
             $result = $this->_authCRAM_MD5($uid, $pwd);
             break;
-
         case 'LOGIN':
             $result = $this->_authLogin($uid, $pwd);
             break;
-
         case 'PLAIN':
             $result = $this->_authPlain($uid, $pwd);
             break;
-
         default:
             $result = PEAR::raiseError("$method is not a supported authentication method");
             break;
         }
-
         /* If an error was encountered, return the PEAR_Error object. */
         if (PEAR::isError($result)) {
             return $result;
         }
-
         return true;
     }
-
     /**
      * Authenticates the user using the DIGEST-MD5 method.
      *
@@ -610,12 +544,10 @@ class Net_SMTP
             }
             return $error;
         }
-
         $challenge = base64_decode($this->_arguments[0]);
         $digest = &Auth_SASL::factory('digestmd5');
         $auth_str = base64_encode($digest->getResponse($uid, $pwd, $challenge,
                                                        $this->host, "smtp"));
-
         if (PEAR::isError($error = $this->_put($auth_str))) {
             return $error;
         }
@@ -623,7 +555,6 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(334))) {
             return $error;
         }
-
         /* We don't use the protocol's third step because SMTP doesn't
          * allow subsequent authentication, so we just silently ignore
          * it. */
@@ -635,7 +566,6 @@ class Net_SMTP
             return $error;
         }
     }
-
     /**
      * Authenticates the user using the CRAM-MD5 method.
      *
@@ -660,21 +590,17 @@ class Net_SMTP
             }
             return $error;
         }
-
         $challenge = base64_decode($this->_arguments[0]);
         $cram = &Auth_SASL::factory('crammd5');
         $auth_str = base64_encode($cram->getResponse($uid, $pwd, $challenge));
-
         if (PEAR::isError($error = $this->_put($auth_str))) {
             return $error;
         }
-
         /* 235: Authentication successful */
         if (PEAR::isError($error = $this->_parseResponse(235))) {
             return $error;
         }
     }
-
     /**
      * Authenticates the user using the LOGIN method.
      *
@@ -699,7 +625,6 @@ class Net_SMTP
             }
             return $error;
         }
-
         if (PEAR::isError($error = $this->_put(base64_encode($uid)))) {
             return $error;
         }
@@ -707,19 +632,15 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(334))) {
             return $error;
         }
-
         if (PEAR::isError($error = $this->_put(base64_encode($pwd)))) {
             return $error;
         }
-
         /* 235: Authentication successful */
         if (PEAR::isError($error = $this->_parseResponse(235))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Authenticates the user using the PLAIN method.
      *
@@ -744,21 +665,16 @@ class Net_SMTP
             }
             return $error;
         }
-
         $auth_str = base64_encode(chr(0) . $uid . chr(0) . $pwd);
-
         if (PEAR::isError($error = $this->_put($auth_str))) {
             return $error;
         }
-
         /* 235: Authentication successful */
         if (PEAR::isError($error = $this->_parseResponse(235))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Send the HELO command.
      *
@@ -777,10 +693,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Return the list of SMTP service extensions advertised by the server.
      *
@@ -792,7 +706,6 @@ class Net_SMTP
     {
         return $this->_esmtp;
     }
-
     /**
      * Send the MAIL FROM: command.
      *
@@ -815,13 +728,11 @@ class Net_SMTP
     function mailFrom($sender, $params = null)
     {
         $args = "FROM:<$sender>";
-
         /* Support the deprecated array form of $params. */
         if (is_array($params) && isset($params['verp'])) {
             /* XVERP */
             if ($params['verp'] === true) {
                 $args .= ' XVERP';
-
             /* XVERP=something */
             } elseif (trim($params['verp'])) {
                 $args .= ' XVERP=' . $params['verp'];
@@ -829,17 +740,14 @@ class Net_SMTP
         } elseif (is_string($params)) {
             $args .= ' ' . $params;
         }
-
         if (PEAR::isError($error = $this->_put('MAIL', $args))) {
             return $error;
         }
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Send the RCPT TO: command.
      *
@@ -859,17 +767,14 @@ class Net_SMTP
         if (is_string($params)) {
             $args .= ' ' . $params;
         }
-
         if (PEAR::isError($error = $this->_put('RCPT', $args))) {
             return $error;
         }
         if (PEAR::isError($error = $this->_parseResponse(array(250, 251), $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Quote the data so that it meets SMTP standards.
      *
@@ -888,13 +793,11 @@ class Net_SMTP
         /* Change Unix (\n) and Mac (\r) linefeeds into
          * Internet-standard CRLF (\r\n) linefeeds. */
         $data = preg_replace(array('/(?<!\r)\n/','/\r(?!\n)/'), "\r\n", $data);
-
         /* Because a single leading period (.) signifies an end to the
          * data, legitimate leading periods need to be "doubled"
          * (e.g. '..'). */
         $data = str_replace("\n.", "\n..", $data);
     }
-
     /**
      * Send the DATA command.
      *
@@ -914,7 +817,6 @@ class Net_SMTP
         if (!is_string($data) && !is_resource($data)) {
             return PEAR::raiseError('Expected a string or file resource');
         }
-
         /* RFC 1870, section 3, subsection 3 states "a value of zero
          * indicates that no fixed maximum message size is in force".
          * Furthermore, it says that if "the parameter is omitted no
@@ -925,7 +827,6 @@ class Net_SMTP
              * We also account for the addition 4 character "\r\n\r\n"
              * separator sequence. */
             $size = (is_null($headers)) ? 0 : strlen($headers) + 4;
-
             if (is_resource($data)) {
                 $stat = fstat($data);
                 if ($stat === false) {
@@ -935,13 +836,11 @@ class Net_SMTP
             } else {
                 $size += strlen($data);
             }
-
             if ($size >= $this->_esmtp['SIZE']) {
                 $this->disconnect();
                 return PEAR::raiseError('Message size exceeds server limit');
             }
         }
-
         /* Initiate the DATA command. */
         if (PEAR::isError($error = $this->_put('DATA'))) {
             return $error;
@@ -949,7 +848,6 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(354))) {
             return $error;
         }
-
         /* If we have a separate headers string, send it first. */
         if (!is_null($headers)) {
             $this->quotedata($headers);
@@ -957,7 +855,6 @@ class Net_SMTP
                 return $result;
             }
         }
-
         /* Now we can send the message body data. */
         if (is_resource($data)) {
             /* Stream the contents of the file resource out over our socket 
@@ -969,7 +866,6 @@ class Net_SMTP
                     return $result;
                 }
             }
-
             /* Finally, send the DATA terminator sequence. */
             if (PEAR::isError($result = $this->_send("\r\n.\r\n"))) {
                 return $result;
@@ -982,15 +878,12 @@ class Net_SMTP
                 return $result;
             }
         }
-
         /* Verify that the data was successfully received by the server. */
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Send the SEND FROM: command.
      *
@@ -1009,10 +902,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Backwards-compatibility wrapper for sendFrom().
      *
@@ -1029,7 +920,6 @@ class Net_SMTP
     {
         return sendFrom($path);
     }
-
     /**
      * Send the SOML FROM: command.
      *
@@ -1048,10 +938,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Backwards-compatibility wrapper for somlFrom().
      *
@@ -1068,7 +956,6 @@ class Net_SMTP
     {
         return somlFrom($path);
     }
-
     /**
      * Send the SAML FROM: command.
      *
@@ -1087,10 +974,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Backwards-compatibility wrapper for samlFrom().
      *
@@ -1107,7 +992,6 @@ class Net_SMTP
     {
         return samlFrom($path);
     }
-
     /**
      * Send the RSET command.
      *
@@ -1124,10 +1008,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250, $this->pipelining))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Send the VRFY command.
      *
@@ -1147,10 +1029,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(array(250, 252)))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Send the NOOP command.
      *
@@ -1167,10 +1047,8 @@ class Net_SMTP
         if (PEAR::isError($error = $this->_parseResponse(250))) {
             return $error;
         }
-
         return true;
     }
-
     /**
      * Backwards-compatibility method.  identifySender()'s functionality is
      * now handled internally.
@@ -1184,5 +1062,4 @@ class Net_SMTP
     {
         return true;
     }
-
 }

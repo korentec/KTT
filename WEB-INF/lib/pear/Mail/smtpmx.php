@@ -1,6 +1,5 @@
 <?PHP
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
-
 /**
  * SMTP MX
  *
@@ -46,9 +45,7 @@
  * @version    CVS: $Id: smtpmx.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link       http://pear.php.net/package/Mail/
  */
-
 require_once 'Net/SMTP.php';
-
 /**
  * SMTP MX implementation of the PEAR Mail interface. Requires the Net_SMTP class.
  *
@@ -59,7 +56,6 @@ require_once 'Net/SMTP.php';
  * @version $Revision: 294747 $
  */
 class Mail_smtpmx extends Mail {
-
     /**
      * SMTP connection object.
      *
@@ -67,14 +63,12 @@ class Mail_smtpmx extends Mail {
      * @access private
      */
     var $_smtp = null;
-
     /**
      * The port the SMTP server is on.
      * @var integer
      * @see getservicebyname()
      */
     var $port = 25;
-
     /**
      * Hostname or domain that will be sent to the remote SMTP server in the
      * HELO / EHLO message.
@@ -83,28 +77,24 @@ class Mail_smtpmx extends Mail {
      * @see posix_uname()
      */
     var $mailname = 'localhost';
-
     /**
      * SMTP connection timeout value.  NULL indicates no timeout.
      *
      * @var integer
      */
     var $timeout = 10;
-
     /**
      * use either PEAR:Net_DNS or getmxrr
      *
      * @var boolean
      */
     var $withNetDns = true;
-
     /**
      * PEAR:Net_DNS_Resolver
      *
      * @var object
      */
     var $resolver;
-
     /**
      * Whether to use VERP or not. If not a boolean, the string value
      * will be used as the VERP separators.
@@ -112,28 +102,24 @@ class Mail_smtpmx extends Mail {
      * @var mixed boolean or string
      */
     var $verp = false;
-
     /**
      * Whether to use VRFY or not.
      *
      * @var boolean $vrfy
      */
     var $vrfy = false;
-
     /**
      * Switch to test mode - don't send emails for real
      *
      * @var boolean $debug
      */
     var $test = false;
-
     /**
      * Turn on Net_SMTP debugging?
      *
      * @var boolean $peardebug
      */
     var $debug = false;
-
     /**
      * internal error codes
      *
@@ -188,7 +174,6 @@ class Mail_smtpmx extends Mail {
             'msg'   => 'RSET command failed, SMTP-connection corrupt.'
         ),
     );
-
     /**
      * Constructor.
      *
@@ -222,21 +207,18 @@ class Mail_smtpmx extends Mail {
                 $this->mailname = $uname['nodename'];
             }
         }
-
         // port number
         if (isset($params['port'])) {
             $this->_port = $params['port'];
         } else {
             $this->_port = getservbyname('smtp', 'tcp');
         }
-
         if (isset($params['timeout'])) $this->timeout = $params['timeout'];
         if (isset($params['verp'])) $this->verp = $params['verp'];
         if (isset($params['test'])) $this->test = $params['test'];
         if (isset($params['peardebug'])) $this->test = $params['peardebug'];
         if (isset($params['netdns'])) $this->withNetDns = $params['netdns'];
     }
-
     /**
      * Constructor wrapper for PHP4
      *
@@ -249,7 +231,6 @@ class Mail_smtpmx extends Mail {
         $this->__construct($params);
         register_shutdown_function(array(&$this, '__destruct'));
     }
-
     /**
      * Destructor implementation to ensure that we disconnect from any
      * potentially-alive persistent SMTP connections.
@@ -261,7 +242,6 @@ class Mail_smtpmx extends Mail {
             $this->_smtp = null;
         }
     }
-
     /**
      * Implements Mail::send() function using SMTP direct delivery
      *
@@ -276,19 +256,16 @@ class Mail_smtpmx extends Mail {
         if (!is_array($headers)) {
             return PEAR::raiseError('$headers must be an array');
         }
-
         $result = $this->_sanitizeHeaders($headers);
         if (is_a($result, 'PEAR_Error')) {
             return $result;
         }
-
         // Prepare headers
         $headerElements = $this->prepareHeaders($headers);
         if (is_a($headerElements, 'PEAR_Error')) {
             return $headerElements;
         }
         list($from, $textHeaders) = $headerElements;
-
         // use 'Return-Path' if possible
         if (!empty($headers['Return-Path'])) {
             $from = $headers['Return-Path'];
@@ -296,49 +273,40 @@ class Mail_smtpmx extends Mail {
         if (!isset($from)) {
             return $this->_raiseError('no_from');
         }
-
         // Prepare recipients
         $recipients = $this->parseRecipients($recipients);
         if (is_a($recipients, 'PEAR_Error')) {
             return $recipients;
         }
-
         foreach ($recipients as $rcpt) {
             list($user, $host) = explode('@', $rcpt);
-
             $mx = $this->_getMx($host);
             if (is_a($mx, 'PEAR_Error')) {
                 return $mx;
             }
-
             if (empty($mx)) {
                 $info = array('rcpt' => $rcpt);
                 return $this->_raiseError('no_mx', $info);
             }
-
             $connected = false;
             foreach ($mx as $mserver => $mpriority) {
                 $this->_smtp = new Net_SMTP($mserver, $this->port, $this->mailname);
-
                 // configure the SMTP connection.
                 if ($this->debug) {
                     $this->_smtp->setDebug(true);
                 }
-
                 // attempt to connect to the configured SMTP server.
                 $res = $this->_smtp->connect($this->timeout);
                 if (is_a($res, 'PEAR_Error')) {
                     $this->_smtp = null;
                     continue;
                 }
-
                 // connection established
                 if ($res) {
                     $connected = true;
                     break;
                 }
             }
-
             if (!$connected) {
                 $info = array(
                     'host' => implode(', ', array_keys($mx)),
@@ -347,7 +315,6 @@ class Mail_smtpmx extends Mail {
                 );
                 return $this->_raiseError('not_connected', $info);
             }
-
             // Verify recipient
             if ($this->vrfy) {
                 $res = $this->_smtp->vrfy($rcpt);
@@ -356,7 +323,6 @@ class Mail_smtpmx extends Mail {
                     return $this->_raiseError('failed_vrfy_rcpt', $info);
                 }
             }
-
             // mail from:
             $args['verp'] = $this->verp;
             $res = $this->_smtp->mailFrom($from, $args);
@@ -364,14 +330,12 @@ class Mail_smtpmx extends Mail {
                 $info = array('from' => $from);
                 return $this->_raiseError('failed_set_from', $info);
             }
-
             // rcpt to:
             $res = $this->_smtp->rcptTo($rcpt);
             if (is_a($res, 'PEAR_Error')) {
                 $info = array('rcpt' => $rcpt);
                 return $this->_raiseError('failed_set_rcpt', $info);
             }
-
             // Don't send anything in test mode
             if ($this->test) {
                 $result = $this->_smtp->rset();
@@ -379,26 +343,21 @@ class Mail_smtpmx extends Mail {
                 if (is_a($res, 'PEAR_Error')) {
                     return $this->_raiseError('failed_rset');
                 }
-
                 $this->_smtp->disconnect();
                 $this->_smtp = null;
                 return true;
             }
-
             // Send data
             $res = $this->_smtp->data("$textHeaders\r\n$body");
             if (is_a($res, 'PEAR_Error')) {
                 $info = array('rcpt' => $rcpt);
                 return $this->_raiseError('failed_send_data', $info);
             }
-
             $this->_smtp->disconnect();
             $this->_smtp = null;
         }
-
         return true;
     }
-
     /**
      * Recieve mx rexords for a spciefied host
      *
@@ -411,18 +370,15 @@ class Mail_smtpmx extends Mail {
     function _getMx($host)
     {
         $mx = array();
-
         if ($this->withNetDns) {
             $res = $this->_loadNetDns();
             if (is_a($res, 'PEAR_Error')) {
                 return $res;
             }
-
             $response = $this->resolver->query($host, 'MX');
             if (!$response) {
                 return false;
             }
-
             foreach ($response->answer as $rr) {
                 if ($rr->type == 'MX') {
                     $mx[$rr->exchange] = $rr->preference;
@@ -431,7 +387,6 @@ class Mail_smtpmx extends Mail {
         } else {
             $mxHost = array();
             $mxWeight = array();
-
             if (!getmxrr($host, $mxHost, $mxWeight)) {
                 return false;
             }
@@ -439,11 +394,9 @@ class Mail_smtpmx extends Mail {
                 $mx[$mxHost[$i]] = $mxWeight[$i];
             }
         }
-
         asort($mx);
         return $mx;
     }
-
     /**
      * initialize PEAR:Net_DNS_Resolver
      *
@@ -455,19 +408,15 @@ class Mail_smtpmx extends Mail {
         if (is_object($this->resolver)) {
             return true;
         }
-
         if (!include_once 'Net/DNS.php') {
             return $this->_raiseError('no_resolver');
         }
-
         $this->resolver = new Net_DNS_Resolver();
         if ($this->debug) {
             $this->resolver->test = 1;
         }
-
         return true;
     }
-
     /**
      * raise standardized error
      *
@@ -482,21 +431,16 @@ class Mail_smtpmx extends Mail {
     {
         $code = $this->errorCode[$id]['code'];
         $msg = $this->errorCode[$id]['msg'];
-
         // include info to messages
         if (!empty($info)) {
             $search = array();
             $replace = array();
-
             foreach ($info as $key => $value) {
                 array_push($search, '{' . strtoupper($key) . '}');
                 array_push($replace, $value);
             }
-
             $msg = str_replace($search, $replace, $msg);
         }
-
         return PEAR::raiseError($msg, $code);
     }
-
 }

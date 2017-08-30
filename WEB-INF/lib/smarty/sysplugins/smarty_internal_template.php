@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Template
  * 
@@ -9,7 +8,6 @@
  * @subpackage Templates
  * @author Uwe Tews 
  */
-
 /**
  * Main class with template data structures and methods
  */
@@ -101,7 +99,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         }
  
     } 
-
     /**
      * Returns the template filepath
      * 
@@ -115,7 +112,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->template_filepath = $this->resource_object->getTemplateFilepath($this) :
         $this->template_filepath;
     } 
-
     /**
      * Returns the timpestamp of the template source
      * 
@@ -129,7 +125,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->template_timestamp = $this->resource_object->getTemplateTimestamp($this) :
         $this->template_timestamp;
     } 
-
     /**
      * Returns the template source code
      * 
@@ -146,7 +141,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return $this->template_source;
     } 
-
     /**
      * Returns if the  template is existing
      * 
@@ -164,7 +158,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return $this->isExisting;
     } 
-
     /**
      * Returns if the current template must be compiled by the Smarty compiler
      * 
@@ -182,7 +175,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return $this->mustCompile;
     } 
-
     /**
      * Returns the compiled template filepath
      * 
@@ -194,7 +186,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         ($this->compiled_filepath = !$this->resource_object->isEvaluated ? $this->resource_object->getCompiledFilepath($this) : false) :
         $this->compiled_filepath;
     } 
-
     /**
      * Returns the timpestamp of the compiled template
      * 
@@ -206,7 +197,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         ($this->compiled_timestamp = (!$this->resource_object->isEvaluated && file_exists($this->getCompiledFilepath())) ? filemtime($this->getCompiledFilepath()) : false) :
         $this->compiled_timestamp;
     } 
-
     /**
      * Returns the compiled template 
      * 
@@ -228,7 +218,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return $this->compiled_template;
     } 
-
     /**
      * Compiles the template
      * 
@@ -284,7 +273,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         	$this->compiler_object
         	); 
     } 
-
     /**
      * Returns the filepath of the cached template output
      * 
@@ -298,7 +286,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->cached_filepath = ($this->resource_object->isEvaluated || !($this->caching == Smarty::CACHING_LIFETIME_CURRENT || $this->caching == Smarty::CACHING_LIFETIME_SAVED)) ? false : $this->cache_resource_object->getCachedFilepath($this) :
         $this->cached_filepath;
     } 
-
     /**
      * Returns the timpestamp of the cached template output
      * 
@@ -312,7 +299,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->cached_timestamp = ($this->resource_object->isEvaluated || !($this->caching == Smarty::CACHING_LIFETIME_CURRENT || $this->caching == Smarty::CACHING_LIFETIME_SAVED)) ? false : $this->cache_resource_object->getCachedTimestamp($this) :
         $this->cached_timestamp;
     } 
-
     /**
      * Returns the cached template output
      * 
@@ -324,7 +310,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->rendered_content = ($this->resource_object->isEvaluated || !($this->caching == Smarty::CACHING_LIFETIME_CURRENT || $this->caching == Smarty::CACHING_LIFETIME_SAVED)) ? false : $this->cache_resource_object->getCachedContents($this) :
         $this->rendered_content;
     } 
-
     /**
      * Writes the cached template output
      */
@@ -337,7 +322,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->properties['cache_lifetime'] = $this->cache_lifetime;
         return $this->cache_resource_object->writeCachedContent($this, $this->createPropertyHeader(true) .$content);
     } 
-
     /**
      * Checks of a valid version redered HTML output is in the cache
      * 
@@ -407,7 +391,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return $this->isCached;
     } 
-
     /**
      * Render the output using the compiled template or the PHP template source
      * 
@@ -531,7 +514,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             } 
         } 
     } 
-
     /**
      * Returns the rendered HTML output 
      * 
@@ -571,7 +553,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $this->isCached = null;
         return $this->rendered_content;
     } 
-
     /**
      * Parse a template resource in its name and type
      * Load required resource handler
@@ -594,7 +575,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return true;
     } 
-
     /**
      * get system filepath to template
      */
@@ -639,7 +619,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         } 
         return false;
     } 
-
     /**
      * Update Smarty variables in other scopes
      */
@@ -694,7 +673,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             } 
         } 
     } 
-
     /**
      * Split a template resource in its name and type
      * 
@@ -718,7 +696,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             }
         } 
     } 
-
     /**
      * Load template resource handler by type
      * 
@@ -760,7 +737,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             } 
         } 
     } 
-
     /**
      * Create property header
      */
@@ -811,7 +787,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         $properties_string .= "\$_smarty_tpl->decodeProperties(" . var_export($this->properties, true) . "); /*/%%SmartyHeaderCode%%*/?>\n";
         return $properties_string . $plugins_string;
     } 
-
     /**
      * Decode saved properties from compiled template and cache files
      */
@@ -830,7 +805,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             $this->smarty->template_functions = array_merge($this->smarty->template_functions, $properties['function']);
         } 
     } 
-
     /**
      * creates a local Smarty variable for array assignments
      */
@@ -851,7 +825,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
             settype($this->tpl_vars[$tpl_var]->value, 'array');
         } 
     } 
-
     /**
      * [util function] counts an array, arrayaccess/traversable or PDOStatement object
      * @param mixed $value
@@ -879,7 +852,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
        }
        return 0;
     }
-
     /**
      * wrapper for fetch
      */
@@ -911,7 +883,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         }
        
     } 
-
     /**
      * set Smarty property in template context      
      * @param string $property_name property name
@@ -927,7 +898,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         	throw new SmartyException("invalid template property '$property_name'.");
         }
     }
-
     /**
      * get Smarty property in template context      
      * @param string $property_name property name
@@ -953,7 +923,6 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         	throw new SmartyException("template property '$property_name' does not exist.");
         }
     }
-
 
     /**
      * Takes unknown class methods and lazy loads sysplugin files for them
@@ -993,6 +962,5 @@ class Smarty_Internal_Template extends Smarty_Internal_Data {
         // pass call to Smarty object 	
         return call_user_func_array(array($this->smarty,$name),$args);
     } 
-
 }
 ?>

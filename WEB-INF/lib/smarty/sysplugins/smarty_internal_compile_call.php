@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Function_Call
  * 
@@ -9,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Function_Call Class
  */
@@ -18,7 +16,6 @@ class Smarty_Internal_Compile_Call extends Smarty_Internal_CompileBase {
     public $required_attributes = array('name');
     public $shorttag_order = array('name');
     public $optional_attributes = array('_any'); 
-
     /**
      * Compiles the calls of user defined tags defined by {function}
      * 
@@ -104,5 +101,4 @@ class Smarty_Internal_Compile_Call extends Smarty_Internal_CompileBase {
         return $_output;
     } 
 } 
-
 ?>

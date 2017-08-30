@@ -34,13 +34,11 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
     var $_config;
     var $_logger;
     var $_registry;
-
     function setConfig(&$c)
     {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
-
     function setLogger(&$l)
     {
         $this->_logger = &$l;
@@ -70,7 +68,6 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
         }
         return $data;
     }
-
     /**
      * post-process data
      *
@@ -84,7 +81,6 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
         }
         return trim($data);
     }
-
     /**
      * @param string
      * @param string file name of the package.xml
@@ -98,14 +94,12 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
         if (PEAR::isError($err = parent::parse($data, $file))) {
             return $err;
         }
-
         $ret = new $class;
         $ret->encoding = $this->encoding;
         $ret->setConfig($this->_config);
         if (isset($this->_logger)) {
             $ret->setLogger($this->_logger);
         }
-
         $ret->fromArray($this->_unserializedData);
         $ret->setPackagefile($file, $archive);
         return $ret;

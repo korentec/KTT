@@ -33,7 +33,6 @@ class PEAR_Task_Replace extends PEAR_Task_Common
     var $type = 'simple';
     var $phase = PEAR_TASK_PACKAGEANDINSTALL;
     var $_replacements;
-
     /**
      * Validate the raw xml at parsing-time.
      * @param PEAR_PackageFile_v2
@@ -87,7 +86,6 @@ class PEAR_Task_Replace extends PEAR_Task_Common
         }
         return true;
     }
-
     /**
      * Initialize a task instance with the parameters
      * @param array raw, parsed xml
@@ -97,7 +95,6 @@ class PEAR_Task_Replace extends PEAR_Task_Common
     {
         $this->_replacements = isset($xml['attribs']) ? array($xml) : $xml;
     }
-
     /**
      * Do a package.xml 1.0 replacement, with additional package-info fields available
      *

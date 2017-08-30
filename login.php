@@ -25,12 +25,10 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 require_once('initialize.php');
 import('form.Form');
 import('ttTeamHelper');
 import('ttUser');
-
 $cl_login = $request->getParameter('login');
 $cl_password = $request->getParameter('password');
 if ($cl_login == null && $request->getMethod() == 'GET')
@@ -40,7 +38,6 @@ $form->addInput(array('type'=>'text','size'=>'25','maxlength'=>'100','name'=>'lo
 $form->addInput(array('type'=>'text','size'=>'25','maxlength'=>'50','name'=>'password','style'=>'width: 220px;','aspassword'=>true,'value'=>$cl_password));
 $form->addInput(array('type'=>'hidden','name'=>'browser_today','value'=>'')); // User current date, which gets filled in on btn_login click.
 $form->addInput(array('type'=>'submit','name'=>'btn_login','onclick'=>'browser_today.value=get_date()','value'=>$i18n->getKey('button.login')));
-
 
 if ($request->getMethod() == 'POST') {
   // Validate user input.
@@ -79,13 +76,10 @@ if ($request->getMethod() == 'POST') {
       $errors->add($i18n->getKey('error.auth'));
   }
 }
-
 if(!isTrue(MULTITEAM_MODE) && !ttTeamHelper::getTeams())
   $errors->add($i18n->getKey('error.no_teams'));
-
 // Determine whether to show login hint. It is currently used only for Windows LDAP authentication.
 $show_hint = ('ad' == $GLOBALS['AUTH_MODULE_PARAMS']['type']);
-
 $smarty->assign('forms', array($form->getName()=>$form->toArray()));
 $smarty->assign('show_hint', $show_hint);
 $smarty->assign('onload', 'onLoad="document.loginForm.'.(!$cl_login?'login':'password').'.focus()"');

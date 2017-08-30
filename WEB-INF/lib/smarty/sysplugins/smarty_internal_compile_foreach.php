@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Foreach Class
  */
@@ -17,7 +16,6 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
     public $required_attributes = array('from', 'item');
     public $optional_attributes = array('name', 'key'); 
     public $shorttag_order = array('from','item','key','name');
-
     /**
      * Compiles code for the {foreach} tag
      * 
@@ -32,24 +30,19 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
         $tpl = $compiler->template; 
         // check and get attributes
         $_attr = $this->_get_attributes($args);
-
         $from = $_attr['from'];
         $item = $_attr['item'];
-
         if (substr_compare("\$_smarty_tpl->getVariable($item)", $from,0, strlen("\$_smarty_tpl->getVariable($item)")) == 0) {
             $this->compiler->trigger_template_error("item variable {$item} may not be the same variable as at 'from'", $this->compiler->lex->taglineno);
         } 
-
         if (isset($_attr['key'])) {
             $key = $_attr['key'];
         } else {
             $key = null;
         } 
-
         $this->_open_tag('foreach', array('foreach', $this->compiler->nocache, $item, $key)); 
         // maybe nocache because of nocache variables
         $this->compiler->nocache = $this->compiler->nocache | $this->compiler->tag_nocache;
-
         if (isset($_attr['name'])) {
             $name = $_attr['name'];
             $has_name = true;
@@ -73,7 +66,6 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
             $usesSmartyTotal = false;
             $usesSmartyShow = false;
         } 
-
         $usesPropFirst = $usesSmartyFirst || strpos($tpl->template_source, $ItemVarName . 'first') !== false;
         $usesPropLast = $usesSmartyLast || strpos($tpl->template_source, $ItemVarName . 'last') !== false;
         $usesPropIndex = $usesPropFirst || strpos($tpl->template_source, $ItemVarName . 'index') !== false;
@@ -151,11 +143,9 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
             } 
         } 
         $output .= "?>";
-
         return $output;
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile Foreachelse Class
  */
@@ -173,14 +163,11 @@ class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase {
         $this->compiler = $compiler; 
         // check and get attributes
         $_attr = $this->_get_attributes($args);
-
         list($_open_tag, $nocache, $item, $key) = $this->_close_tag(array('foreach'));
         $this->_open_tag('foreachelse', array('foreachelse', $nocache, $item, $key));
-
         return "<?php }} else { ?>";
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile Foreachclose Class
  */
@@ -202,18 +189,15 @@ class Smarty_Internal_Compile_Foreachclose extends Smarty_Internal_CompileBase {
         if ($this->compiler->nocache) {
             $this->compiler->tag_nocache = true;
         } 
-
         list($_open_tag, $this->compiler->nocache, $item, $key) = $this->_close_tag(array('foreach', 'foreachelse'));
         unset($compiler->local_var[$item]);
         if ($key != null) {
             unset($compiler->local_var[$key]);
         } 
-
         if ($_open_tag == 'foreachelse')
             return "<?php } ?>";
         else
             return "<?php }} ?>";
     } 
 } 
-
 ?>

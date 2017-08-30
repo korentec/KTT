@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Resource Extends
  * 
@@ -9,7 +8,6 @@
  * @subpackage TemplateResources
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Resource Extends
  */
@@ -28,7 +26,6 @@ class Smarty_Internal_Resource_Extends {
     public $usesCompiler = true;
     public $isEvaluated = false;
     public $allFilepaths = array();
-
     /**
      * Return flag if template source is existing
      * 
@@ -68,7 +65,6 @@ class Smarty_Internal_Resource_Extends {
         $_template->templateUid = sha1($sha1String);
         return $_filepath;
     } 
-
     /**
      * Get timestamp to template source
      * 
@@ -79,7 +75,6 @@ class Smarty_Internal_Resource_Extends {
     {
         return filemtime($_template->getTemplateFilepath());
     } 
-
     /**
      * Read template source from file
      * 
@@ -133,7 +128,6 @@ class Smarty_Internal_Resource_Extends {
         } 
     }
     
-
     /**
      * Get filepath to compiled template
      * 
@@ -172,5 +166,4 @@ class Smarty_Internal_Resource_Extends {
         return $_compile_dir . $_filepath . '.' . $_template->resource_type . '.' . basename($_files[count($_files)-1]) . $_cache . '.php';
     } 
 } 
-
 ?>

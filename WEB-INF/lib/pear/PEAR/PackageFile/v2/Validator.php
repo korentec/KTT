@@ -232,17 +232,14 @@ class PEAR_PackageFile_v2_Validator
                 }
             }
         }
-
         if ($fail) {
             return false;
         }
-
         $list = $this->_packageInfo['contents'];
         if (isset($list['dir']) && is_array($list['dir']) && isset($list['dir'][0])) {
             $this->_multipleToplevelDirNotAllowed();
             return $this->_isValid = 0;
         }
-
         $this->_validateFilelist();
         $this->_validateRelease();
         if (!$this->_stack->hasErrors()) {
@@ -277,7 +274,6 @@ class PEAR_PackageFile_v2_Validator
                 }
             }
         }
-
         $this->_pf->_isValid = $this->_isValid = !$this->_stack->hasErrors('error');
         if ($this->_isValid && $state == PEAR_VALIDATE_PACKAGING && !$this->_filesValid) {
             if ($this->_pf->getPackageType() == 'bundle') {
@@ -294,14 +290,11 @@ class PEAR_PackageFile_v2_Validator
                 }
             }
         }
-
         if ($this->_isValid) {
             return $this->_pf->_isValid = $this->_isValid = $state;
         }
-
         return $this->_pf->_isValid = $this->_isValid = 0;
     }
-
     function _stupidSchemaValidate($structure, $xml, $root)
     {
         if (!is_array($xml)) {
@@ -404,7 +397,6 @@ class PEAR_PackageFile_v2_Validator
         }
         return $ret;
     }
-
     function _processAttribs($choice, $tag, $context)
     {
         if (isset($choice['attribs'])) {
@@ -439,7 +431,6 @@ class PEAR_PackageFile_v2_Validator
         }
         return true;
     }
-
     function _processStructure($key)
     {
         $ret = array();
@@ -463,7 +454,6 @@ class PEAR_PackageFile_v2_Validator
         }
         return $ret;
     }
-
     function _validateStabilityVersion()
     {
         $structure = array('release', 'api');
@@ -488,7 +478,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateMaintainers()
     {
         $structure =
@@ -512,7 +501,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validatePhpDep($dep, $installcondition = false)
     {
         $structure = array(
@@ -547,7 +535,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validatePearinstallerDep($dep)
     {
         $structure = array(
@@ -591,7 +578,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validatePackageDep($dep, $group, $type = '<package>')
     {
         if (isset($dep['uri'])) {
@@ -676,7 +662,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateSubpackageDep($dep, $group)
     {
         $this->_validatePackageDep($dep, $group, '<subpackage>');
@@ -687,7 +672,6 @@ class PEAR_PackageFile_v2_Validator
             $this->_subpackagesCannotConflict(isset($dep['name']) ? $dep['name'] : '');
         }
     }
-
     function _validateExtensionDep($dep, $group = false, $installcondition = false)
     {
         if (isset($dep['conflicts'])) {
@@ -746,7 +730,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateOsDep($dep, $installcondition = false)
     {
         $structure = array(
@@ -762,7 +745,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateArchDep($dep, $installcondition = false)
     {
         $structure = array(
@@ -772,7 +754,6 @@ class PEAR_PackageFile_v2_Validator
         $type = $installcondition ? '<installcondition><arch>' : '<dependencies><required><arch>';
         $this->_stupidSchemaValidate($structure, $dep, $type);
     }
-
     function _validateInstallConditions($cond, $release)
     {
         $structure = array(
@@ -801,7 +782,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateDependencies()
     {
         $structure = array(
@@ -921,7 +901,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateCompatible()
     {
         $compat = $this->_packageInfo['compatible'];
@@ -960,7 +939,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateBundle($list)
     {
         if (!is_array($list) || !isset($list['bundledpackage'])) {
@@ -975,7 +953,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateFilelist($list = false, $allowignore = false, $dirs = '')
     {
         $iscontents = false;
@@ -1214,7 +1191,6 @@ class PEAR_PackageFile_v2_Validator
             }
         }
     }
-
     function _validateRelease()
     {
         if (isset($this->_packageInfo['phprelease'])) {
@@ -1329,13 +1305,11 @@ class PEAR_PackageFile_v2_Validator
             }
             if (is_array($rel) && array_key_exists('filelist', $rel)) {
                 if ($rel['filelist']) {
-
                     $this->_validateFilelist($rel['filelist'], true);
                 }
             }
         }
     }
-
     /**
      * This is here to allow role extension through plugins
      * @param string
@@ -1344,7 +1318,6 @@ class PEAR_PackageFile_v2_Validator
     {
         return in_array($role, PEAR_Installer_Role::getValidRoles($this->_pf->getPackageType()));
     }
-
     function _pearVersionTooLow($version)
     {
         $this->_stack->push(__FUNCTION__, 'error',
@@ -1352,55 +1325,47 @@ class PEAR_PackageFile_v2_Validator
             'This package.xml requires PEAR version %version% to parse properly, we are ' .
             'version 1.9.4');
     }
-
     function _invalidTagOrder($oktags, $actual, $root)
     {
         $this->_stack->push(__FUNCTION__, 'error',
             array('oktags' => $oktags, 'actual' => $actual, 'root' => $root),
             'Invalid tag order in %root%, found <%actual%> expected one of "%oktags%"');
     }
-
     function _ignoreNotAllowed($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type),
             '<%type%> is not allowed inside global <contents>, only inside ' .
             '<phprelease>/<extbinrelease>/<zendextbinrelease>, use <dir> and <file> only');
     }
-
     function _fileNotAllowed($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type),
             '<%type%> is not allowed inside release <filelist>, only inside ' .
             '<contents>, use <ignore> and <install> only');
     }
-
     function _oldStyleFileNotAllowed()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'Old-style <file>name</file> is not allowed.  Use' .
             '<file name="name" role="role"/>');
     }
-
     function _tagMissingAttribute($tag, $attr, $context)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $tag,
             'attribute' => $attr, 'context' => $context),
             'tag <%tag%> in context "%context%" has no attribute "%attribute%"');
     }
-
     function _tagHasNoAttribs($tag, $context)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $tag,
             'context' => $context),
             'tag <%tag%> has no attributes in context "%context%"');
     }
-
     function _invalidInternalStructure()
     {
         $this->_stack->push(__FUNCTION__, 'exception', array(),
             'internal array was not generated by compatible parser, or extreme parser error, cannot continue');
     }
-
     function _invalidFileRole($file, $dir, $role)
     {
         $this->_stack->push(__FUNCTION__, 'error', array(
@@ -1408,48 +1373,41 @@ class PEAR_PackageFile_v2_Validator
             'roles' => PEAR_Installer_Role::getValidRoles($this->_pf->getPackageType())),
             'File "%file%" in directory "%dir%" has invalid role "%role%", should be one of %roles%');
     }
-
     function _invalidFileName($file, $dir)
     {
         $this->_stack->push(__FUNCTION__, 'error', array(
             'file' => $file),
             'File "%file%" in directory "%dir%" cannot begin with "./" or contain ".."');
     }
-
     function _invalidFileInstallAs($file, $as)
     {
         $this->_stack->push(__FUNCTION__, 'error', array(
             'file' => $file, 'as' => $as),
             'File "%file%" <install as="%as%"/> cannot contain "./" or contain ".."');
     }
-
     function _invalidDirName($dir)
     {
         $this->_stack->push(__FUNCTION__, 'error', array(
             'dir' => $file),
             'Directory "%dir%" cannot begin with "./" or contain ".."');
     }
-
     function _filelistCannotContainFile($filelist)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $filelist),
             '<%tag%> can only contain <dir>, contains <file>.  Use ' .
             '<dir name="/"> as the first dir element');
     }
-
     function _filelistMustContainDir($filelist)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $filelist),
             '<%tag%> must contain <dir>.  Use <dir name="/"> as the ' .
             'first dir element');
     }
-
     function _tagCannotBeEmpty($tag)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $tag),
             '<%tag%> cannot be empty (<%tag%/>)');
     }
-
     function _UrlOrChannel($type, $name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type,
@@ -1457,7 +1415,6 @@ class PEAR_PackageFile_v2_Validator
             'Required dependency <%type%> "%name%" can have either url OR ' .
             'channel attributes, and not both');
     }
-
     function _NoChannel($type, $name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type,
@@ -1465,7 +1422,6 @@ class PEAR_PackageFile_v2_Validator
             'Required dependency <%type%> "%name%" must have either url OR ' .
             'channel attributes');
     }
-
     function _UrlOrChannelGroup($type, $name, $group)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type,
@@ -1473,7 +1429,6 @@ class PEAR_PackageFile_v2_Validator
             'Group "%group%" dependency <%type%> "%name%" can have either url OR ' .
             'channel attributes, and not both');
     }
-
     function _NoChannelGroup($type, $name, $group)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type,
@@ -1481,49 +1436,41 @@ class PEAR_PackageFile_v2_Validator
             'Group "%group%" dependency <%type%> "%name%" must have either url OR ' .
             'channel attributes');
     }
-
     function _unknownChannel($channel)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('channel' => $channel),
             'Unknown channel "%channel%"');
     }
-
     function _noPackageVersion()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'package.xml <package> tag has no version attribute, or version is not 2.0');
     }
-
     function _NoBundledPackages()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'No <bundledpackage> tag was found in <contents>, required for bundle packages');
     }
-
     function _AtLeast2BundledPackages()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'At least 2 packages must be bundled in a bundle package');
     }
-
     function _ChannelOrUri($name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('name' => $name),
             'Bundled package "%name%" can have either a uri or a channel, not both');
     }
-
     function _noChildTag($child, $tag)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('child' => $child, 'tag' => $tag),
             'Tag <%tag%> is missing child tag <%child%>');
     }
-
     function _invalidVersion($type, $value)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type, 'value' => $value),
             'Version type <%type%> is not a valid version (%value%)');
     }
-
     function _invalidState($type, $value)
     {
         $states = array('stable', 'beta', 'alpha', 'devel');
@@ -1540,7 +1487,6 @@ class PEAR_PackageFile_v2_Validator
             'Stability type <%type%> is not a valid stability (%value%), must be one of ' .
             '%types%');
     }
-
     function _invalidTask($task, $ret, $file)
     {
         switch ($ret[0]) {
@@ -1565,158 +1511,133 @@ class PEAR_PackageFile_v2_Validator
         }
         $this->_stack->push(__FUNCTION__, 'error', $info, $msg);
     }
-
     function _unknownTask($task, $file)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('task' => $task, 'file' => $file),
             'Unknown task "%task%" passed in file <file name="%file%">');
     }
-
     function _subpackageCannotProvideExtension($name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('name' => $name),
             'Subpackage dependency "%name%" cannot use <providesextension>, ' .
             'only package dependencies can use this tag');
     }
-
     function _subpackagesCannotConflict($name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('name' => $name),
             'Subpackage dependency "%name%" cannot use <conflicts/>, ' .
             'only package dependencies can use this tag');
     }
-
     function _cannotProvideExtension($release)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('release' => $release),
             '<%release%> packages cannot use <providesextension>, only extbinrelease, extsrcrelease, zendextsrcrelease, and zendextbinrelease can provide a PHP extension');
     }
-
     function _mustProvideExtension($release)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('release' => $release),
             '<%release%> packages must use <providesextension> to indicate which PHP extension is provided');
     }
-
     function _cannotHaveSrcpackage($release)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('release' => $release),
             '<%release%> packages cannot specify a source code package, only extension binaries may use the <srcpackage> tag');
     }
-
     function _mustSrcPackage($release)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('release' => $release),
             '<extbinrelease>/<zendextbinrelease> packages must specify a source code package with <srcpackage>');
     }
-
     function _mustSrcuri($release)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('release' => $release),
             '<extbinrelease>/<zendextbinrelease> packages must specify a source code package with <srcuri>');
     }
-
     function _uriDepsCannotHaveVersioning($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type),
             '%type%: dependencies with a <uri> tag cannot have any versioning information');
     }
-
     function _conflictingDepsCannotHaveVersioning($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type),
             '%type%: conflicting dependencies cannot have versioning info, use <exclude> to ' .
             'exclude specific versions of a dependency');
     }
-
     function _DepchannelCannotBeUri($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('type' => $type),
             '%type%: channel cannot be __uri, this is a pseudo-channel reserved for uri ' .
             'dependencies only');
     }
-
     function _bundledPackagesMustBeFilename()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             '<bundledpackage> tags must contain only the filename of a package release ' .
             'in the bundle');
     }
-
     function _binaryPackageMustBePackagename()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             '<binarypackage> tags must contain the name of a package that is ' .
             'a compiled version of this extsrc/zendextsrc package');
     }
-
     function _fileNotFound($file)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('file' => $file),
             'File "%file%" in package.xml does not exist');
     }
-
     function _notInContents($file, $tag)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('file' => $file, 'tag' => $tag),
             '<%tag% name="%file%"> is invalid, file is not in <contents>');
     }
-
     function _cannotValidateNoPathSet()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'Cannot validate files, no path to package file is set (use setPackageFile())');
     }
-
     function _usesroletaskMustHaveChannelOrUri($role, $tag)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('role' => $role, 'tag' => $tag),
             '<%tag%> for role "%role%" must contain either <uri>, or <channel> and <package>');
     }
-
     function _usesroletaskMustHavePackage($role, $tag)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('role' => $role, 'tag' => $tag),
             '<%tag%> for role "%role%" must contain <package>');
     }
-
     function _usesroletaskMustHaveRoleTask($tag, $type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $tag, 'type' => $type),
             '<%tag%> must contain <%type%> defining the %type% to be used');
     }
-
     function _cannotConflictWithAllOs($type)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('tag' => $tag),
             '%tag% cannot conflict with all OSes');
     }
-
     function _invalidDepGroupName($name)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('name' => $name),
             'Invalid dependency group name "%name%"');
     }
-
     function _multipleToplevelDirNotAllowed()
     {
         $this->_stack->push(__FUNCTION__, 'error', array(),
             'Multiple top-level <dir> tags are not allowed.  Enclose them ' .
                 'in a <dir name="/">');
     }
-
     function _multipleInstallAs($file)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('file' => $file),
             'Only one <install> tag is allowed for file "%file%"');
     }
-
     function _ignoreAndInstallAs($file)
     {
         $this->_stack->push(__FUNCTION__, 'error', array('file' => $file),
             'Cannot have both <ignore> and <install> tags for file "%file%"');
     }
-
     function _analyzeBundledPackages()
     {
         if (!$this->_isValid) {
@@ -1763,7 +1684,6 @@ class PEAR_PackageFile_v2_Validator
         }
         return true;
     }
-
     function _analyzePhpFiles()
     {
         if (!$this->_isValid) {
@@ -1830,7 +1750,6 @@ class PEAR_PackageFile_v2_Validator
         }
         return $this->_isValid;
     }
-
     /**
      * Analyze the source code of the given PHP file
      *
@@ -1845,19 +1764,15 @@ class PEAR_PackageFile_v2_Validator
                 'Parser error: token_get_all() function must exist to analyze source code, PHP may have been compiled with --disable-tokenizer');
             return false;
         }
-
         if (!defined('T_DOC_COMMENT')) {
             define('T_DOC_COMMENT', T_COMMENT);
         }
-
         if (!defined('T_INTERFACE')) {
             define('T_INTERFACE', -1);
         }
-
         if (!defined('T_IMPLEMENTS')) {
             define('T_IMPLEMENTS', -1);
         }
-
         if ($string) {
             $contents = $file;
         } else {
@@ -1867,7 +1782,6 @@ class PEAR_PackageFile_v2_Validator
             fclose($fp);
             $contents = file_get_contents($file);
         }
-
         // Silence this function so we can catch PHP Warnings and show our own custom message
         $tokens = @token_get_all($contents);
         if (isset($php_errormsg)) {
@@ -1918,7 +1832,6 @@ class PEAR_PackageFile_v2_Validator
                 $token = $tokens[$i];
                 $data = '';
             }
-
             if ($inquote) {
                 if ($token != '"' && $token != T_END_HEREDOC) {
                     continue;
@@ -1927,7 +1840,6 @@ class PEAR_PackageFile_v2_Validator
                     continue;
                 }
             }
-
             switch ($token) {
                 case T_WHITESPACE :
                     continue;
@@ -1970,7 +1882,6 @@ class PEAR_PackageFile_v2_Validator
                             PEAR::raiseError("Parser error: invalid PHP found in file \"$file\"",
                                 PEAR_COMMON_ERROR_INVALIDPHP);
                         }
-
                         return false;
                     }
                 case T_FUNCTION:
@@ -1998,7 +1909,6 @@ class PEAR_PackageFile_v2_Validator
                             }
                         }
                     }
-
                     if ($look_for == T_CLASS) {
                         $current_class = $data;
                         $current_class_level = $brace_level;
@@ -2022,13 +1932,11 @@ class PEAR_PackageFile_v2_Validator
                             $current_function = $data;
                             $declared_functions[] = $current_function;
                         }
-
                         $current_function_level = $brace_level;
                         $m = array();
                     } elseif ($look_for == T_NEW) {
                         $used_classes[$data] = true;
                     }
-
                     $look_for = 0;
                     continue 2;
                 case T_VARIABLE:
@@ -2053,19 +1961,15 @@ class PEAR_PackageFile_v2_Validator
                             PEAR::raiseError("Parser error: invalid PHP found in file \"$file\"",
                                 PEAR_COMMON_ERROR_INVALIDPHP);
                         }
-
                         return false;
                     }
-
                     $class = $tokens[$i - 1][1];
                     if (strtolower($class) != 'parent') {
                         $used_classes[$class] = true;
                     }
-
                     continue 2;
             }
         }
-
         return array(
             "source_file" => $file,
             "declared_classes" => $declared_classes,
@@ -2077,7 +1981,6 @@ class PEAR_PackageFile_v2_Validator
             "implements" => $implements,
         );
     }
-
     /**
      * Build a "provides" array from data returned by
      * analyzeSourceCode().  The format of the built array is like
@@ -2102,7 +2005,6 @@ class PEAR_PackageFile_v2_Validator
         if (!$this->_isValid) {
             return array();
         }
-
         $providesret = array();
         $file        = basename($srcinfo['source_file']);
         $pn          = isset($this->_pf) ? $this->_pf->getPackage() : '';
@@ -2112,7 +2014,6 @@ class PEAR_PackageFile_v2_Validator
             if (isset($providesret[$key])) {
                 continue;
             }
-
             $providesret[$key] =
                 array('file'=> $file, 'type' => 'class', 'name' => $class);
             if (isset($srcinfo['inheritance'][$class])) {
@@ -2120,7 +2021,6 @@ class PEAR_PackageFile_v2_Validator
                     $srcinfo['inheritance'][$class];
             }
         }
-
         foreach ($srcinfo['declared_methods'] as $class => $methods) {
             foreach ($methods as $method) {
                 $function = "$class::$method";
@@ -2129,26 +2029,21 @@ class PEAR_PackageFile_v2_Validator
                     isset($providesret[$key])) {
                     continue;
                 }
-
                 $providesret[$key] =
                     array('file'=> $file, 'type' => 'function', 'name' => $function);
             }
         }
-
         foreach ($srcinfo['declared_functions'] as $function) {
             $key = "function;$function";
             if ($function{0} == '_' || isset($providesret[$key])) {
                 continue;
             }
-
             if (!strstr($function, '::') && strncasecmp($function, $pn, $pnl)) {
                 $warnings[] = "in1 " . $file . ": function \"$function\" not prefixed with package name \"$pn\"";
             }
-
             $providesret[$key] =
                 array('file'=> $file, 'type' => 'function', 'name' => $function);
         }
-
         return $providesret;
     }
 }

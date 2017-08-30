@@ -14,9 +14,7 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since PEAR 0.1
  */
-
 // {{{ uname examples
-
 // php_uname() without args returns the same as 'uname -a', or a PHP-custom
 // string for Windows.
 // PHP versions prior to 4.3 return the uname of the host where PHP was built,
@@ -69,13 +67,10 @@
 //
 // Mac OS X early versions
 //
-
 // }}}
-
 /* TODO:
  * - define endianness, to allow matchSignature("bigend") etc.
  */
-
 /**
  * Retrieves information about the current operating system
  *
@@ -98,7 +93,6 @@ class OS_Guess
     var $cpu;
     var $release;
     var $extra;
-
     function OS_Guess($uname = null)
     {
         list($this->sysname,
@@ -107,7 +101,6 @@ class OS_Guess
              $this->extra,
              $this->nodename) = $this->parseSignature($uname);
     }
-
     function parseSignature($uname = null)
     {
         static $sysmap = array(
@@ -124,7 +117,6 @@ class OS_Guess
         }
         $parts = preg_split('/\s+/', trim($uname));
         $n = count($parts);
-
         $release  = $machine = $cpu = '';
         $sysname  = $parts[0];
         $nodename = $parts[1];
@@ -133,7 +125,6 @@ class OS_Guess
         if ($cpu == 'unknown') {
             $cpu = $parts[$n - 2];
         }
-
         switch ($sysname) {
             case 'AIX' :
                 $release = "$parts[3].$parts[2]";
@@ -176,7 +167,6 @@ class OS_Guess
                 $release = preg_replace('/-.*/', '', $parts[2]);
                 break;
         }
-
         if (isset($sysmap[$sysname])) {
             $sysname = $sysmap[$sysname];
         } else {
@@ -187,7 +177,6 @@ class OS_Guess
         }
         return array($sysname, $release, $cpu, $extra, $nodename);
     }
-
     function _detectGlibcVersion()
     {
         static $glibc = false;
@@ -216,7 +205,6 @@ class OS_Guess
                         }
                         continue;
                     }
-
                     if (strpos($line, '__GLIBC_MINOR__'))  {
                         // got the minor version number
                         // #define __GLIBC_MINOR__ version
@@ -234,7 +222,6 @@ class OS_Guess
                 }
                 return $glibc = 'glibc' . trim($glibc_major) . "." . trim($glibc_minor) ;
             } // no cpp
-
             $tmpfile = System::mktemp("glibctest");
             $fp = fopen($tmpfile, "w");
             fwrite($fp, "#include <features.h>\n__GLIBC__ __GLIBC_MINOR__\n");
@@ -244,7 +231,6 @@ class OS_Guess
                 if ($line{0} == '#' || trim($line) == '') {
                     continue;
                 }
-
                 if (list($major, $minor) = explode(' ', trim($line))) {
                     break;
                 }
@@ -252,21 +238,17 @@ class OS_Guess
             pclose($cpp);
             unlink($tmpfile);
         } // features.h
-
         if (!($major && $minor) && @is_link('/lib/libc.so.6')) {
             // Let's try reading the libc.so.6 symlink
             if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib/libc.so.6')), $matches)) {
                 list($major, $minor) = explode('.', $matches[1]);
             }
         }
-
         if (!($major && $minor)) {
             return $glibc = '';
         }
-
         return $glibc = "glibc{$major}.{$minor}";
     }
-
     function getSignature()
     {
         if (empty($this->extra)) {
@@ -274,32 +256,26 @@ class OS_Guess
         }
         return "{$this->sysname}-{$this->release}-{$this->cpu}-{$this->extra}";
     }
-
     function getSysname()
     {
         return $this->sysname;
     }
-
     function getNodename()
     {
         return $this->nodename;
     }
-
     function getCpu()
     {
         return $this->cpu;
     }
-
     function getRelease()
     {
         return $this->release;
     }
-
     function getExtra()
     {
         return $this->extra;
     }
-
     function matchSignature($match)
     {
         $fragments = is_array($match) ? $match : explode('-', $match);
@@ -319,7 +295,6 @@ class OS_Guess
         }
         return ($matches == $n);
     }
-
     function _matchFragment($fragment, $value)
     {
         if (strcspn($fragment, '*?') < strlen($fragment)) {
@@ -328,7 +303,6 @@ class OS_Guess
         }
         return ($fragment == '*' || !strcasecmp($fragment, $value));
     }
-
 }
 /*
  * Local Variables:

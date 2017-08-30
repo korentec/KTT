@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsShared
  */
-
 /**
  * escape_special_chars common function
  *
@@ -25,5 +24,4 @@ function smarty_function_escape_special_chars($string)
     }
     return $string;
 }
-
 ?>

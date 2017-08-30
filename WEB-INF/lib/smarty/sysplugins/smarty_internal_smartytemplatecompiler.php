@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Smarty Template Compiler Base
  * 
@@ -9,9 +8,7 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 require_once("smarty_internal_parsetree.php");
-
 /**
  * Class SmartyTemplateCompiler
  */
@@ -29,7 +26,6 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
         $this->lexer_class = $lexer_class;
         $this->parser_class = $parser_class;
     } 
-
     /**
      * Methode to compile a Smarty template
      * 
@@ -50,7 +46,6 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
             if (isset($this->smarty->_parserdebug)) echo "<pre>Line {$this->lex->line} Parsing  {$this->parser->yyTokenName[$this->lex->token]} Token " . htmlentities($this->lex->value) . "</pre>";
             $this->parser->doParse($this->lex->token, $this->lex->value);
         } 
-
         if ($this->abort_and_recompile) {
             // exit here on abort
             return false;
@@ -68,5 +63,4 @@ class Smarty_Internal_SmartyTemplateCompiler extends Smarty_Internal_TemplateCom
         return $this->parser->retvalue;
     } 
 } 
-
 ?>

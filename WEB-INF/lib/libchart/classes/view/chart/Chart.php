@@ -23,7 +23,6 @@
 	 * You can find here information that is not covered by the <a href="../samplecode/">tutorial</a>.
 	 *
 	 */
-
 	/**
 	 * Base chart class.
 	 *
@@ -39,7 +38,6 @@
 		 * Plot (holds graphical attributes).
 		 */
 		protected $plot;
-
 		/**
 		 * Abstract constructor of Chart.
 		 *
@@ -52,7 +50,6 @@
 			$this->plot->setTitle("Untitled chart");
 			$this->plot->setLogoFileName(dirname(__FILE__) . "/../../../images/PoweredBy.png");
 		}
-
 		/**
 		 * Checks the data model before rendering the graph.
 		 */
@@ -71,7 +68,6 @@
 		protected function createImage() {
 			$this->plot->createImage();
 		}
-
 		/**
 		 * Sets the data set.
 		 *

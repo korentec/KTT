@@ -15,12 +15,10 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
-
 /**
  * base class
  */
 require_once 'PEAR/Command/Common.php';
-
 /**
  * PEAR commands for building extensions.
  *
@@ -47,7 +45,6 @@ class PEAR_Command_Build extends PEAR_Command_Common
 Builds one or more extensions contained in a package.'
             ),
         );
-
     /**
      * PEAR_Command_Build constructor.
      *
@@ -57,24 +54,20 @@ Builds one or more extensions contained in a package.'
     {
         parent::PEAR_Command_Common($ui, $config);
     }
-
     function doBuild($command, $options, $params)
     {
         require_once 'PEAR/Builder.php';
         if (sizeof($params) < 1) {
             $params[0] = 'package.xml';
         }
-
         $builder = &new PEAR_Builder($this->ui);
         $this->debug = $this->config->get('verbose');
         $err = $builder->build($params[0], array(&$this, 'buildCallback'));
         if (PEAR::isError($err)) {
             return $err;
         }
-
         return true;
     }
-
     function buildCallback($what, $data)
     {
         if (($what == 'cmdoutput' && $this->debug > 1) ||

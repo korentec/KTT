@@ -44,13 +44,11 @@
 //
 // $Id: Common.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 /**
  * @package  MDB2
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-
 /**
  * Base class for the function modules that is extended by each MDB2 driver
  *
@@ -64,7 +62,6 @@
 class MDB2_Driver_Function_Common extends MDB2_Module_Common
 {
     // {{{ executeStoredProc()
-
     /**
      * Execute a stored procedure and return any results
      *
@@ -84,15 +81,12 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $error = $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
         return $error;
     }
-
     // }}}
     // {{{ functionTable()
-
     /**
      * return string for internal table used when calling only a function
      *
@@ -103,10 +97,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return '';
     }
-
     // }}}
     // {{{ now()
-
     /**
      * Return string to call a variable with the current timestamp inside an SQL statement
      * There are three special variables for current date and time:
@@ -131,10 +123,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
             return 'CURRENT_TIMESTAMP';
         }
     }
-
     // }}}
     // {{{ unixtimestamp()
-
     /**
      * return string to call a function to get the unix timestamp from a iso timestamp
      *
@@ -149,15 +139,12 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $error = $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
         return $error;
     }
-
     // }}}
     // {{{ substring()
-
     /**
      * return string to call a function to get a substring inside an SQL statement
      *
@@ -171,10 +158,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
         }
         return "SUBSTRING($value FROM $position)";
     }
-
     // }}}
     // {{{ replace()
-
     /**
      * return string to call a function to get replace inside an SQL statement.
      *
@@ -185,10 +170,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return "REPLACE($str, $from_str , $to_str)";
     }
-
     // }}}
     // {{{ concat()
-
     /**
      * Returns string to concatenate two or more string parameters
      *
@@ -204,10 +187,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
         $args = func_get_args();
         return "(".implode(' || ', $args).")";
     }
-
     // }}}
     // {{{ random()
-
     /**
      * return string to call a function to get random value inside an SQL statement
      *
@@ -218,10 +199,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return 'RAND()';
     }
-
     // }}}
     // {{{ lower()
-
     /**
      * return string to call a function to lower the case of an expression
      *
@@ -234,10 +213,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return "LOWER($expression)";
     }
-
     // }}}
     // {{{ upper()
-
     /**
      * return string to call a function to upper the case of an expression
      *
@@ -250,10 +227,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return "UPPER($expression)";
     }
-
     // }}}
     // {{{ length()
-
     /**
      * return string to call a function to get the length of a string expression
      *
@@ -266,10 +241,8 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
     {
         return "LENGTH($expression)";
     }
-
     // }}}
     // {{{ guid()
-
     /**
      * Returns global unique identifier
      *
@@ -282,12 +255,10 @@ class MDB2_Driver_Function_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $error = $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
         return $error;
     }
-
     // }}}
 }
 ?>

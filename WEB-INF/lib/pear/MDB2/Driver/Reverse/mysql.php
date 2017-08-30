@@ -44,9 +44,7 @@
 //
 // $Id: mysql.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 require_once 'MDB2/Driver/Reverse/Common.php';
-
 /**
  * MDB2 MySQL driver for the schema reverse engineering module
  *
@@ -58,7 +56,6 @@ require_once 'MDB2/Driver/Reverse/Common.php';
 class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
 {
     // {{{ getTableFieldDefinition()
-
     /**
      * Get the structure of a field into an array
      *
@@ -73,14 +70,11 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $result = $db->loadModule('Datatype', null, true);
         if (MDB2::isError($result)) {
             return $result;
         }
-
         list($schema, $table) = $this->splitTableSchema($table_name);
-
         $table = $db->quoteIdentifier($table, true);
         $query = "SHOW FULL COLUMNS FROM $table LIKE ".$db->quote($field_name);
         $columns = $db->queryAll($query, null, MDB2_FETCHMODE_ASSOC);
@@ -134,7 +128,6 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
                     $collate = $column['collation'];
                     $charset = preg_replace('/(.+?)(_.+)?/', '$1', $collate);
                 }
-
                 if (null !== $length) {
                     $definition[0]['length'] = $length;
                 }
@@ -167,14 +160,11 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
                 return $definition;
             }
         }
-
         return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
             'it was not specified an existing table column', __FUNCTION__);
     }
-
     // }}}
     // {{{ getTableIndexDefinition()
-
     /**
      * Get the structure of an index into an array
      *
@@ -189,9 +179,7 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         list($schema, $table) = $this->splitTableSchema($table_name);
-
         $table = $db->quoteIdentifier($table, true);
         $query = "SHOW INDEX FROM $table /*!50002 WHERE Key_name = %s */";
         $index_name_mdb2 = $db->getIndexName($index_name);
@@ -246,10 +234,8 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         }
         return $definition;
     }
-
     // }}}
     // {{{ getTableConstraintDefinition()
-
     /**
      * Get the structure of a constraint into an array
      *
@@ -264,10 +250,8 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         list($schema, $table) = $this->splitTableSchema($table_name);
         $constraint_name_original = $constraint_name;
-
         $table = $db->quoteIdentifier($table, true);
         $query = "SHOW INDEX FROM $table /*!50002 WHERE Key_name = %s */";
         if (strtolower($constraint_name) != 'primary') {
@@ -344,7 +328,6 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         }
         return $definition;
     }
-
     // }}}
     // {{{ _getTableFKConstraintDefinition()
     
@@ -416,10 +399,8 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         return $db->raiseError(MDB2_ERROR_NOT_FOUND, null, null,
                 $constraint_name . ' is not an existing table constraint', __FUNCTION__);
     }
-
     // }}}
     // {{{ getTriggerDefinition()
-
     /**
      * Get the structure of a trigger into an array
      *
@@ -438,7 +419,6 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = 'SELECT trigger_name,
                          event_object_table AS table_name,
                          action_statement AS trigger_body,
@@ -461,10 +441,8 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         $def['trigger_enabled'] = true;
         return $def;
     }
-
     // }}}
     // {{{ tableInfo()
-
     /**
      * Returns information about a table or a result set
      *
@@ -485,18 +463,15 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         if (is_string($result)) {
            return parent::tableInfo($result, $mode);
         }
-
         $db = $this->getDBInstance();
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $resource = MDB2::isResultCommon($result) ? $result->getResource() : $result;
         if (!is_resource($resource)) {
             return $db->raiseError(MDB2_ERROR_NEED_MORE_DATA, null, null,
                 'Could not generate result resource', __FUNCTION__);
         }
-
         if ($db->options['portability'] & MDB2_PORTABILITY_FIX_CASE) {
             if ($db->options['field_case'] == CASE_LOWER) {
                 $case_func = 'strtolower';
@@ -506,13 +481,11 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
         } else {
             $case_func = 'strval';
         }
-
         $count = @mysql_num_fields($resource);
         $res   = array();
         if ($mode) {
             $res['num_fields'] = $count;
         }
-
         $db->loadModule('Datatype', null, true);
         for ($i = 0; $i < $count; $i++) {
             $res[$i] = array(
@@ -539,7 +512,6 @@ class MDB2_Driver_Reverse_mysql extends MDB2_Driver_Reverse_Common
                 $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
             }
         }
-
         return $res;
     }
 }

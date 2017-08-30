@@ -44,7 +44,6 @@ class PEAR_Validator_PECL extends PEAR_Validate
         }
         return true;
     }
-
     function validatePackageName()
     {
         $ret = parent::validatePackageName();

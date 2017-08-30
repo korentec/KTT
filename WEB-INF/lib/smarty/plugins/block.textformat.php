@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsBlock
  */
-
 /**
  * Smarty {textformat}{/textformat} block plugin
  * 
@@ -36,7 +35,6 @@ function smarty_block_textformat($params, $content, $template, &$repeat)
     if (is_null($content)) {
         return;
     } 
-
     $style = null;
     $indent = 0;
     $indent_first = 0;
@@ -45,7 +43,6 @@ function smarty_block_textformat($params, $content, $template, &$repeat)
     $wrap_char = "\n";
     $wrap_cut = false;
     $assign = null;
-
     foreach ($params as $_key => $_val) {
         switch ($_key) {
             case 'style':
@@ -54,29 +51,24 @@ function smarty_block_textformat($params, $content, $template, &$repeat)
             case 'assign':
                 $$_key = (string)$_val;
                 break;
-
             case 'indent':
             case 'indent_first':
             case 'wrap':
                 $$_key = (int)$_val;
                 break;
-
             case 'wrap_cut':
                 $$_key = (bool)$_val;
                 break;
-
             default:
                 trigger_error("textformat: unknown attribute '$_key'");
         } 
     } 
-
     if ($style == 'email') {
         $wrap = 72;
     } 
     // split into paragraphs
     $_paragraphs = preg_split('![\r\n][\r\n]!', $content);
     $_output = '';
-
     for($_x = 0, $_y = count($_paragraphs); $_x < $_y; $_x++) {
         if ($_paragraphs[$_x] == '') {
             continue;
@@ -98,5 +90,4 @@ function smarty_block_textformat($params, $content, $template, &$repeat)
     
     return $assign ? $template->assign($assign, $_output) : $_output;
 } 
-
 ?>

@@ -197,7 +197,6 @@ function handleCheckboxes() {
 </script>
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['reportForm']['open'];?>
-
 <div style="padding: 0 0 10 0;">
   <table border="0" bgcolor="#efefef" width="720">
     <tr>

@@ -26,110 +26,84 @@
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
 */
-
 a { color: blue; text-decoration: none; }
-
 a:visited { text-decoration: none; }
-
 a:hover { text-decoration: underline; }
-
 body {
   font-size: 10pt;
   font-family: verdana;
   background-color: white;
 }
-
 table { font-size: 10pt; font-family: verdana; }
-
 input, button { font-size: 10pt; font-family: verdana; }
-
 textarea { font-size: 10pt; font-family: verdana; }
-
 select{ font-size: 10pt; font-family: verdana; }
-
 .pageTitle {
   font-size: 12pt;
   font-weight: bold;
   color: silver;
 }
-
 .systemMenu {
   font-size: 12pt;
   font-weight: bold;
   color: #ffffff;
   background-color: #000000;
 }
-
 .mainMenu {
   font-size: 12pt;
   color: #444444;
 }
-
 .tableHeader {
   font-weight: bold;
   text-align: left;
   color: #000000;
   background-color: #a6ccf7;
 }
-
 .tableHeaderCentered {
   font-weight: bold;
   text-align: center;
   color: #000000;
   background-color: #a6ccf7;
 }
-
 .rowReportItem {
   background-color: #ccccce;
 }
-
 .rowReportItemAlt {
   background-color: #f5f5f5;
 }
-
 .rowReportSubtotal {
   background-color: #e0e0e0;
 }
-
 .cellLeftAligned {
   text-align: left;
   vertical-align: top;
 }
-
 .cellRightAligned {
   text-align: right;
   vertical-align: top;
 }
-
 .cellLeftAlignedSubtotal {
   font-weight: bold;
   vertical-align: top;
 }
-
 .cellRightAlignedSubtotal {
   font-weight: bold;
   text-align: right;
   vertical-align: top;
 }
-
 .sectionHeader {
   font-weight: bold;
   border-bottom: 1px solid silver;
 }
-
 .sectionHeaderNoBorder {
   font-weight: bold;
 }
-
 .error {
   font-weight: bold;
   color: red;
 }
-
 .info_message {
   font-weight: bold;
   color: #0000c0;
 }
-
 div#LoginAboutText { width:400px; }
-

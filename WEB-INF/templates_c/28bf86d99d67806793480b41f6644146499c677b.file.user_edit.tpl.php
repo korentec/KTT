@@ -79,7 +79,6 @@ function handleClientControl() {
 </script>
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['userForm']['open'];?>
-
 <table cellspacing="4" cellpadding="7" border="0">
   <table cellspacing="1" cellpadding="2" border="0">
     <tr>

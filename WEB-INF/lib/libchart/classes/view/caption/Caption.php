@@ -56,7 +56,6 @@
 			
 			// Get the caption area
 			$captionArea = $this->plot->getCaptionArea();
-
 			// Get the pie color set
 			$colorSet = $this->colorSet;
 			$colorSet->reset();
@@ -66,21 +65,16 @@
 				// Get the next color
 				$color = $colorSet->currentColor();
 				$colorSet->next();
-
 				$boxX1 = $captionArea->x1;
 				$boxX2 = $boxX1 + $this->labelBoxWidth;
 				$boxY1 = $captionArea->y1 + 5 + $i * ($this->labelBoxHeight + 5);
 				$boxY2 = $boxY1 + $this->labelBoxHeight;
-
 				$primitive->outlinedBox($boxX1, $boxY1, $boxX2, $boxY2, $palette->axisColor[0], $palette->axisColor[1]);
 				imagefilledrectangle($img, $boxX1 + 2, $boxY1 + 2, $boxX2 - 2, $boxY2 - 2, $color->getColor($img));
-
 				$text->printText($img, $boxX2 + 5, $boxY1 + $this->labelBoxHeight / 2, $this->plot->getTextColor(), $label, $text->fontCondensed, $text->VERTICAL_CENTER_ALIGN);
-
 				$i++;
 			}
 		}
-
 		/**
 		 * Sets the plot.
 		 *

@@ -29,15 +29,12 @@ function get_date() {
   <tr>
     <td>
       <?php echo $_smarty_tpl->getVariable('forms')->value['loginForm']['open'];?>
-
       <?php $_template = new Smarty_Internal_Template("login.".(@AUTH_MODULE).".tpl", $_smarty_tpl->smarty, $_smarty_tpl, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null);
  echo $_template->getRenderedTemplate();?><?php unset($_template);?>
       <?php echo $_smarty_tpl->getVariable('forms')->value['loginForm']['close'];?>
-
     </td>
   </tr>
 </table>
-
 <?php if (!empty($_smarty_tpl->getVariable('about_text',null,true,false)->value)){?>
   <div id="LoginAboutText"> <?php echo $_smarty_tpl->getVariable('about_text')->value;?>
  </div>

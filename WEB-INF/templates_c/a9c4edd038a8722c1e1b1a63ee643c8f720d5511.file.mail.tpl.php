@@ -18,7 +18,6 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['open'];?>
-
 <table cellspacing="4" cellpadding="7" border="0">
 <tr>
   <td>

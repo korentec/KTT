@@ -44,7 +44,6 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
     var $_pkg;
     var $_contents;
     var $phase = PEAR_TASK_INSTALL;
-
     /**
      * Validate the raw xml at parsing-time.
      *
@@ -221,7 +220,6 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
         }
         return true;
     }
-
     /**
      * Initialize a task instance with the parameters
      * @param array raw, parsed xml
@@ -236,7 +234,6 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
         $this->_params = $xml;
         $this->_lastversion = $lastversion;
     }
-
     /**
      * Strip the tasks: namespace from internal params
      *
@@ -267,7 +264,6 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
             return $newparams;
         }
     }
-
     /**
      * Unlike other tasks, the installed file name is passed in instead of the file contents,
      * because this task is handled post-installation
@@ -307,7 +303,6 @@ class PEAR_Task_Postinstallscript extends PEAR_Task_Common
         $this->_contents = $contents;
         return true;
     }
-
     /**
      * No longer used
      * @see PEAR_PackageFile_v2::runPostinstallScripts()

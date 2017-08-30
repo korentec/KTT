@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin CacheResource File
  * 
@@ -10,7 +9,6 @@
  * @subpackage Cacher
  * @author Uwe Tews 
  */
-
 /**
  * This class does contain all necessary methods for the HTML cache on file system
  */
@@ -55,7 +53,6 @@ class Smarty_Internal_CacheResource_File {
         } 
         return $_cache_dir . $_cache_id . $_compile_id . $_filepath . '.' . basename($_source_file_path) . '.php';
     } 
-
     /**
      * Returns the timpestamp of the cached template output
      * 
@@ -67,7 +64,6 @@ class Smarty_Internal_CacheResource_File {
         // return @filemtime ($_template->getCachedFilepath());
         return ($_template->getCachedFilepath() && file_exists($_template->getCachedFilepath())) ? filemtime($_template->getCachedFilepath()) : false ;
     } 
-
     /**
      * Returns the cached template output
      * 
@@ -87,7 +83,6 @@ class Smarty_Internal_CacheResource_File {
           return ob_get_clean();
         }
     } 
-
     /**
      * Writes the rendered template output to cache file
      * 
@@ -104,7 +99,6 @@ class Smarty_Internal_CacheResource_File {
         } 
         return false;
     } 
-
     /**
      * Empty cache folder
      * 
@@ -201,5 +195,4 @@ class Smarty_Internal_CacheResource_File {
         return $_count;
     } 
 } 
-
 ?>

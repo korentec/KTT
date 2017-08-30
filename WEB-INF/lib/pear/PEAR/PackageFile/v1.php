@@ -17,253 +17,203 @@
  * For error handling
  */
 require_once 'PEAR/ErrorStack.php';
-
 /**
  * Error code if parsing is attempted with no xml extension
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_XML_EXT', 3);
-
 /**
  * Error code if creating the xml parser resource fails
  */
 define('PEAR_PACKAGEFILE_ERROR_CANT_MAKE_PARSER', 4);
-
 /**
  * Error code used for all sax xml parsing errors
  */
 define('PEAR_PACKAGEFILE_ERROR_PARSER_ERROR', 5);
-
 /**
  * Error code used when there is no name
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_NAME', 6);
-
 /**
  * Error code when a package name is not valid
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_NAME', 7);
-
 /**
  * Error code used when no summary is parsed
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_SUMMARY', 8);
-
 /**
  * Error code for summaries that are more than 1 line
  */
 define('PEAR_PACKAGEFILE_ERROR_MULTILINE_SUMMARY', 9);
-
 /**
  * Error code used when no description is present
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DESCRIPTION', 10);
-
 /**
  * Error code used when no license is present
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_LICENSE', 11);
-
 /**
  * Error code used when a <version> version number is not present
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_VERSION', 12);
-
 /**
  * Error code used when a <version> version number is invalid
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_VERSION', 13);
-
 /**
  * Error code when release state is missing
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_STATE', 14);
-
 /**
  * Error code when release state is invalid
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_STATE', 15);
-
 /**
  * Error code when release state is missing
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DATE', 16);
-
 /**
  * Error code when release state is invalid
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_DATE', 17);
-
 /**
  * Error code when no release notes are found
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_NOTES', 18);
-
 /**
  * Error code when no maintainers are found
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_MAINTAINERS', 19);
-
 /**
  * Error code when a maintainer has no handle
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_MAINTHANDLE', 20);
-
 /**
  * Error code when a maintainer has no handle
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_MAINTROLE', 21);
-
 /**
  * Error code when a maintainer has no name
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_MAINTNAME', 22);
-
 /**
  * Error code when a maintainer has no email
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_MAINTEMAIL', 23);
-
 /**
  * Error code when a maintainer has no handle
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_MAINTROLE', 24);
-
 /**
  * Error code when a dependency is not a PHP dependency, but has no name
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DEPNAME', 25);
-
 /**
  * Error code when a dependency has no type (pkg, php, etc.)
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DEPTYPE', 26);
-
 /**
  * Error code when a dependency has no relation (lt, ge, has, etc.)
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DEPREL', 27);
-
 /**
  * Error code when a dependency is not a 'has' relation, but has no version
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DEPVERSION', 28);
-
 /**
  * Error code when a dependency has an invalid relation
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_DEPREL', 29);
-
 /**
  * Error code when a dependency has an invalid type
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_DEPTYPE', 30);
-
 /**
  * Error code when a dependency has an invalid optional option
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_DEPOPTIONAL', 31);
-
 /**
  * Error code when a dependency is a pkg dependency, and has an invalid package name
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_DEPNAME', 32);
-
 /**
  * Error code when a dependency has a channel="foo" attribute, and foo is not a registered channel
  */
 define('PEAR_PACKAGEFILE_ERROR_UNKNOWN_DEPCHANNEL', 33);
-
 /**
  * Error code when rel="has" and version attribute is present.
  */
 define('PEAR_PACKAGEFILE_ERROR_DEPVERSION_IGNORED', 34);
-
 /**
  * Error code when type="php" and dependency name is present
  */
 define('PEAR_PACKAGEFILE_ERROR_DEPNAME_IGNORED', 35);
-
 /**
  * Error code when a configure option has no name
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_CONFNAME', 36);
-
 /**
  * Error code when a configure option has no name
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_CONFPROMPT', 37);
-
 /**
  * Error code when a file in the filelist has an invalid role
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_FILEROLE', 38);
-
 /**
  * Error code when a file in the filelist has no role
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_FILEROLE', 39);
-
 /**
  * Error code when analyzing a php source file that has parse errors
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_PHPFILE', 40);
-
 /**
  * Error code when analyzing a php source file reveals a source element
  * without a package name prefix
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_PNAME_PREFIX', 41);
-
 /**
  * Error code when an unknown channel is specified
  */
 define('PEAR_PACKAGEFILE_ERROR_UNKNOWN_CHANNEL', 42);
-
 /**
  * Error code when no files are found in the filelist
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_FILES', 43);
-
 /**
  * Error code when a file is not valid php according to _analyzeSourceCode()
  */
 define('PEAR_PACKAGEFILE_ERROR_INVALID_FILE', 44);
-
 /**
  * Error code when the channel validator returns an error or warning
  */
 define('PEAR_PACKAGEFILE_ERROR_CHANNELVAL', 45);
-
 /**
  * Error code when a php5 package is packaged in php4 (analysis doesn't work)
  */
 define('PEAR_PACKAGEFILE_ERROR_PHP5', 46);
-
 /**
  * Error code when a file is listed in package.xml but does not exist
  */
 define('PEAR_PACKAGEFILE_ERROR_FILE_NOTFOUND', 47);
-
 /**
  * Error code when a <dep type="php" rel="not"... is encountered (use rel="ne")
  */
 define('PEAR_PACKAGEFILE_PHP_NO_NOT', 48);
-
 /**
  * Error code when a package.xml contains non-ISO-8859-1 characters
  */
 define('PEAR_PACKAGEFILE_ERROR_NON_ISO_CHARS', 49);
-
 /**
  * Error code when a dependency is not a 'has' relation, but has no version
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_DEPPHPVERSION', 50);
-
 /**
  * Error code when a package has no lead developer
  */
 define('PEAR_PACKAGEFILE_ERROR_NO_LEAD', 51);
-
 /**
  * Error code when a filename begins with "."
  */
@@ -287,48 +237,41 @@ class PEAR_PackageFile_v1
      * @access private
      */
     var $_stack;
-
     /**
      * A registry object, used to access the package name validation regex for non-standard channels
      * @var PEAR_Registry
      * @access private
      */
     var $_registry;
-
     /**
      * An object that contains a log method that matches PEAR_Common::log's signature
      * @var object
      * @access private
      */
     var $_logger;
-
     /**
      * Parsed package information
      * @var array
      * @access private
      */
     var $_packageInfo;
-
     /**
      * path to package.xml
      * @var string
      * @access private
      */
     var $_packageFile;
-
     /**
      * path to package .tgz or false if this is a local/extracted package.xml
      * @var string
      * @access private
      */
     var $_archiveFile;
-
     /**
      * @var int
      * @access private
      */
     var $_isValid = 0;
-
     /**
      * Determines whether this packagefile was initialized only with partial package info
      *
@@ -341,7 +284,6 @@ class PEAR_PackageFile_v1
      * @access private
      */
     var $_incomplete = true;
-
     /**
      * @param bool determines whether to return a PEAR_Error object, or use the PEAR_ErrorStack
      * @param string Name of Error Stack class to use.
@@ -352,28 +294,23 @@ class PEAR_PackageFile_v1
         $this->_stack->setErrorMessageTemplate($this->_getErrorMessage());
         $this->_isValid = 0;
     }
-
     function installBinary($installer)
     {
         return false;
     }
-
     function isExtension($name)
     {
         return false;
     }
-
     function setConfig(&$config)
     {
         $this->_config = &$config;
         $this->_registry = &$config->getRegistry();
     }
-
     function setRequestedGroup()
     {
         // placeholder
     }
-
     /**
      * For saving in the registry.
      *
@@ -384,7 +321,6 @@ class PEAR_PackageFile_v1
     {
         $this->_packageInfo['_lastversion'] = $version;
     }
-
     /**
      * @return string|false
      */
@@ -395,22 +331,18 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function getInstalledBinary()
     {
         return false;
     }
-
     function listPostinstallScripts()
     {
         return false;
     }
-
     function initPostinstallScripts()
     {
         return false;
     }
-
     function setLogger(&$logger)
     {
         if ($logger && (!is_object($logger) || !method_exists($logger, 'log'))) {
@@ -418,28 +350,23 @@ class PEAR_PackageFile_v1
         }
         $this->_logger = &$logger;
     }
-
     function setPackagefile($file, $archive = false)
     {
         $this->_packageFile = $file;
         $this->_archiveFile = $archive ? $archive : $file;
     }
-
     function getPackageFile()
     {
         return isset($this->_packageFile) ? $this->_packageFile : false;
     }
-
     function getPackageType()
     {
         return 'php';
     }
-
     function getArchiveFile()
     {
         return $this->_archiveFile;
     }
-
     function packageInfo($field)
     {
         if (!is_string($field) || empty($field) ||
@@ -448,7 +375,6 @@ class PEAR_PackageFile_v1
         }
         return $this->_packageInfo[$field];
     }
-
     function setDirtree($path)
     {
         if (!isset($this->_packageInfo['dirtree'])) {
@@ -456,7 +382,6 @@ class PEAR_PackageFile_v1
         }
         $this->_packageInfo['dirtree'][$path] = true;
     }
-
     function getDirtree()
     {
         if (isset($this->_packageInfo['dirtree']) && count($this->_packageInfo['dirtree'])) {
@@ -464,38 +389,31 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function resetDirtree()
     {
         unset($this->_packageInfo['dirtree']);
     }
-
     function fromArray($pinfo)
     {
         $this->_incomplete = false;
         $this->_packageInfo = $pinfo;
     }
-
     function isIncomplete()
     {
         return $this->_incomplete;
     }
-
     function getChannel()
     {
         return 'pear.php.net';
     }
-
     function getUri()
     {
         return false;
     }
-
     function getTime()
     {
         return false;
     }
-
     function getExtends()
     {
         if (isset($this->_packageInfo['extends'])) {
@@ -503,7 +421,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     /**
      * @return array
      */
@@ -514,17 +431,14 @@ class PEAR_PackageFile_v1
         }
         return $this->getArray();
     }
-
     function getArray()
     {
         return $this->_packageInfo;
     }
-
     function getName()
     {
         return $this->getPackage();
     }
-
     function getPackage()
     {
         if (isset($this->_packageInfo['package'])) {
@@ -532,7 +446,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     /**
      * WARNING - don't use this unless you know what you are doing
      */
@@ -540,13 +453,11 @@ class PEAR_PackageFile_v1
     {
         $this->_packageInfo['package'] = $package;
     }
-
     function setPackage($package)
     {
         $this->_packageInfo['package'] = $package;
         $this->_isValid = false;
     }
-
     function getVersion()
     {
         if (isset($this->_packageInfo['version'])) {
@@ -554,18 +465,15 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setVersion($version)
     {
         $this->_packageInfo['version'] = $version;
         $this->_isValid = false;
     }
-
     function clearMaintainers()
     {
         unset($this->_packageInfo['maintainers']);
     }
-
     function getMaintainers()
     {
         if (isset($this->_packageInfo['maintainers'])) {
@@ -573,7 +481,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     /**
      * Adds a new maintainer - no checking of duplicates is performed, use
      * updatemaintainer for that purpose.
@@ -584,7 +491,6 @@ class PEAR_PackageFile_v1
             array('handle' => $handle, 'role' => $role, 'email' => $email, 'name' => $name);
         $this->_isValid = false;
     }
-
     function updateMaintainer($role, $handle, $name, $email)
     {
         $found = false;
@@ -605,7 +511,6 @@ class PEAR_PackageFile_v1
         }
         $this->addMaintainer($role, $handle, $name, $email);
     }
-
     function deleteMaintainer($handle)
     {
         $found = false;
@@ -623,7 +528,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function getState()
     {
         if (isset($this->_packageInfo['release_state'])) {
@@ -631,18 +535,15 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setRawState($state)
     {
         $this->_packageInfo['release_state'] = $state;
     }
-
     function setState($state)
     {
         $this->_packageInfo['release_state'] = $state;
         $this->_isValid = false;
     }
-
     function getDate()
     {
         if (isset($this->_packageInfo['release_date'])) {
@@ -650,13 +551,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setDate($date)
     {
         $this->_packageInfo['release_date'] = $date;
         $this->_isValid = false;
     }
-
     function getLicense()
     {
         if (isset($this->_packageInfo['release_license'])) {
@@ -664,13 +563,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setLicense($date)
     {
         $this->_packageInfo['release_license'] = $date;
         $this->_isValid = false;
     }
-
     function getSummary()
     {
         if (isset($this->_packageInfo['summary'])) {
@@ -678,13 +575,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setSummary($summary)
     {
         $this->_packageInfo['summary'] = $summary;
         $this->_isValid = false;
     }
-
     function getDescription()
     {
         if (isset($this->_packageInfo['description'])) {
@@ -692,13 +587,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setDescription($desc)
     {
         $this->_packageInfo['description'] = $desc;
         $this->_isValid = false;
     }
-
     function getNotes()
     {
         if (isset($this->_packageInfo['release_notes'])) {
@@ -706,13 +599,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setNotes($notes)
     {
         $this->_packageInfo['release_notes'] = $notes;
         $this->_isValid = false;
     }
-
     function getDeps()
     {
         if (isset($this->_packageInfo['release_deps'])) {
@@ -720,7 +611,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     /**
      * Reset dependencies prior to adding new ones
      */
@@ -728,7 +618,6 @@ class PEAR_PackageFile_v1
     {
         unset($this->_packageInfo['release_deps']);
     }
-
     function addPhpDep($version, $rel)
     {
         $this->_isValid = false;
@@ -737,7 +626,6 @@ class PEAR_PackageFile_v1
                   'rel' => $rel,
                   'version' => $version);
     }
-
     function addPackageDep($name, $version, $rel, $optional = 'no')
     {
         $this->_isValid = false;
@@ -751,7 +639,6 @@ class PEAR_PackageFile_v1
         }
         $this->_packageInfo['release_deps'][] = $dep;
     }
-
     function addExtensionDep($name, $version, $rel, $optional = 'no')
     {
         $this->_isValid = false;
@@ -762,7 +649,6 @@ class PEAR_PackageFile_v1
                   'version' => $version,
                   'optional' => $optional);
     }
-
     /**
      * WARNING - do not use this function directly unless you know what you're doing
      */
@@ -770,33 +656,27 @@ class PEAR_PackageFile_v1
     {
         $this->_packageInfo['release_deps'] = $deps;
     }
-
     function hasDeps()
     {
         return isset($this->_packageInfo['release_deps']) &&
             count($this->_packageInfo['release_deps']);
     }
-
     function getDependencyGroup($group)
     {
         return false;
     }
-
     function isCompatible($pf)
     {
         return false;
     }
-
     function isSubpackageOf($p)
     {
         return $p->isSubpackage($this);
     }
-
     function isSubpackage($p)
     {
         return false;
     }
-
     function dependsOn($package, $channel)
     {
         if (strtolower($channel) != 'pear.php.net') {
@@ -815,7 +695,6 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function getConfigureOptions()
     {
         if (isset($this->_packageInfo['configure_options'])) {
@@ -823,13 +702,11 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function hasConfigureOptions()
     {
         return isset($this->_packageInfo['configure_options']) &&
             count($this->_packageInfo['configure_options']);
     }
-
     function addConfigureOption($name, $prompt, $default = false)
     {
         $o = array('name' => $name, 'prompt' => $prompt);
@@ -841,12 +718,10 @@ class PEAR_PackageFile_v1
         }
         $this->_packageInfo['configure_options'][] = $o;
     }
-
     function clearConfigureOptions()
     {
         unset($this->_packageInfo['configure_options']);
     }
-
     function getProvides()
     {
         if (isset($this->_packageInfo['provides'])) {
@@ -854,12 +729,10 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function getProvidesExtension()
     {
         return false;
     }
-
     function addFile($dir, $file, $attrs)
     {
         $dir = preg_replace(array('!\\\\+!', '!/+!'), array('/', '/'), $dir);
@@ -872,12 +745,10 @@ class PEAR_PackageFile_v1
         $file = preg_replace('![\\/]+!', '/', $file);
         $this->_packageInfo['filelist'][$file] = $attrs;
     }
-
     function getInstallationFilelist()
     {
         return $this->getFilelist();
     }
-
     function getFilelist()
     {
         if (isset($this->_packageInfo['filelist'])) {
@@ -885,17 +756,14 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function setFileAttribute($file, $attr, $value)
     {
         $this->_packageInfo['filelist'][$file][$attr] = $value;
     }
-
     function resetFilelist()
     {
         $this->_packageInfo['filelist'] = array();
     }
-
     function setInstalledAs($file, $path)
     {
         if ($path) {
@@ -903,7 +771,6 @@ class PEAR_PackageFile_v1
         }
         unset($this->_packageInfo['filelist'][$file]['installed_as']);
     }
-
     function installedFile($file, $atts)
     {
         if (isset($this->_packageInfo['filelist'][$file])) {
@@ -913,7 +780,6 @@ class PEAR_PackageFile_v1
             $this->_packageInfo['filelist'][$file] = $atts;
         }
     }
-
     function getChangelog()
     {
         if (isset($this->_packageInfo['changelog'])) {
@@ -921,12 +787,10 @@ class PEAR_PackageFile_v1
         }
         return false;
     }
-
     function getPackagexmlVersion()
     {
         return '1.0';
     }
-
     /**
      * Wrapper to {@link PEAR_ErrorStack::getErrors()}
      * @param boolean determines whether to purge the error stack after retrieving
@@ -936,7 +800,6 @@ class PEAR_PackageFile_v1
     {
         return $this->_stack->getErrors($purge);
     }
-
     // }}}
     /**
      * Validation error.  Also marks the object contents as invalid
@@ -949,7 +812,6 @@ class PEAR_PackageFile_v1
         $this->_stack->push($code, 'error', $params, false, false, debug_backtrace());
         $this->_isValid = false;
     }
-
     /**
      * Validation warning.  Does not mark the object contents invalid.
      * @param error code
@@ -960,7 +822,6 @@ class PEAR_PackageFile_v1
     {
         $this->_stack->push($code, 'warning', $params, false, false, debug_backtrace());
     }
-
     /**
      * @param integer error code
      * @access protected
@@ -1048,7 +909,6 @@ class PEAR_PackageFile_v1
                     'Package.xml contains non-ISO-8859-1 characters, and may not validate',
             );
     }
-
     /**
      * Validate XML package definition file.
      *
@@ -1068,7 +928,6 @@ class PEAR_PackageFile_v1
         } else {
             $this->_packageName = $pn = $info['package'];
         }
-
         if (empty($info['summary'])) {
             $this->_validateError(PEAR_PACKAGEFILE_ERROR_NO_SUMMARY);
         } elseif (strpos(trim($info['summary']), "\n") !== false) {
@@ -1242,7 +1101,6 @@ class PEAR_PackageFile_v1
         }
         return $this->_isValid = 0;
     }
-
     function _analyzePhpFiles()
     {
         if (!$this->_isValid) {
@@ -1297,7 +1155,6 @@ class PEAR_PackageFile_v1
         }
         return $this->_isValid;
     }
-
     /**
      * Get the default xml generator object
      *
@@ -1311,7 +1168,6 @@ class PEAR_PackageFile_v1
         $a = &new PEAR_PackageFile_Generator_v1($this);
         return $a;
     }
-
     /**
      * Get the contents of a file listed within the package.xml
      * @param string
@@ -1344,7 +1200,6 @@ class PEAR_PackageFile_v1
             return $file;
         }
     }
-
     // {{{ analyzeSourceCode()
     /**
      * Analyze the source code of the given PHP file
@@ -1541,7 +1396,6 @@ class PEAR_PackageFile_v1
             "implements" => $implements,
             );
     }
-
     /**
      * Build a "provides" array from data returned by
      * analyzeSourceCode().  The format of the built array is like
@@ -1593,7 +1447,6 @@ class PEAR_PackageFile_v1
                     array('file'=> $file, 'type' => 'function', 'name' => $function);
             }
         }
-
         foreach ($srcinfo['declared_functions'] as $function) {
             $key = "function;$function";
             if ($function{0} == '_' || isset($this->_packageInfo['provides'][$key])) {
@@ -1606,7 +1459,6 @@ class PEAR_PackageFile_v1
                 array('file'=> $file, 'type' => 'function', 'name' => $function);
         }
     }
-
     // }}}
 }
 ?>

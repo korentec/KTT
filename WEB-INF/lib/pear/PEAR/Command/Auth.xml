@@ -6,7 +6,6 @@
   <options />
   <doc>&lt;channel name&gt;
 WARNING: This function is deprecated in favor of using channel-login
-
 Log in to a remote channel server.  If &lt;channel name&gt; is not supplied,
 the default channel is used. To use remote functions in the installer
 that require any kind of privileges, you need to log in first.  The
@@ -22,7 +21,6 @@ operations on the remote server.</doc>
   <options />
   <doc>
 WARNING: This function is deprecated in favor of using channel-logout
-
 Logs out from the remote server.  This command does not actually
 connect to the remote server, it only deletes the stored username and
 password from your user configuration.</doc>

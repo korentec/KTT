@@ -13,7 +13,6 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.7.0
  */
-
 /**
  * @category   pear
  * @package    PEAR

@@ -19,7 +19,6 @@
  */
 require_once 'System.php';
 require_once 'XML/Util.php';
-
 /**
  * This class converts a PEAR_PackageFile_v2 object into any output format.
  *
@@ -74,20 +73,17 @@ http://pear.php.net/dtd/package-2.0.xsd',
         'beautifyFilelist'   => false,
         'encoding' => 'UTF-8',
     );
-
    /**
     * options for the serialization
     * @access private
     * @var array $options
     */
     var $options = array();
-
    /**
     * current tag depth
     * @var integer $_tagDepth
     */
     var $_tagDepth = 0;
-
    /**
     * serilialized representation of the data
     * @var string $_serializedData
@@ -107,7 +103,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             $this->_defaultOptions['encoding'] = $this->_packagefile->encoding;
         }
     }
-
     /**
      * @return string
      */
@@ -115,7 +110,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
     {
         return '1.9.4';
     }
-
     /**
      * @param PEAR_Packager
      * @param bool generate a .tgz or a .tar
@@ -126,7 +120,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         $a = null;
         return $this->toTgz2($packager, $a, $compress, $where);
     }
-
     /**
      * Package up both a package.xml and package2.xml for the same release
      * @param PEAR_Packager
@@ -143,7 +136,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 '" is not equivalent to "' . basename($this->_packagefile->getPackageFile())
                 . '"');
         }
-
         if ($where === null) {
             if (!($where = System::mktemp(array('-d')))) {
                 return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: mktemp failed');
@@ -152,17 +144,14 @@ http://pear.php.net/dtd/package-2.0.xsd',
             return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: "' . $where . '" could' .
                 ' not be created');
         }
-
         $file = $where . DIRECTORY_SEPARATOR . 'package.xml';
         if (file_exists($file) && !is_file($file)) {
             return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: unable to save package.xml as' .
                 ' "' . $file  .'"');
         }
-
         if (!$this->_packagefile->validate(PEAR_VALIDATE_PACKAGING)) {
             return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: invalid package.xml');
         }
-
         $ext = $compress ? '.tgz' : '.tar';
         $pkgver = $this->_packagefile->getPackage() . '-' . $this->_packagefile->getVersion();
         $dest_package = getcwd() . DIRECTORY_SEPARATOR . $pkgver . $ext;
@@ -170,16 +159,13 @@ http://pear.php.net/dtd/package-2.0.xsd',
             return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: cannot create tgz file "' .
                 $dest_package . '"');
         }
-
         $pkgfile = $this->_packagefile->getPackageFile();
         if (!$pkgfile) {
             return PEAR::raiseError('PEAR_Packagefile_v2::toTgz: package file object must ' .
                 'be created from a real file');
         }
-
         $pkgdir  = dirname(realpath($pkgfile));
         $pkgfile = basename($pkgfile);
-
         // {{{ Create the package file list
         $filelist = array();
         $i = 0;
@@ -190,7 +176,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             if (!isset($contents[0])) {
                 $contents = array($contents);
             }
-
             $packageDir = $where;
             foreach ($contents as $i => $package) {
                 $fname = $package;
@@ -198,7 +183,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 if (!file_exists($file)) {
                     return $packager->raiseError("File does not exist: $fname");
                 }
-
                 $tfile = $packageDir . DIRECTORY_SEPARATOR . $fname;
                 System::mkdir(array('-p', dirname($tfile)));
                 copy($file, $tfile);
@@ -210,7 +194,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             if (!isset($contents[0])) {
                 $contents = array($contents);
             }
-
             $packageDir = $where;
             foreach ($contents as $i => $file) {
                 $fname = $file['attribs']['name'];
@@ -220,7 +203,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 if (!file_exists($file)) {
                     return $packager->raiseError("File does not exist: $fname");
                 }
-
                 $origperms = fileperms($file);
                 $tfile = $packageDir . DIRECTORY_SEPARATOR . $fname;
                 unset($orig['attribs']);
@@ -240,11 +222,9 @@ http://pear.php.net/dtd/package-2.0.xsd',
                         if (!$res) {
                             continue; // skip this task
                         }
-
                         if (PEAR::isError($res)) {
                             return $res;
                         }
-
                         $contents = $res; // save changes
                         System::mkdir(array('-p', dirname($tfile)));
                         $wp = fopen($tfile, "wb");
@@ -252,12 +232,10 @@ http://pear.php.net/dtd/package-2.0.xsd',
                         fclose($wp);
                     }
                 }
-
                 if (!file_exists($tfile)) {
                     System::mkdir(array('-p', dirname($tfile)));
                     copy($file, $tfile);
                 }
-
                 chmod($tfile, $origperms);
                 $filelist[$i++] = $tfile;
                 $this->_packagefile->setFileAttribute($fname, 'md5sum', md5_file($tfile), $i - 1);
@@ -265,7 +243,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             }
         }
             // }}}
-
         $name       = $pf1 !== null ? 'package2.xml' : 'package.xml';
         $packagexml = $this->toPackageFile($where, PEAR_VALIDATE_PACKAGING, $name);
         if ($packagexml) {
@@ -279,13 +256,11 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 return $packager->raiseError('PEAR_Packagefile_v2::toTgz(): adding ' . $name .
                     ' failed');
             }
-
             // ----- Add the content of the package
             if (!$tar->addModify($filelist, $pkgver, $where)) {
                 return $packager->raiseError(
                     'PEAR_Packagefile_v2::toTgz(): tarball creation failed');
             }
-
             // add the package.xml version 1.0
             if ($pf1 !== null) {
                 $pfgen = &$pf1->getDefaultGenerator();
@@ -295,18 +270,15 @@ http://pear.php.net/dtd/package-2.0.xsd',
                         'PEAR_Packagefile_v2::toTgz(): adding package.xml failed');
                 }
             }
-
             return $dest_package;
         }
     }
-
     function toPackageFile($where = null, $state = PEAR_VALIDATE_NORMAL, $name = 'package.xml')
     {
         if (!$this->_packagefile->validate($state)) {
             return PEAR::raiseError('PEAR_Packagefile_v2::toPackageFile: invalid package.xml',
                 null, null, null, $this->_packagefile->getValidationWarnings());
         }
-
         if ($where === null) {
             if (!($where = System::mktemp(array('-d')))) {
                 return PEAR::raiseError('PEAR_Packagefile_v2::toPackageFile: mktemp failed');
@@ -315,7 +287,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             return PEAR::raiseError('PEAR_Packagefile_v2::toPackageFile: "' . $where . '" could' .
                 ' not be created');
         }
-
         $newpkgfile = $where . DIRECTORY_SEPARATOR . $name;
         $np = @fopen($newpkgfile, 'wb');
         if (!$np) {
@@ -326,12 +297,10 @@ http://pear.php.net/dtd/package-2.0.xsd',
         fclose($np);
         return $newpkgfile;
     }
-
     function &toV2()
     {
         return $this->_packagefile;
     }
-
     /**
      * Return an XML document based on the package info (as returned
      * by the PEAR_Common::infoFrom* methods).
@@ -345,38 +314,31 @@ http://pear.php.net/dtd/package-2.0.xsd',
         if (!$this->_packagefile->validate($state)) {
             return false;
         }
-
         if (is_array($options)) {
             $this->options = array_merge($this->_defaultOptions, $options);
         } else {
             $this->options = $this->_defaultOptions;
         }
-
         $arr = $this->_packagefile->getArray();
         if (isset($arr['filelist'])) {
             unset($arr['filelist']);
         }
-
         if (isset($arr['_lastversion'])) {
             unset($arr['_lastversion']);
         }
-
         // Fix the notes a little bit
         if (isset($arr['notes'])) {
             // This trims out the indenting, needs fixing
             $arr['notes'] = "\n" . trim($arr['notes']) . "\n";
         }
-
         if (isset($arr['changelog']) && !empty($arr['changelog'])) {
             // Fix for inconsistency how the array is filled depending on the changelog release amount
             if (!isset($arr['changelog']['release'][0])) {
                 $release = $arr['changelog']['release'];
                 unset($arr['changelog']['release']);
-
                 $arr['changelog']['release']    = array();
                 $arr['changelog']['release'][0] = $release;
             }
-
             foreach (array_keys($arr['changelog']['release']) as $key) {
                 $c =& $arr['changelog']['release'][$key];
                 if (isset($c['notes'])) {
@@ -385,7 +347,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 }
             }
         }
-
         if ($state ^ PEAR_VALIDATE_PACKAGING && !isset($arr['bundle'])) {
             $use = $this->_recursiveXmlFilelist($arr['contents']['dir']['file']);
             unset($arr['contents']['dir']['file']);
@@ -397,15 +358,12 @@ http://pear.php.net/dtd/package-2.0.xsd',
             }
             $this->options['beautifyFilelist'] = true;
         }
-
         $arr['attribs']['packagerversion'] = '1.9.4';
         if ($this->serialize($arr, $options)) {
             return $this->_serializedData . "\n";
         }
-
         return false;
     }
-
 
     function _recursiveXmlFilelist($list)
     {
@@ -427,7 +385,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         $this->_deFormat($dirs);
         return $dirs;
     }
-
     function _addDir(&$dirs, $dir, $file = null, $attributes = null, $tasks = null)
     {
         if (!$tasks) {
@@ -445,7 +402,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
         $this->_addDir($dirs['dir'][$curdir], $dir, $file, $attributes, $tasks);
     }
-
     function _formatDir(&$dirs)
     {
         if (!count($dirs)) {
@@ -469,7 +425,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
             uksort($dirs['file'], 'strnatcasecmp');
         };
     }
-
     function _deFormat(&$dirs)
     {
         if (!count($dirs)) {
@@ -500,7 +455,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
         $dirs = $newdirs;
     }
-
     /**
     * reset all options to default options
     *
@@ -511,7 +465,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
     {
         $this->options = $this->_defaultOptions;
     }
-
    /**
     * set an option
     *
@@ -524,7 +477,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
     {
         $this->options[$name] = $value;
     }
-
    /**
     * sets several options at once
     *
@@ -537,7 +489,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
     {
         $this->options = array_merge($this->options, $options);
     }
-
    /**
     * serialize data
     *
@@ -559,7 +510,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         } else {
             $optionsBak = null;
         }
-
         //  start depth is zero
         $this->_tagDepth = 0;
         $this->_serializedData = '';
@@ -568,14 +518,12 @@ http://pear.php.net/dtd/package-2.0.xsd',
             $tagName = isset($this->options['rootName']) ? $this->options['rootName'] : 'array';
             $this->_serializedData .= $this->_serializeArray($data, $tagName, $this->options['rootAttributes']);
         }
-
         // add doctype declaration
         if ($this->options['addDoctype'] === true) {
             $this->_serializedData = XML_Util::getDoctypeDeclaration($tagName, $this->options['doctype'])
                                    . $this->options['linebreak']
                                    . $this->_serializedData;
         }
-
         //  build xml declaration
         if ($this->options['addDecl']) {
             $atts = array();
@@ -585,14 +533,11 @@ http://pear.php.net/dtd/package-2.0.xsd',
                                    . $this->_serializedData;
         }
 
-
         if ($optionsBak !== null) {
             $this->options = $optionsBak;
         }
-
         return  true;
     }
-
    /**
     * get the result of the serialization
     *
@@ -606,7 +551,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
         return $this->_serializedData;
     }
-
    /**
     * serialize any value
     *
@@ -634,7 +578,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
         }
         return $xml;
     }
-
    /**
     * serialize an array
     *
@@ -648,7 +591,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
     function _serializeArray(&$array, $tagName = null, $attributes = array())
     {
         $_content = null;
-
         /**
          * check for special attributes
          */
@@ -667,7 +609,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 }
             }
         }
-
         /*
         * if mode is set to simpleXML, check whether
         * the array is associative or indexed
@@ -683,7 +624,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                     break;
                 }
             }
-
             if ($indexed && $this->options['mode'] == 'simplexml') {
                 $string = '';
                 foreach ($array as $key => $val) {
@@ -712,7 +652,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                             $this->_curdir = $savedir;
                         }
                     }
-
                     $string .= $this->options['linebreak'];
                     // do indentation
                     if ($this->options['indent'] !== null && $this->_tagDepth > 0) {
@@ -722,7 +661,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 return rtrim($string);
             }
         }
-
         if ($this->options['scalarAsAttributes'] === true) {
             foreach ($array as $key => $value) {
                 if (is_scalar($value) && (XML_Util::isValidName($key) === true)) {
@@ -731,7 +669,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 }
             }
         }
-
         // check for empty array => create empty tag
         if (empty($array)) {
             $tag = array(
@@ -739,7 +676,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                             'content'    => $_content,
                             'attributes' => $attributes
                         );
-
         } else {
             $this->_tagDepth++;
             $tmp = $this->options['linebreak'];
@@ -748,7 +684,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 if ($this->options['indent'] !== null && $this->_tagDepth > 0) {
                     $tmp .= str_repeat($this->options['indent'], $this->_tagDepth);
                 }
-
                 // copy key
                 $origKey = $key;
                 // key cannot be used as tagname => use default tag
@@ -766,7 +701,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                     if ($key !== $origKey) {
                         $atts[$this->options['keyAttribute']] = (string)$origKey;
                     }
-
                 }
                 if ($this->options['beautifyFilelist'] && $key == 'dir') {
                     if (!isset($this->_curdir)) {
@@ -781,7 +715,6 @@ http://pear.php.net/dtd/package-2.0.xsd',
                         }
                     }
                 }
-
                 if (is_string($value) && $value && ($value{strlen($value) - 1} == "\n")) {
                     $value .= str_repeat($this->options['indent'], $this->_tagDepth);
                 }
@@ -802,16 +735,13 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 }
                 $tmp .= $this->options['linebreak'];
             }
-
             $this->_tagDepth--;
             if ($this->options['indent']!==null && $this->_tagDepth>0) {
                 $tmp .= str_repeat($this->options['indent'], $this->_tagDepth);
             }
-
             if (trim($tmp) === '') {
                 $tmp = null;
             }
-
             $tag = array(
                 'qname'      => $tagName,
                 'content'    => $tmp,
@@ -823,11 +753,9 @@ http://pear.php.net/dtd/package-2.0.xsd',
                 $tag['attributes'][$this->options['typeAttribute']] = 'array';
             }
         }
-
         $string = $this->_createXMLTag($tag, false);
         return $string;
     }
-
    /**
     * create a tag from an array
     * this method awaits an array in the following format
@@ -849,17 +777,14 @@ http://pear.php.net/dtd/package-2.0.xsd',
         if ($this->options['indentAttributes'] !== false) {
             $multiline = true;
             $indent    = str_repeat($this->options['indent'], $this->_tagDepth);
-
             if ($this->options['indentAttributes'] == '_auto') {
                 $indent .= str_repeat(' ', (strlen($tag['qname'])+2));
-
             } else {
                 $indent .= $this->options['indentAttributes'];
             }
         } else {
             $indent = $multiline = false;
         }
-
         if (is_array($tag['content'])) {
             if (empty($tag['content'])) {
                 $tag['content'] = '';
@@ -867,18 +792,15 @@ http://pear.php.net/dtd/package-2.0.xsd',
         } elseif(is_scalar($tag['content']) && (string)$tag['content'] == '') {
             $tag['content'] = '';
         }
-
         if (is_scalar($tag['content']) || is_null($tag['content'])) {
             if ($this->options['encoding'] == 'UTF-8' &&
                   version_compare(phpversion(), '5.0.0', 'lt')
             ) {
                 $tag['content'] = utf8_encode($tag['content']);
             }
-
             if ($replaceEntities === true) {
                 $replaceEntities = XML_UTIL_ENTITIES_XML;
             }
-
             $tag = XML_Util::createTagFromArray($tag, $replaceEntities, $multiline, $indent, $this->options['linebreak']);
         } elseif (is_array($tag['content'])) {
             $tag = $this->_serializeArray($tag['content'], $tag['qname'], $tag['attributes']);

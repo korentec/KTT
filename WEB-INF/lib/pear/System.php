@@ -13,15 +13,12 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
-
 /**
  * base class
  */
 require_once 'PEAR.php';
 require_once 'Console/Getopt.php';
-
 $GLOBALS['_System_temp_files'] = array();
-
 /**
 * System offers cross plattform compatible system functions
 *
@@ -83,7 +80,6 @@ class System
         }
         return Console_Getopt::getopt2($argv, $short_options, $long_options);
     }
-
     /**
      * Output errors with PHP trigger_error(). You can silence the errors
      * with prefixing a "@" sign to the function call: @System::mkdir(..);
@@ -101,7 +97,6 @@ class System
         trigger_error($error, E_USER_WARNING);
         return false;
     }
-
     /**
      * Creates a nested array representing the structure of a directory
      *
@@ -136,7 +131,6 @@ class System
             }
             return $struct; // XXX could not open error
         }
-
         $struct['dirs'][] = $sPath = realpath($sPath); // XXX don't add if '.' or '..' ?
         $list = array();
         while (false !== ($file = readdir($dir))) {
@@ -144,7 +138,6 @@ class System
                 $list[] = $file;
             }
         }
-
         closedir($dir);
         natsort($list);
         if ($aktinst < $maxinst || $maxinst == 0) {
@@ -158,10 +151,8 @@ class System
                 }
             }
         }
-
         return $struct;
     }
-
     /**
      * Creates a nested array representing the structure of a directory and files
      *
@@ -186,7 +177,6 @@ class System
         }
         return $struct;
     }
-
     /**
      * The rm command for removing files.
      * Supports multiple files and dirs and also recursive deletes
@@ -215,7 +205,6 @@ class System
                     $ret = false;
                 }
             }
-
             rsort($struct['dirs']);
             foreach ($struct['dirs'] as $dir) {
                 if (!@rmdir($dir)) {
@@ -232,7 +221,6 @@ class System
         }
         return $ret;
     }
-
     /**
      * Make directories.
      *
@@ -248,7 +236,6 @@ class System
         if (PEAR::isError($opts)) {
             return System::raiseError($opts);
         }
-
         $mode = 0777; // default mode
         foreach ($opts[0] as $opt) {
             if ($opt[0] == 'p') {
@@ -265,7 +252,6 @@ class System
                 $mode = $opt[1];
             }
         }
-
         $ret = true;
         if (isset($create_parents)) {
             foreach ($opts[1] as $dir) {
@@ -275,13 +261,11 @@ class System
                     array_unshift($dirstack, $dir);
                     $dir = dirname($dir);
                 }
-
                 while ($newdir = array_shift($dirstack)) {
                     if (!is_writeable(dirname($newdir))) {
                         $ret = false;
                         break;
                     }
-
                     if (!mkdir($newdir, $mode)) {
                         $ret = false;
                     }
@@ -294,10 +278,8 @@ class System
                 }
             }
         }
-
         return $ret;
     }
-
     /**
      * Concatenate files
      *
@@ -320,7 +302,6 @@ class System
         if (!is_array($args)) {
             $args = preg_split('/\s+/', $args, -1, PREG_SPLIT_NO_EMPTY);
         }
-
         $count_args = count($args);
         for ($i = 0; $i < $count_args; $i++) {
             if ($args[$i] == '>') {
@@ -362,7 +343,6 @@ class System
         }
         return $ret;
     }
-
     /**
      * Creates temporary files or directories. This function will remove
      * the created files when the scripts finish its execution.
@@ -394,7 +374,6 @@ class System
         if (PEAR::isError($opts)) {
             return System::raiseError($opts);
         }
-
         foreach ($opts[0] as $opt) {
             if ($opt[0] == 'd') {
                 $tmp_is_dir = true;
@@ -402,16 +381,13 @@ class System
                 $tmpdir = $opt[1];
             }
         }
-
         $prefix = (isset($opts[1][0])) ? $opts[1][0] : 'tmp';
         if (!isset($tmpdir)) {
             $tmpdir = System::tmpdir();
         }
-
         if (!System::mkDir(array('-p', $tmpdir))) {
             return false;
         }
-
         $tmp = tempnam($tmpdir, $prefix);
         if (isset($tmp_is_dir)) {
             unlink($tmp); // be careful possible race condition here
@@ -419,20 +395,16 @@ class System
                 return System::raiseError("Unable to create temporary directory $tmpdir");
             }
         }
-
         $GLOBALS['_System_temp_files'][] = $tmp;
         if (isset($tmp_is_dir)) {
             //$GLOBALS['_System_temp_files'][] = dirname($tmp);
         }
-
         if ($first_time) {
             PEAR::registerShutdownFunc(array('System', '_removeTmpFiles'));
             $first_time = false;
         }
-
         return $tmp;
     }
-
     /**
      * Remove temporary files created my mkTemp. This function is executed
      * at script shutdown time
@@ -449,7 +421,6 @@ class System
             $GLOBALS['_System_temp_files'] = array();
         }
     }
-
     /**
      * Get the path of the temporal directory set in the system
      * by looking in its environments variables.
@@ -481,7 +452,6 @@ class System
         }
         return realpath('/tmp');
     }
-
     /**
      * The "which" command (show the full path of a command)
      *
@@ -498,7 +468,6 @@ class System
         if (!is_string($program) || '' == $program) {
             return $fallback;
         }
-
         // full path given
         if (basename($program) != $program) {
             $path_elements[] = dirname($program);
@@ -513,7 +482,6 @@ class System
             }
             $path_elements = explode(PATH_SEPARATOR, $path);
         }
-
         if (OS_WINDOWS) {
             $exe_suffixes = getenv('PATHEXT')
                                 ? explode(PATH_SEPARATOR, getenv('PATHEXT'))
@@ -528,7 +496,6 @@ class System
             $exe_suffixes = array('');
             $pear_is_executable = 'is_executable';
         }
-
         foreach ($exe_suffixes as $suff) {
             foreach ($path_elements as $dir) {
                 $file = $dir . DIRECTORY_SEPARATOR . $program . $suff;
@@ -539,7 +506,6 @@ class System
         }
         return $fallback;
     }
-
     /**
      * The "find" command
      *

@@ -25,9 +25,7 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 // Note: This script uses Lichart PHP library and requires GD 2.0.1 or later.
-
 require_once('initialize.php');
 import('form.Form');
 import('DateAndTime');
@@ -36,13 +34,11 @@ import('ttSysConfig');
 import('PieChartEx');
 import('ttUserHelper');
 import('ttTeamHelper');
-
 // Access check.
 if (!ttAccessCheck(right_view_charts)) {
   header('Location: access_denied.php');
   exit();
 }
-
 // Initialize and store date in session.
 $cl_date = $request->getParameter('date', @$_SESSION['date']);
 if(!$cl_date) {
@@ -50,7 +46,6 @@ if(!$cl_date) {
   $cl_date = $now->toString(DB_DATEFORMAT);
 }
 $_SESSION['date'] = $cl_date;
-
 // Initialize chart interval.
 $cl_interval = $_SESSION['chart_interval'];
 if (!$cl_interval) {
@@ -59,7 +54,6 @@ if (!$cl_interval) {
 }
 if (!$cl_interval) $cl_interval = INTERVAL_THIS_MONTH;
 $_SESSION['chart_interval'] = $cl_interval;
-
 // Initialize chart type.
 $cl_type = $_SESSION['chart_type'];
 if (!$cl_type) {
@@ -80,10 +74,8 @@ if (MODE_TIME == $user->tracking_mode) {
 }
 if (!$cl_type) $cl_type = CHART_PROJECTS;
 $_SESSION['chart_type'] = $cl_type;
-
 // Who do we draw charts for?
 $on_behalf_id = $request->getParameter('onBehalfUser', (isset($_SESSION['behalf_id'])? $_SESSION['behalf_id'] : $user->id));
-
 if ($request->getMethod( )== 'POST') {    
   // If chart interval changed - save it.
   $cl_interval = $request->getParameter('interval');
@@ -118,10 +110,8 @@ if ($request->getMethod( )== 'POST') {
     }
   }
 }
-
 // Elements of chartForm.
 $chart_form = new Form('chartForm');
-
 // User dropdown. Changes the user "on behalf" of whom we are working. 
 if ($user->canManageTeam()) {
   $user_list = ttTeamHelper::getActiveUsers(array('putSelfFirst'=>true));
@@ -136,7 +126,6 @@ if ($user->canManageTeam()) {
     $smarty->assign('on_behalf_control', 1);
   }
 }
-
 // Chart interval options.
 $intervals = array();
 $intervals[INTERVAL_THIS_DAY] = $i18n->getKey('dropdown.this_day');
@@ -144,7 +133,6 @@ $intervals[INTERVAL_THIS_WEEK] = $i18n->getKey('dropdown.this_week');
 $intervals[INTERVAL_THIS_MONTH] = $i18n->getKey('dropdown.this_month');
 $intervals[INTERVAL_THIS_YEAR] = $i18n->getKey('dropdown.this_year');
 $intervals[INTERVAL_ALL_TIME] = $i18n->getKey('dropdown.all_time');
-
 // Chart interval dropdown.
 $chart_form->addInput(array('type' => 'combobox',
   'onchange' => 'if(this.form) this.form.submit();',
@@ -152,7 +140,6 @@ $chart_form->addInput(array('type' => 'combobox',
   'value' => $cl_interval,
   'data' => $intervals
 ));
-
 // Chart type options.
 $chart_selector = (MODE_PROJECTS_AND_TASKS == $user->tracking_mode
   || in_array('cl', explode(',', $user->plugins)));
@@ -173,14 +160,11 @@ if ($chart_selector) {
     'data' => $types
   ));
 }
-
 // Calendar.
 $chart_form->addInput(array('type'=>'calendar','name'=>'date','value'=>$cl_date)); // calendar
-
 // Get data for our chart.
 $totals = ttChartHelper::getTotals($on_behalf_id, $cl_type, $cl_date, $cl_interval);
 $smarty->assign('totals', $totals);   
-
 // Prepare chart for drawing.
 /*
  * We use libchart.php library to draw chart images. It can draw chart labels, too (embed in the image).
@@ -201,13 +185,11 @@ foreach($totals as $total) {
   $data_set->addPoint(new Point( $total['name'], $total['time']));
 }
 $chart->setDataSet($data_set); 
-
 // Prepare a file name.
 $img_dir = TEMPLATE_DIR.'_c/'; // Directory.
 $file_name = uniqid('chart_').'.png'; // Short file name. Unique ID here is to avoid problems with browser caching.
 $img_ref = 'WEB-INF/templates_c/'.$file_name; // Image reference for html.
 $file_name = $img_dir.$file_name; // Full file name. 
-
 // Clean up the file system from older images.
 $img_files = glob($img_dir.'chart_*.png');
 foreach($img_files as $file) {
@@ -216,11 +198,9 @@ foreach($img_files as $file) {
     unlink($file);
   }
 }
-
 // Write chart image to file system.
 $chart->renderEx(array('fileName'=>$file_name,'hideLogo'=>true,'hideTitle'=>true,'hideLabel'=>true));
 // At this point libchart usage is complete and we have chart image on disk.
-
 $smarty->assign('img_file_name', $img_ref);
 $smarty->assign('chart_selector', $chart_selector);
 $smarty->assign('forms', array($chart_form->getName() => $chart_form->toArray()));

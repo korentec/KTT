@@ -44,9 +44,7 @@
 //
 // $Id: mysql.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 require_once 'MDB2/Driver/Function/Common.php';
-
 /**
  * MDB2 MySQL driver for the function modules
  *
@@ -58,7 +56,6 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
 {
      // }}}
     // {{{ executeStoredProc()
-
     /**
      * Execute a stored procedure and return any results
      *
@@ -77,15 +74,12 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $query = 'CALL '.$name;
         $query .= $params ? '('.implode(', ', $params).')' : '()';
         return $db->query($query, $types, $result_class, $result_wrap_class);
     }
-
     // }}}
     // {{{ unixtimestamp()
-
     /**
      * return string to call a function to get the unix timestamp from a iso timestamp
      *
@@ -98,10 +92,8 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
     {
         return 'UNIX_TIMESTAMP('. $expression.')';
     }
-
     // }}}
     // {{{ concat()
-
     /**
      * Returns string to concatenate two or more string parameters
      *
@@ -116,10 +108,8 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
         $args = func_get_args();
         return "CONCAT(".implode(', ', $args).")";
     }
-
     // }}}
     // {{{ guid()
-
     /**
      * Returns global unique identifier
      *
@@ -130,7 +120,6 @@ class MDB2_Driver_Function_mysql extends MDB2_Driver_Function_Common
     {
         return 'UUID()';
     }
-
     // }}}
 }
 ?>

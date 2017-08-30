@@ -25,7 +25,6 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 require_once('initialize.php');
 import('form.Form');
 import('ttUserHelper');
@@ -33,28 +32,22 @@ import('ttTeamHelper');
 import('ttClientHelper');
 import('ttTimeHelper');
 import('DateAndTime');
-
 // Access check.
 if (!ttAccessCheck(right_data_entry)) {
   header('Location: access_denied.php');
   exit();
 }
-
 // Use custom fields plugin if it is enabled.
 if (in_array('cf', explode(',', $user->plugins))) {
   require_once('plugins/CustomFields.class.php');
   $custom_fields = new CustomFields($user->team_id);
   $smarty->assign('custom_fields', $custom_fields);
 }
-
 $cl_id = $request->getParameter('id');
-
 // Get the time record we are editing.
 $time_rec = ttTimeHelper::getRecord($cl_id, $user->getActiveUser());
-
 // Prohibit editing invoiced records.
 if ($time_rec['invoice_id']) die($i18n->getKey('error.sys'));
-
 $item_date = new DateAndTime(DB_DATEFORMAT, $time_rec['date']);
   
 // Initialize variables.
@@ -109,7 +102,6 @@ if ($request->getMethod() == 'POST') {
   
 // Initialize elements of 'timeRecordForm'.
 $form = new Form('timeRecordForm');
-
 // Dropdown for clients in MODE_TIME. Use all active clients.
 if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plugins))) {
     $active_clients = ttTeamHelper::getActiveClients($user->team_id, true);
@@ -124,7 +116,6 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
     ));
   // Note: in other modes the client list is filtered to relevant clients only. See below.
 }
-
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
   // Dropdown for projects assigned to user.
   $project_list = $user->getAssignedProjects();
@@ -152,7 +143,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
 		"datakeys"=>array("a_id","a_name"),
 		"empty"=>array(""=>$i18n->getKey('controls.select.activity'))
 		));
-
 	 $form->addInput(array("type"=>"text","name"=>"subactivity","value"=>$cl_sub_activity));
   
   
@@ -168,14 +158,12 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
 		"empty"=>array(""=>$i18n->getKey('controls.select.location'))
 		));
 
-
   // Dropdown for clients if the clients plugin is enabled.
   if (in_array('cl', explode(',', $user->plugins))) {
     $active_clients = ttTeamHelper::getActiveClients($user->team_id, true);
     // We need an array of assigned project ids to do some trimming. 
     foreach($project_list as $project)
       $projects_assigned_to_user[] = $project['id'];
-
     // Build a client list out of active clients. Use only clients that are relevant to user.
     // Also trim their associated project list to only assigned projects (to user).
     foreach($active_clients as $client) {
@@ -197,7 +185,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
     ));
   }
 }
-
 if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
   $task_list = ttTeamHelper::getActiveTasks($user->team_id);
   $form->addInput(array('type'=>'combobox',
@@ -213,7 +200,7 @@ if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
 // Add other controls.
 if ((TYPE_START_FINISH == $user->record_type) || (TYPE_ALL == $user->record_type)) {
   $form->addInput(array('type'=>'text','name'=>'start','value'=>$cl_start,'onchange'=>"formDisable('start');"));
-  $form->addInput(array('type'=>'text','name'=>'finish','value'=>$cl_finish,'onchange'=>"formDisable('finish');"));
+  $form->addInput(array('type'=>'text','name'=>'finish','value'=>$cl_finish,'onchange'=>"formDisable('finish');"));  
 }
 if (!$user->canManageTeam() && defined('READONLY_START_FINISH') && isTrue(READONLY_START_FINISH)) {
   // Make the start and finish fields read-only.
@@ -247,9 +234,7 @@ $form->addInput(array('type'=>'hidden','name'=>'browser_today','value'=>'')); //
 $form->addInput(array('type'=>'submit','name'=>'btn_save','onclick'=>'browser_today.value=get_date()','value'=>$i18n->getKey('button.save')));
 $form->addInput(array('type'=>'submit','name'=>'btn_copy','onclick'=>'browser_today.value=get_date()','value'=>$i18n->getKey('button.copy')));
 $form->addInput(array('type'=>'submit','name'=>'btn_delete','value'=>$i18n->getKey('label.delete')));
-
 if ($request->getMethod() == 'POST') {
-
   // Validate user input.
   if (in_array('cl', explode(',', $user->plugins)) && in_array('cm', explode(',', $user->plugins)) && !$cl_client)
     $errors->add($i18n->getKey('error.client'));
@@ -297,17 +282,14 @@ if ($request->getMethod() == 'POST') {
     $lockdate = new DateAndTime();
     $lockdate->decDay($lock_interval);
   }
-
   // This is a new date for the time record.
   $new_date = new DateAndTime($user->date_format, $cl_date);
-
   // Prohibit creating entries in future.
   if (defined('FUTURE_ENTRIES') && !isTrue(FUTURE_ENTRIES)) {
     $browser_today = new DateAndTime(DB_DATEFORMAT, $request->getParameter('browser_today', null));
     if ($new_date->after($browser_today))
       $errors->add($i18n->getKey('error.future_date'));
   }
-
   // Save record.
   if ($request->getParameter('btn_save')) {
     // We need to:
@@ -339,7 +321,6 @@ if ($request->getMethod() == 'POST') {
       if (ttTimeHelper::overlaps($user->getActiveUser(), $new_date->toString(DB_DATEFORMAT), $cl_start, $cl_finish, $cl_id))
         $errors->add($i18n->getKey('error.overlap'));
     } 
-
     // Now, an update.
     if ($errors->isEmpty()) {
       $res = ttTimeHelper::update(array(
@@ -400,7 +381,6 @@ if ($request->getMethod() == 'POST') {
       if (ttTimeHelper::overlaps($user->getActiveUser(), $new_date->toString(DB_DATEFORMAT), $cl_start, $cl_finish))
         $errors->add($i18n->getKey('error.overlap'));
     }
-
     // Now, a new insert.
     if ($errors->isEmpty()) {
       	
@@ -415,7 +395,6 @@ if ($request->getMethod() == 'POST') {
         'duration'=>$cl_duration,
         'note'=>$cl_note,
         'billable'=>$cl_billable));
-
       // Insert a custom field if we have it.
       $res = true;
       if ($id && $custom_fields && $cl_cf_1) {
@@ -437,7 +416,6 @@ if ($request->getMethod() == 'POST') {
     exit();
   }
 } // End of if ($request->getMethod() == "POST")
-
 $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign("activity_list", $activity_list );

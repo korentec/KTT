@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Resource Registered
  * 
@@ -32,7 +31,6 @@ class Smarty_Internal_Resource_Registered {
     // properties
     public $usesCompiler = true;
     public $isEvaluated = false;
-
     /**
      * Return flag if template source is existing
      * 
@@ -58,7 +56,6 @@ class Smarty_Internal_Resource_Registered {
         $_template->templateUid = sha1($_filepath);
         return $_filepath;
     } 
-
     /**
      * Get timestamp of template source
      * 
@@ -88,7 +85,6 @@ class Smarty_Internal_Resource_Registered {
             array($_resource_name, &$time_stamp, $this->smarty));
         return is_numeric($time_stamp) ? (int)$time_stamp : $time_stamp;
     } 
-
     /**
      * Retuen template source from resource name
      * 
@@ -101,7 +97,6 @@ class Smarty_Internal_Resource_Registered {
         return call_user_func_array($this->smarty->registered_resources[$_template->resource_type][0][0],
             array($_template->resource_name, &$_template->template_source, $this->smarty));
     } 
-
     /**
      * Get filepath to compiled template
      * 
@@ -139,5 +134,4 @@ class Smarty_Internal_Resource_Registered {
         return $_compile_dir . $_filepath . '.' . $_template->resource_type . '.' . basename($_template->resource_name) . $_cache . '.php';
     } 
 } 
-
 ?>

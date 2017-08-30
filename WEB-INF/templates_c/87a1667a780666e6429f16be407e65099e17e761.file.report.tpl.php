@@ -23,7 +23,6 @@ $_smarty_tpl->decodeProperties(array (
 </script>
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['reportForm']['open'];?>
-
 <table width="720">
   <td valign="top">
     <table border="0" cellpadding="3" cellspacing="1" width="100%">
@@ -115,7 +114,6 @@ if ($_smarty_tpl->_count($_from) > 0){
       <?php if ($_smarty_tpl->getVariable('cur_grouped_by')->value!=$_smarty_tpl->getVariable('prev_grouped_by')->value&&!$_smarty_tpl->getVariable('first_pass')->value){?>
       <tr class="rowReportSubtotal">
         <td class="cellLeftAlignedSubtotal"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['subtotal'];?>
-
         <?php if ($_smarty_tpl->getVariable('user')->value->canManageTeam()||$_smarty_tpl->getVariable('user')->value->isClient()){?><td class="cellLeftAlignedSubtotal"><?php if ($_smarty_tpl->getVariable('group_by')->value=='user'){?><?php echo smarty_modifier_escape($_smarty_tpl->getVariable('subtotals')->value[$_smarty_tpl->getVariable('prev_grouped_by')->value]['name'],'html');?>
 </td><?php }?><?php }?>
         <?php if ($_smarty_tpl->getVariable('bean')->value->getAttribute('chclient')){?><td class="cellLeftAlignedSubtotal"><?php if ($_smarty_tpl->getVariable('group_by')->value=='client'){?><?php echo smarty_modifier_escape($_smarty_tpl->getVariable('subtotals')->value[$_smarty_tpl->getVariable('prev_grouped_by')->value]['name'],'html');?>
@@ -196,7 +194,6 @@ if ($_smarty_tpl->_count($_from) > 0){
   <?php if ($_smarty_tpl->getVariable('print_subtotals')->value){?>      
       <tr class="rowReportSubtotal">
         <td class="cellLeftAlignedSubtotal"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['subtotal'];?>
-
     <?php if ($_smarty_tpl->getVariable('user')->value->canManageTeam()||$_smarty_tpl->getVariable('user')->value->isClient()){?><td class="cellLeftAlignedSubtotal"><?php if ($_smarty_tpl->getVariable('group_by')->value=='user'){?><?php echo smarty_modifier_escape($_smarty_tpl->getVariable('subtotals')->value[$_smarty_tpl->getVariable('cur_grouped_by')->value]['name'],'html');?>
 </td><?php }?><?php }?>
     <?php if ($_smarty_tpl->getVariable('bean')->value->getAttribute('chclient')){?><td class="cellLeftAlignedSubtotal"><?php if ($_smarty_tpl->getVariable('group_by')->value=='client'){?><?php echo smarty_modifier_escape($_smarty_tpl->getVariable('subtotals')->value[$_smarty_tpl->getVariable('cur_grouped_by')->value]['name'],'html');?>
@@ -260,7 +257,6 @@ if ($_smarty_tpl->_count($_from) > 0){
 </table>
 <?php }?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['reportForm']['close'];?>
-
 
 <table width="720" cellspacing="4" cellpadding="4" border="0">
 <tr>

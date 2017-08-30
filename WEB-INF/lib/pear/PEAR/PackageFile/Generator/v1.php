@@ -43,12 +43,10 @@ class PEAR_PackageFile_Generator_v1
     {
         $this->_packagefile = &$packagefile;
     }
-
     function getPackagerVersion()
     {
         return '1.9.4';
     }
-
     /**
      * @param PEAR_Packager
      * @param bool if true, a .tgz is written, otherwise a .tar is written
@@ -93,7 +91,6 @@ class PEAR_PackageFile_Generator_v1
         // {{{ Create the package file list
         $filelist = array();
         $i = 0;
-
         foreach ($this->_packagefile->getFilelist() as $fname => $atts) {
             $file = $pkgdir . DIRECTORY_SEPARATOR . $fname;
             if (!file_exists($file)) {
@@ -125,7 +122,6 @@ class PEAR_PackageFile_Generator_v1
             return $dest_package;
         }
     }
-
     /**
      * @param string|null directory to place the package.xml in, or null for a temporary dir
      * @param int one of the PEAR_VALIDATE_* constants
@@ -158,7 +154,6 @@ class PEAR_PackageFile_Generator_v1
         fclose($np);
         return $newpkgfile;
     }
-
     /**
      * fix both XML encoding to be UTF8, and replace standard XML entities < > " & '
      *
@@ -178,7 +173,6 @@ class PEAR_PackageFile_Generator_v1
                                           '"'  => '&quot;',
                                           '\'' => '&apos;' ));
     }
-
     /**
      * Return an XML document based on the package info (as returned
      * by the PEAR_Common::infoFrom* methods).
@@ -230,10 +224,8 @@ class PEAR_PackageFile_Generator_v1
         $ret .= "</package>\n";
         return $ret;
     }
-
     // }}}
     // {{{ _makeReleaseXml()
-
     /**
      * Generate part of an XML description with release information.
      *
@@ -354,7 +346,6 @@ class PEAR_PackageFile_Generator_v1
         $ret .= "$indent </release>\n";
         return $ret;
     }
-
     /**
      * @param array
      * @access protected
@@ -367,7 +358,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $this->_formatDir($this->_dirs);
     }
-
     /**
      * @param array
      * @param array
@@ -387,7 +377,6 @@ class PEAR_PackageFile_Generator_v1
         }
         $this->_addDir($dirs['dirs'][$curdir], $dir, $file, $attributes);
     }
-
     /**
      * @param array
      * @param string
@@ -417,7 +406,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $ret;
     }
-
     /**
      * @param string
      * @param array
@@ -457,9 +445,7 @@ class PEAR_PackageFile_Generator_v1
         }
         return $ret;
     }
-
     // {{{ _unIndent()
-
     /**
      * Unindent given string (?)
      *
@@ -483,7 +469,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $data;
     }
-
     /**
      * @return array
      */
@@ -493,7 +478,6 @@ class PEAR_PackageFile_Generator_v1
         $this->_convertDependencies2_0($arr);
         return $arr['dependencies'];
     }
-
     /**
      * Convert a package.xml version 1.0 into version 2.0
      *
@@ -515,7 +499,6 @@ class PEAR_PackageFile_Generator_v1
                 return $a;
             }
         }
-
         $arr = array(
             'attribs' => array(
                              'version' => '2.0',
@@ -545,7 +528,6 @@ class PEAR_PackageFile_Generator_v1
             );
             $arr['lead'][] = $new;
         }
-
         if (!isset($arr['lead'])) { // some people... you know?
             $arr['lead'] = array(
                 'name' => 'unknown',
@@ -554,11 +536,9 @@ class PEAR_PackageFile_Generator_v1
                 'active' => 'no',
             );
         }
-
         if (count($arr['lead']) == 1) {
             $arr['lead'] = $arr['lead'][0];
         }
-
         foreach ($maintainers as $maintainer) {
             if ($maintainer['role'] == 'lead') {
                 continue;
@@ -571,19 +551,15 @@ class PEAR_PackageFile_Generator_v1
             );
             $arr[$maintainer['role']][] = $new;
         }
-
         if (isset($arr['developer']) && count($arr['developer']) == 1) {
             $arr['developer'] = $arr['developer'][0];
         }
-
         if (isset($arr['contributor']) && count($arr['contributor']) == 1) {
             $arr['contributor'] = $arr['contributor'][0];
         }
-
         if (isset($arr['helper']) && count($arr['helper']) == 1) {
             $arr['helper'] = $arr['helper'][0];
         }
-
         $arr['date'] = $this->_packagefile->getDate();
         $arr['version'] =
             array(
@@ -607,7 +583,6 @@ class PEAR_PackageFile_Generator_v1
                 'gpl' => 'http://www.gnu.org/copyleft/gpl.html',
                 'apache' => 'http://www.opensource.org/licenses/apache2.0.php'
             );
-
         if (isset($licensemap[strtolower($this->_packagefile->getLicense())])) {
             $arr['license'] = array(
                 'attribs' => array('uri' =>
@@ -618,7 +593,6 @@ class PEAR_PackageFile_Generator_v1
             // don't use bogus uri
             $arr['license'] = $this->_packagefile->getLicense();
         }
-
         $arr['notes'] = $this->_packagefile->getNotes();
         $temp = array();
         $arr['contents'] = $this->_convertFilelist2_0($temp);
@@ -629,7 +603,6 @@ class PEAR_PackageFile_Generator_v1
             $arr['channel'] = 'pecl.php.net';
             $arr['providesextension'] = $arr['name']; // assumption
         }
-
         $arr[$release] = array();
         if ($this->_packagefile->getConfigureOptions()) {
             $arr[$release]['configureoption'] = $this->_packagefile->getConfigureOptions();
@@ -640,13 +613,11 @@ class PEAR_PackageFile_Generator_v1
                 $arr[$release]['configureoption'] = $arr[$release]['configureoption'][0];
             }
         }
-
         $this->_convertRelease2_0($arr[$release], $temp);
         if ($release == 'extsrcrelease' && count($arr[$release]) > 1) {
             // multiple extsrcrelease tags added in PEAR 1.4.1
             $arr['dependencies']['required']['pearinstaller']['min'] = '1.4.1';
         }
-
         if ($cl = $this->_packagefile->getChangelog()) {
             foreach ($cl as $release) {
                 $rel = array();
@@ -658,7 +629,6 @@ class PEAR_PackageFile_Generator_v1
                 if (!isset($release['release_state'])) {
                     $release['release_state'] = 'stable';
                 }
-
                 $rel['stability'] =
                     array(
                         'release' => $release['release_state'],
@@ -669,7 +639,6 @@ class PEAR_PackageFile_Generator_v1
                 } else {
                     $rel['date'] = date('Y-m-d');
                 }
-
                 if (isset($release['release_license'])) {
                     if (isset($licensemap[strtolower($release['release_license'])])) {
                         $uri = $licensemap[strtolower($release['release_license'])];
@@ -683,26 +652,21 @@ class PEAR_PackageFile_Generator_v1
                 } else {
                     $rel['license'] = $arr['license'];
                 }
-
                 if (!isset($release['release_notes'])) {
                     $release['release_notes'] = 'no release notes';
                 }
-
                 $rel['notes'] = $release['release_notes'];
                 $arr['changelog']['release'][] = $rel;
             }
         }
-
         $ret = new $class;
         $ret->setConfig($this->_packagefile->_config);
         if (isset($this->_packagefile->_logger) && is_object($this->_packagefile->_logger)) {
             $ret->setLogger($this->_packagefile->_logger);
         }
-
         $ret->fromArray($arr);
         return $ret;
     }
-
     /**
      * @param array
      * @param bool
@@ -792,7 +756,6 @@ class PEAR_PackageFile_Generator_v1
         isset($bewm['extension']) ? $order['extension'] = $bewm['extension'] :0;
         $release['dependencies']['required'] = $order;
     }
-
     /**
      * @param array
      * @access private
@@ -840,7 +803,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $ret;
     }
-
     /**
      * Post-process special files with install-as/platform attributes and
      * make the release tag.
@@ -1090,7 +1052,6 @@ class PEAR_PackageFile_Generator_v1
             }
         }
     }
-
     /**
      * @param array
      * @return array
@@ -1146,7 +1107,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $php;
     }
-
     /**
      * @param array
      * @return array
@@ -1206,7 +1166,6 @@ class PEAR_PackageFile_Generator_v1
         }
         return $php;
     }
-
     /**
      * process multiple dependencies that have a name, like package deps
      * @param array
@@ -1221,7 +1180,6 @@ class PEAR_PackageFile_Generator_v1
                 $tests[$name][] = $this->_processDep($d);
             }
         }
-
         foreach ($tests as $name => $test) {
             $max = $min = $php = array();
             $php['name'] = $name;

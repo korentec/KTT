@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Config Load
  * 
@@ -9,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Config Load Class
  */
@@ -18,7 +16,6 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase {
     public $required_attributes = array('file');
     public $shorttag_order = array('file','section');
     public $optional_attributes = array('section', 'scope'); 
-
     /**
      * Compiles code for the {config_load} tag
      * 
@@ -35,7 +32,6 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase {
         if ($_attr['nocache'] === true) {
         	$this->compiler->trigger_template_error('nocache option not allowed', $this->compiler->lex->taglineno);
         }
-
          
         // save posible attributes
         $conf_file = $_attr['file'];
@@ -60,5 +56,4 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase {
         return $_output;
     } 
 } 
-
 ?>

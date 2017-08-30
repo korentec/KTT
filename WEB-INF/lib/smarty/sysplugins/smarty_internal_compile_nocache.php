@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Nocache
  *
@@ -8,7 +7,6 @@
  * @subpackage Compiler
  * @author Uwe Tews
  */
-
 /**
  * Smarty Internal Plugin Compile Nocache Class
  */ 
@@ -35,7 +33,6 @@ class Smarty_Internal_Compile_Nocache extends Smarty_Internal_CompileBase {
         return true;
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile Nocacheclose Class
  */ 
@@ -59,5 +56,4 @@ class Smarty_Internal_Compile_Nocacheclose extends Smarty_Internal_CompileBase {
         return true;
     } 
 } 
-
 ?>

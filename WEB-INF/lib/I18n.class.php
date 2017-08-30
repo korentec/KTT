@@ -25,7 +25,6 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 class I18n {
   var $lang = 'en'; // Language for the class.
   var $defaultLang = 'en'; // English is the default language.
@@ -34,7 +33,6 @@ class I18n {
   var $weekdayShortNames;
   var $holidays;
   var $keys = array(); // These are our localized strings.
-
   // The getKey obtains localized keyword value.
   function getKey($kword) {
     $value = '';
@@ -51,21 +49,17 @@ class I18n {
     }
     return $value;
   }
-
   // TODO: refactoring ongoing down from here...
     function getWeekDayName($id) {
       $id = intval($id);
       return $this->weekdayNames[$id];
     }
-
     function load($localName) {
     $kw = array();
     $filename = strtolower($localName) . '.lang.php';
     $inc_filename = RESOURCE_DIR . '/' . $this->defaultLang . '.lang.php';
-
     if (file_exists($inc_filename)) {
       include($inc_filename);
-
       $this->monthNames = $i18n_months;
       $this->weekdayNames = $i18n_weekdays;
         
@@ -89,11 +83,9 @@ class I18n {
                }
       }
     }
-
     $inc_filename = RESOURCE_DIR . '/' . $filename;
     if (file_exists($inc_filename) && ($localName != $this->defaultLang)) {
       require($inc_filename);
-
       $this->lang = $localName;
       $this->monthNames = $i18n_months;
       $this->weekdayNames = $i18n_weekdays;
@@ -119,13 +111,11 @@ class I18n {
         return true;
     }
   }
-
   function hasLang($lang)
   {
     $filename = RESOURCE_DIR . '/' . strtolower($lang) . '.lang.php';
     return file_exists($filename);
   }
-
   function getBrowserLanguage()
   {
     $acclang = @$_SERVER['HTTP_ACCEPT_LANGUAGE'];
@@ -143,7 +133,6 @@ class I18n {
     }
     return "";
   }
-
   // getLangFileList() returns a list of language files.
   static function getLangFileList() {
     $fileList = array();
@@ -160,8 +149,7 @@ class I18n {
   }
    
   static function getLangFromFilename($filename)
-  {
-    return substr($filename, 0, strpos($filename, '.'));
+  {      return substr($filename, 0, strpos($filename, '.'));
   }
 }
 ?>

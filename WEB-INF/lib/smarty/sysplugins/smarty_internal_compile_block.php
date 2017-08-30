@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Block Class
  */
@@ -37,18 +36,15 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
         $compiler->smarty->inheritance = true;
         // must merge includes
         $this->compiler->smarty->merge_compiled_includes = true; 
-
         $compiler->parser->current_buffer = new _smarty_template_buffer($compiler->parser);
         $compiler->has_code = false;
         return true;
     } 
 
-
     static function saveBlockData($block_content, $block_tag, $template, $filepath)
     {
     	$_rdl = preg_quote($template->smarty->right_delimiter);
         $_ldl = preg_quote($template->smarty->left_delimiter);
-
         if (0 == preg_match("!({$_ldl}block\s+)(name=)?(\w+|'.*'|\".*\")(\s*?)?((append|prepend|nocache)(=true)?)?(\s*{$_rdl})!", $block_tag, $_match)) {
             $error_text = 'Syntax Error in template "' . $template->getTemplateFilepath() . '"   "' . htmlspecialchars($block_tag) . '" illegal options';
             throw new SmartyCompilerException($error_text);
@@ -87,7 +83,6 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             $template->block_data[$_name]['file'] = $filepath;
         }
     }
-
 	static function compileChildBlock ($compiler, $_name = null)
 	{
 		$_output = '';
@@ -145,9 +140,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
 		unset($_tpl);
 		return $_output;
 	}
-
 }
-
 /**
  * Smarty Internal Plugin Compile BlockClose Class
  */

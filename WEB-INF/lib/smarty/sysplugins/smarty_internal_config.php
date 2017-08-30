@@ -11,7 +11,6 @@
  */
 class Smarty_Internal_Config {
     static $config_objects = array();
-
     public function __construct($config_resource, $smarty, $data = null)
     {
         $this->data = $data;
@@ -32,21 +31,18 @@ class Smarty_Internal_Config {
             throw new SmartyException ("Unable to parse config resource '{$config_resource}'");
         } 
     } 
-
     public function getConfigFilepath ()
     {
         return $this->config_filepath === null ?
         $this->config_filepath = $this->buildConfigFilepath() :
         $this->config_filepath;
     } 
-
     public function getTimestamp ()
     {
         return $this->config_timestamp === null ?
         $this->config_timestamp = filemtime($this->getConfigFilepath()) :
         $this->config_timestamp;
     } 
-
     private function parseConfigResourceName($config_resource)
     {
         if (empty($config_resource))
@@ -68,7 +64,6 @@ class Smarty_Internal_Config {
         } 
         return true;
     } 
-
     /*
      * get system filepath to config
      */
@@ -78,7 +73,6 @@ class Smarty_Internal_Config {
             if (strpos('/\\', substr($_config_dir, -1)) === false) {
                 $_config_dir .= DS;
             } 
-
             $_filepath = $_config_dir . $this->config_resource_name;
             if (file_exists($_filepath))
                 return $_filepath;
@@ -121,7 +115,6 @@ class Smarty_Internal_Config {
             return false;
         } 
     } 
-
     /**
      * Returns the compiled  filepath
      * 
@@ -199,7 +192,6 @@ class Smarty_Internal_Config {
         } 
         return $this->compiled_config;
     } 
-
     /**
      * Compiles the config files
      */
@@ -231,7 +223,6 @@ class Smarty_Internal_Config {
         // write compiled template
         Smarty_Internal_Write_File::writeFile($this->getCompiledFilepath(), $this->getCompiledConfig(), $this->smarty);
     } 
-
     /*
      * load config variables
     *

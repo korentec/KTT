@@ -44,18 +44,15 @@ class PEAR_PackageFile_Parser_v1
         $ret = new PEAR_PackageFile_v1;
         $ret->fromArray($info['old']);
     }
-
     function setConfig(&$c)
     {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
-
     function setLogger(&$l)
     {
         $this->_logger = &$l;
     }
-
     /**
      * @param string contents of package.xml file, version 1.0
      * @return bool success of parsing
@@ -74,7 +71,6 @@ class PEAR_PackageFile_Parser_v1
         xml_set_element_handler($xp, '_element_start_1_0', '_element_end_1_0');
         xml_set_character_data_handler($xp, '_pkginfo_cdata_1_0');
         xml_parser_set_option($xp, XML_OPTION_CASE_FOLDING, false);
-
         $this->element_stack = array();
         $this->_packageInfo = array('provides' => array());
         $this->current_element = false;
@@ -86,7 +82,6 @@ class PEAR_PackageFile_Parser_v1
         $this->d_i = 0;
         $this->cdata = '';
         $this->_isValid = true;
-
         if (!xml_parse($xp, $data, 1)) {
             $code = xml_get_error_code($xp);
             $line = xml_get_current_line_number($xp);
@@ -95,9 +90,7 @@ class PEAR_PackageFile_Parser_v1
                            $str = xml_error_string($code), $line), 2);
             return $a;
         }
-
         xml_parser_free($xp);
-
         $pf = new PEAR_PackageFile_v1;
         $pf->setConfig($this->_config);
         if (isset($this->_logger)) {
@@ -108,7 +101,6 @@ class PEAR_PackageFile_Parser_v1
         return $pf;
     }
     // {{{ _unIndent()
-
     /**
      * Unindent given string
      *
@@ -134,10 +126,8 @@ class PEAR_PackageFile_Parser_v1
         }
         return $data;
     }
-
     // Support for package DTD v1.0:
     // {{{ _element_start_1_0()
-
     /**
      * XML parser callback for ending elements.  Used for version 1.0
      * packages.
@@ -282,10 +272,8 @@ class PEAR_PackageFile_Parser_v1
                 break;
         }
     }
-
     // }}}
     // {{{ _element_end_1_0()
-
     /**
      * XML parser callback for ending elements.  Used for version 1.0
      * packages.
@@ -432,10 +420,8 @@ class PEAR_PackageFile_Parser_v1
         $this->current_element = ($spos > 0) ? $this->element_stack[$spos] : '';
         $this->cdata = '';
     }
-
     // }}}
     // {{{ _pkginfo_cdata_1_0()
-
     /**
      * XML parser callback for character data.  Used for version 1.0
      * packages.
@@ -453,7 +439,6 @@ class PEAR_PackageFile_Parser_v1
             $this->cdata .= $data;
         }
     }
-
     // }}}
 }
 ?>

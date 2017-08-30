@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Ldelim
  *
@@ -8,7 +7,6 @@
  * @subpackage Compiler
  * @author Uwe Tews
  */
-
 /**
  * Smarty Internal Plugin Compile Ldelim Class
  */ 
@@ -33,5 +31,4 @@ class Smarty_Internal_Compile_Ldelim extends Smarty_Internal_CompileBase {
         return $this->compiler->smarty->left_delimiter;
     } 
 }
-
 ?>

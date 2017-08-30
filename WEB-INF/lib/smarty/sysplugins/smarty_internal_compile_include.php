@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Include
  * 
@@ -9,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Include Class
  */
@@ -21,7 +19,6 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
    	public $shorttag_order = array('file');
     public $option_flags = array('nocache','inline','caching');
     public $optional_attributes = array('_any'); 
-
     /**
      * Compiles code for the {include} tag
      * 
@@ -79,12 +76,10 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
                 } 
             } 
         } 
-
         if (isset($_attr['assign'])) {
             // output will be stored in a smarty variable instead of beind displayed
             $_assign = $_attr['assign'];
         } 
-
         $_parent_scope = Smarty::SCOPE_LOCAL;
         if (isset($_attr['scope'])) {
             $_attr['scope'] = trim($_attr['scope'], "'\"");
@@ -172,5 +167,4 @@ class Smarty_Internal_Compile_Include extends Smarty_Internal_CompileBase {
         return $_output;
     } 
 } 
-
 ?>

@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Print Expression Class
  */
@@ -16,7 +15,6 @@ class Smarty_Internal_Compile_Private_Print_Expression extends Smarty_Internal_C
 	// attribute definitions
     public $optional_attributes = array('assign'); 
     public $option_flags = array('nocache', 'nofilter'); 
-
     /**
      * Compiles code for gererting output from any expression
      * 
@@ -73,5 +71,4 @@ class Smarty_Internal_Compile_Private_Print_Expression extends Smarty_Internal_C
         return $output;
     } 
 } 
-
 ?>

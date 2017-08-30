@@ -15,12 +15,10 @@
  * @since      File available since Release 0.1
  * @deprecated since 1.8.0alpha1
  */
-
 /**
  * base class
  */
 require_once 'PEAR/Command/Channels.php';
-
 /**
  * PEAR commands for login/logout
  *
@@ -45,7 +43,6 @@ class PEAR_Command_Auth extends PEAR_Command_Channels
             'options' => array(),
             'doc' => '<channel name>
 WARNING: This function is deprecated in favor of using channel-login
-
 Log in to a remote channel server.  If <channel name> is not supplied,
 the default channel is used. To use remote functions in the installer
 that require any kind of privileges, you need to log in first.  The
@@ -61,14 +58,11 @@ operations on the remote server.',
             'options' => array(),
             'doc' => '
 WARNING: This function is deprecated in favor of using channel-logout
-
 Logs out from the remote server.  This command does not actually
 connect to the remote server, it only deletes the stored username and
 password from your user configuration.',
             )
-
         );
-
     /**
      * PEAR_Command_Auth constructor.
      *

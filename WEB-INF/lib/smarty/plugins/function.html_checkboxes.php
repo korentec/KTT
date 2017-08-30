@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {html_checkboxes} function plugin
  *
@@ -41,7 +40,6 @@
 function smarty_function_html_checkboxes($params, $template)
 {
     require_once(SMARTY_PLUGINS_DIR . 'shared.escape_special_chars.php');
-
     $name = 'checkbox';
     $values = null;
     $options = null;
@@ -49,42 +47,33 @@ function smarty_function_html_checkboxes($params, $template)
     $separator = '';
     $labels = true;
     $output = null;
-
     $extra = '';
-
     foreach($params as $_key => $_val) {
         switch($_key) {
             case 'name':
             case 'separator':
                 $$_key = $_val;
                 break;
-
             case 'labels':
                 $$_key = (bool)$_val;
                 break;
-
             case 'options':
                 $$_key = (array)$_val;
                 break;
-
             case 'values':
             case 'output':
                 $$_key = array_values((array)$_val);
                 break;
-
             case 'checked':
             case 'selected':
                 $selected = array_map('strval', array_values((array)$_val));
                 break;
-
             case 'checkboxes':
                 trigger_error('html_checkboxes: the use of the "checkboxes" attribute is deprecated, use "options" instead', E_USER_WARNING);
                 $options = (array)$_val;
                 break;
-
             case 'assign':
                 break;
-
             default:
                 if(!is_array($_val)) {
                     $extra .= ' '.$_key.'="'.smarty_function_escape_special_chars($_val).'"';
@@ -94,50 +83,38 @@ function smarty_function_html_checkboxes($params, $template)
                 break;
         }
     }
-
     if (!isset($options) && !isset($values))
         return ''; /* raise error here? */
-
     settype($selected, 'array');
     $_html_result = array();
-
     if (isset($options)) {
-
         foreach ($options as $_key=>$_val)
             $_html_result[] = smarty_function_html_checkboxes_output($name, $_key, $_val, $selected, $extra, $separator, $labels);
-
 
     } else {
         foreach ($values as $_i=>$_key) {
             $_val = isset($output[$_i]) ? $output[$_i] : '';
             $_html_result[] = smarty_function_html_checkboxes_output($name, $_key, $_val, $selected, $extra, $separator, $labels);
         }
-
     }
-
     if(!empty($params['assign'])) {
         $template->assign($params['assign'], $_html_result);
     } else {
         return implode("\n",$_html_result);
     }
-
 }
-
 function smarty_function_html_checkboxes_output($name, $value, $output, $selected, $extra, $separator, $labels) {
     $_output = '';
     if ($labels) $_output .= '<label>';
     $_output .= '<input type="checkbox" name="'
         . smarty_function_escape_special_chars($name) . '[]" value="'
         . smarty_function_escape_special_chars($value) . '"';
-
     if (in_array((string)$value, $selected)) {
         $_output .= ' checked="checked"';
     }
     $_output .= $extra . ' />' . $output;
     if ($labels) $_output .= '</label>';
     $_output .=  $separator;
-
     return $_output;
 }
-
 ?>

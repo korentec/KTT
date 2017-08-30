@@ -20,7 +20,6 @@ $_smarty_tpl->decodeProperties(array (
 <?php if (!is_callable('smarty_function_cycle')) include '/home/korentecco/public_html/ktt/WEB-INF/lib/smarty/plugins/function.cycle.php';
 if (!is_callable('smarty_modifier_escape')) include '/home/korentecco/public_html/ktt/WEB-INF/lib/smarty/plugins/modifier.escape.php';
 ?><?php echo $_smarty_tpl->getVariable('forms')->value['customFieldsForm']['open'];?>
-
 <table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr>
     <td valign="top">

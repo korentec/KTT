@@ -26,7 +26,6 @@
  * @version    CVS: $Id: ErrorStack.php 313023 2011-07-06 19:17:11Z dufuz $
  * @link       http://pear.php.net/package/PEAR_ErrorStack
  */
-
 /**
  * Singleton storage
  * 
@@ -42,7 +41,6 @@
  * @global array $GLOBALS['_PEAR_ERRORSTACK_SINGLETON']
  */
 $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
-
 /**
  * Global error callback (default)
  * 
@@ -58,7 +56,6 @@ $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'] = array();
 $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array(
     '*' => false,
 );
-
 /**
  * Global Log object (default)
  * 
@@ -69,7 +66,6 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_CALLBACK'] = array(
  * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
  */
 $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = false;
-
 /**
  * Global Overriding Callback
  * 
@@ -80,7 +76,6 @@ $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER'] = false;
  * @global array $GLOBALS['_PEAR_ERRORSTACK_DEFAULT_LOGGER']
  */
 $GLOBALS['_PEAR_ERRORSTACK_OVERRIDE_CALLBACK'] = array();
-
 /**#@+
  * One of four possible return values from the error Callback
  * @see PEAR_ErrorStack::_errorCallback()
@@ -109,13 +104,11 @@ define('PEAR_ERRORSTACK_IGNORE', 4);
  */
 define('PEAR_ERRORSTACK_DIE', 5);
 /**#@-*/
-
 /**
  * Error code for an attempt to instantiate a non-class as a PEAR_ErrorStack in
  * the singleton method.
  */
 define('PEAR_ERRORSTACK_ERR_NONCLASS', 1);
-
 /**
  * Error code for an attempt to pass an object into {@link PEAR_ErrorStack::getMessage()}
  * that has no __toString() method
@@ -150,7 +143,6 @@ class PEAR_ErrorStack {
      * @access private
      */
     var $_errors = array();
-
     /**
      * Storage of errors by level.
      *
@@ -160,7 +152,6 @@ class PEAR_ErrorStack {
      * @access private
      */
     var $_errorsByLevel = array();
-
     /**
      * Package name this error stack represents
      * @var string
@@ -270,10 +261,8 @@ class PEAR_ErrorStack {
         }
         $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package] =
             new $stackClass($package, $msgCallback, $contextCallback, $throwPEAR_Error);
-
         return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package];
     }
-
     /**
      * Internal error handler for PEAR_ErrorStack class
      * 
@@ -519,11 +508,9 @@ class PEAR_ErrorStack {
                 'context' => $context,
                 'message' => $msg,
                );
-
         if ($repackage) {
             $err['repackage'] = $repackage;
         }
-
         // set up the error message, if necessary
         if ($this->_msgCallback) {
             $msg = call_user_func_array($this->_msgCallback,
@@ -653,7 +640,6 @@ class PEAR_ErrorStack {
             call_user_func($logger, $err);
         }
     }
-
     
     /**
      * Pop an error off of the error stack
@@ -673,7 +659,6 @@ class PEAR_ErrorStack {
         }
         return $err;
     }
-
     /**
      * Pop an error off of the error stack, static method
      *
@@ -690,7 +675,6 @@ class PEAR_ErrorStack {
             return $GLOBALS['_PEAR_ERRORSTACK_SINGLETON'][$package]->pop();
         }
     }
-
     /**
      * Determine whether there are any errors on the stack
      * @param string|array Level name.  Use to determine if any errors
@@ -816,7 +800,6 @@ class PEAR_ErrorStack {
         }
         return -1;
     }
-
     /**
      * Standard file/line number/function/class context callback
      *

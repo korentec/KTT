@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {html_options} function plugin
  * 
@@ -31,7 +30,6 @@
 function smarty_function_html_options($params, $template)
 {
     require_once(SMARTY_PLUGINS_DIR . 'shared.escape_special_chars.php');
-
     $name = null;
     $values = null;
     $options = null;
@@ -39,10 +37,8 @@ function smarty_function_html_options($params, $template)
     $output = null;
     $id = null;
     $class = null;
-
     $extra = '';
     $options_extra = '';
-
     foreach($params as $_key => $_val) {
         switch ($_key) {
             case 'name':
@@ -50,20 +46,16 @@ function smarty_function_html_options($params, $template)
             case 'id':
                 $$_key = (string)$_val;
                 break;
-
             case 'options':
                 $$_key = (array)$_val;
                 break;
-
             case 'values':
             case 'output':
                 $$_key = array_values((array)$_val);
                 break;
-
             case 'selected':
                 $$_key = array_map('strval', array_values((array)$_val));
                 break;
-
             default:
                 if (!is_array($_val)) {
                     $extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_val) . '"';
@@ -73,14 +65,11 @@ function smarty_function_html_options($params, $template)
                 break;
         } 
     } 
-
     if (!isset($options) && !isset($values))
         return '';
     /* raise error here? */
-
     $_html_result = '';
     $_idx = 0;
-
     if (isset($options)) {
         foreach ($options as $_key => $_val) {
           $_html_result .= smarty_function_html_options_optoutput($_key, $_val, $selected, $id, $class, $_idx);
@@ -91,16 +80,13 @@ function smarty_function_html_options($params, $template)
             $_html_result .= smarty_function_html_options_optoutput($_key, $_val, $selected, $id, $class, $_idx);
         } 
     } 
-
     if (!empty($name)) {
         $_html_class = !empty($class) ? ' class="'.$class.'"' : '';
         $_html_id = !empty($id) ? ' id="'.$id.'"' : '';
         $_html_result = '<select name="' . $name . '"' . $_html_class . $_html_id . $extra . '>' . "\n" . $_html_result . '</select>' . "\n";
     } 
-
     return $_html_result;
 } 
-
 function smarty_function_html_options_optoutput($key, $value, $selected, $id, $class, &$idx)
 {
     if (!is_array($value)) {
@@ -119,7 +105,6 @@ function smarty_function_html_options_optoutput($key, $value, $selected, $id, $c
     }
     return $_html_result;
 } 
-
 function smarty_function_html_options_optgroup($key, $values, $selected, $id, $class, &$idx)
 {
     $optgroup_html = '<optgroup label="' . smarty_function_escape_special_chars($key) . '">' . "\n";
@@ -129,5 +114,4 @@ function smarty_function_html_options_optgroup($key, $values, $selected, $id, $c
     $optgroup_html .= "</optgroup>\n";
     return $optgroup_html;
 } 
-
 ?>

@@ -13,24 +13,20 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
-
 /**
  * Include error handling
  */
 //require_once 'PEAR.php';
-
 /**
  * Which user interface class is being used.
  * @var string class name
  */
 $GLOBALS['_PEAR_FRONTEND_CLASS'] = 'PEAR_Frontend_CLI';
-
 /**
  * Instance of $_PEAR_Command_uiclass.
  * @var object
  */
 $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = null;
-
 /**
  * Singleton-based frontend for PEAR user input/output
  *
@@ -59,11 +55,9 @@ class PEAR_Frontend extends PEAR
             }
             return $GLOBALS['_PEAR_FRONTEND_SINGLETON'];
         }
-
         $a = PEAR_Frontend::setFrontendClass($type);
         return $a;
     }
-
     /**
      * Set the frontend class that will be used by calls to {@link singleton()}
      *
@@ -79,14 +73,12 @@ class PEAR_Frontend extends PEAR
               is_a($GLOBALS['_PEAR_FRONTEND_SINGLETON'], $uiclass)) {
             return $GLOBALS['_PEAR_FRONTEND_SINGLETON'];
         }
-
         if (!class_exists($uiclass)) {
             $file = str_replace('_', '/', $uiclass) . '.php';
             if (PEAR_Frontend::isIncludeable($file)) {
                 include_once $file;
             }
         }
-
         if (class_exists($uiclass)) {
             $obj = &new $uiclass;
             // quick test to see if this class implements a few of the most
@@ -96,15 +88,12 @@ class PEAR_Frontend extends PEAR
                 $GLOBALS['_PEAR_FRONTEND_CLASS'] = $uiclass;
                 return $obj;
             }
-
             $err = PEAR::raiseError("not a frontend class: $uiclass");
             return $err;
         }
-
         $err = PEAR::raiseError("no such class: $uiclass");
         return $err;
     }
-
     /**
      * Set the frontend class that will be used by calls to {@link singleton()}
      *
@@ -119,18 +108,15 @@ class PEAR_Frontend extends PEAR
               is_a($GLOBALS['_PEAR_FRONTEND_SINGLETON'], get_class($uiobject))) {
             return $GLOBALS['_PEAR_FRONTEND_SINGLETON'];
         }
-
         if (!is_a($uiobject, 'PEAR_Frontend')) {
             $err = PEAR::raiseError('not a valid frontend class: (' .
                 get_class($uiobject) . ')');
             return $err;
         }
-
         $GLOBALS['_PEAR_FRONTEND_SINGLETON'] = &$uiobject;
         $GLOBALS['_PEAR_FRONTEND_CLASS'] = get_class($uiobject);
         return $uiobject;
     }
-
     /**
      * @param string $path relative or absolute include path
      * @return boolean
@@ -141,23 +127,19 @@ class PEAR_Frontend extends PEAR
         if (file_exists($path) && is_readable($path)) {
             return true;
         }
-
         $fp = @fopen($path, 'r', true);
         if ($fp) {
             fclose($fp);
             return true;
         }
-
         return false;
     }
-
     /**
      * @param PEAR_Config
      */
     function setConfig(&$config)
     {
     }
-
     /**
      * This can be overridden to allow session-based temporary file management
      *
@@ -169,7 +151,6 @@ class PEAR_Frontend extends PEAR
     {
         $GLOBALS['_PEAR_Common_tempfiles'][] = $file;
     }
-
     /**
      * Log an action
      *
@@ -181,7 +162,6 @@ class PEAR_Frontend extends PEAR
     function log($msg, $append_crlf = true)
     {
     }
-
     /**
      * Run a post-installation script
      *
@@ -191,7 +171,6 @@ class PEAR_Frontend extends PEAR
     function runPostinstallScripts(&$scripts)
     {
     }
-
     /**
      * Display human-friendly output formatted depending on the
      * $command parameter.
@@ -204,7 +183,6 @@ class PEAR_Frontend extends PEAR
     function outputData($data, $command = '_default')
     {
     }
-
     /**
      * Display a modal form dialog and return the given input
      *

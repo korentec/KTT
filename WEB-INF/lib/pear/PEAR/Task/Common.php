@@ -99,7 +99,6 @@ class PEAR_Task_Common
             $GLOBALS['_PEAR_TASK_POSTINSTANCES'][get_class($this)][] = &$this;
         }
     }
-
     /**
      * Validate the basic contents of a task tag.
      * @param PEAR_PackageFile_v2
@@ -118,7 +117,6 @@ class PEAR_Task_Common
     function validateXml($pkg, $xml, $config, $fileXml)
     {
     }
-
     /**
      * Initialize a task instance with the parameters
      * @param array raw, parsed xml
@@ -129,7 +127,6 @@ class PEAR_Task_Common
     function init($xml, $fileAttributes, $lastVersion)
     {
     }
-
     /**
      * Begin a task processing session.  All multiple tasks will be processed after each file
      * has been successfully installed, all simple tasks should perform their task here and
@@ -146,7 +143,6 @@ class PEAR_Task_Common
     function startSession($pkg, $contents, $dest)
     {
     }
-
     /**
      * This method is used to process each of the tasks for a particular multiple class
      * type.  Simple tasks need not implement this method.
@@ -158,7 +154,6 @@ class PEAR_Task_Common
     function run($tasks)
     {
     }
-
     /**
      * @static
      * @final
@@ -167,7 +162,6 @@ class PEAR_Task_Common
     {
         return isset($GLOBALS['_PEAR_TASK_POSTINSTANCES']);
     }
-
     /**
      * @static
      * @final
@@ -183,7 +177,6 @@ class PEAR_Task_Common
          }
          unset($GLOBALS['_PEAR_TASK_POSTINSTANCES']);
     }
-
     /**
      * Determines whether a role is a script
      * @return bool
@@ -192,7 +185,6 @@ class PEAR_Task_Common
     {
         return $this->type == 'script';
     }
-
     function throwError($msg, $code = -1)
     {
         include_once 'PEAR.php';

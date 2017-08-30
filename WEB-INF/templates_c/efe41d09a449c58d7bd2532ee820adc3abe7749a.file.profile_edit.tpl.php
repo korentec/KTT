@@ -68,7 +68,6 @@ function handlePluginCheckboxes() {
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['profileForm']['open'];?>
 
-
 <?php if ($_smarty_tpl->getVariable('user')->value->canManageTeam()){?>
 <?php $_template = new Smarty_Internal_Template("datetime_format_preview.tpl", $_smarty_tpl->smarty, $_smarty_tpl, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null);
  echo $_template->getRenderedTemplate();?><?php unset($_template);?>

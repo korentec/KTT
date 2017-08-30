@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty write file plugin
  * 
@@ -7,7 +6,6 @@
  * @subpackage PluginsInternal
  * @author Monte Ohrt 
  */
-
 /**
  * Smarty Internal Write File Class
  */
@@ -29,7 +27,6 @@ class Smarty_Internal_Write_File {
         } 
         // write to tmp file, then move to overt file lock race condition
         $_tmp_file = tempnam($_dirpath, 'wrt');
-
 	    if (!($fd = @fopen($_tmp_file, 'wb'))) {
         	$_tmp_file = $_dirpath . DS . uniqid('wrt');
         	if (!($fd = @fopen($_tmp_file, 'wb'))) {
@@ -37,10 +34,8 @@ class Smarty_Internal_Write_File {
             return false;
         	}
    		 }
-
     	fwrite($fd, $_contents);
     	fclose($fd);
-
         // remove original file
         if (file_exists($_filepath))
             @unlink($_filepath); 
@@ -52,5 +47,4 @@ class Smarty_Internal_Write_File {
         return true;
     } 
 } 
-
 ?>

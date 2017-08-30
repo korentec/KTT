@@ -8,7 +8,6 @@
 * @subpackage Compiler
 * @author Uwe Tews 
 */
-
 /**
 * Smarty Internal Plugin Compile While Class
 */
@@ -27,7 +26,6 @@ class Smarty_Internal_Compile_While extends Smarty_Internal_CompileBase {
         // check and get attributes
         $_attr = $this->_get_attributes($args);
         $this->_open_tag('while', $this->compiler->nocache);
-
         // maybe nocache because of nocache variables
         $this->compiler->nocache = $this->compiler->nocache | $this->compiler->tag_nocache;
         if (is_array($parameter['if condition'])) {
@@ -55,7 +53,6 @@ class Smarty_Internal_Compile_While extends Smarty_Internal_CompileBase {
         } 
     } 
 } 
-
 /**
 * Smarty Internal Plugin Compile Whileclose Class
 */
@@ -78,5 +75,4 @@ class Smarty_Internal_Compile_Whileclose extends Smarty_Internal_CompileBase {
         return "<?php }?>";
     } 
 } 
-
 ?>

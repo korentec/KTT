@@ -43,13 +43,11 @@
 // +----------------------------------------------------------------------+
 //
 // $Id: Extended.php 327310 2012-08-27 15:16:18Z danielc $
-
 /**
  * @package  MDB2
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-
 /**
  * Used by autoPrepare()
  */
@@ -57,7 +55,6 @@ define('MDB2_AUTOQUERY_INSERT', 1);
 define('MDB2_AUTOQUERY_UPDATE', 2);
 define('MDB2_AUTOQUERY_DELETE', 3);
 define('MDB2_AUTOQUERY_SELECT', 4);
-
 /**
  * MDB2_Extended: class which adds several high level methods to MDB2
  *
@@ -68,7 +65,6 @@ define('MDB2_AUTOQUERY_SELECT', 4);
 class MDB2_Extended extends MDB2_Module_Common
 {
     // {{{ autoPrepare()
-
     /**
      * Generate an insert, update or delete query and call prepare() on it
      *
@@ -108,10 +104,8 @@ class MDB2_Extended extends MDB2_Module_Common
         }
         return $db->prepare($query, $types, $result_types, $lobs);
     }
-
     // }}}
     // {{{ autoExecute()
-
     /**
      * Generate an insert, update or delete query and call prepare() and execute() on it
      *
@@ -152,7 +146,6 @@ class MDB2_Extended extends MDB2_Module_Common
         $params = array_values($fields_values);
         if (empty($params)) {
             $query = $this->buildManipSQL($table, $keys, $mode, $where);
-
             $db = $this->getDBInstance();
             if (MDB2::isError($db)) {
                 return $db;
@@ -172,10 +165,8 @@ class MDB2_Extended extends MDB2_Module_Common
         }
         return $result;
     }
-
     // }}}
     // {{{ buildManipSQL()
-
     /**
      * Make automaticaly an sql query for prepare()
      *
@@ -203,24 +194,20 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if ($db->options['quote_identifier']) {
             $table = $db->quoteIdentifier($table);
         }
-
         if (!empty($table_fields) && $db->options['quote_identifier']) {
             foreach ($table_fields as $key => $field) {
                 $table_fields[$key] = $db->quoteIdentifier($field);
             }
         }
-
         if ((false !== $where) && (null !== $where)) {
             if (is_array($where)) {
                 $where = implode(' AND ', $where);
             }
             $where = ' WHERE '.$where;
         }
-
         switch ($mode) {
         case MDB2_AUTOQUERY_INSERT:
             if (empty($table_fields)) {
@@ -253,10 +240,8 @@ class MDB2_Extended extends MDB2_Module_Common
         return $db->raiseError(MDB2_ERROR_SYNTAX, null, null,
                 'Non existant mode', __FUNCTION__);
     }
-
     // }}}
     // {{{ limitQuery()
-
     /**
      * Generates a limited query
      *
@@ -277,17 +262,14 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $result = $db->setLimit($limit, $offset);
         if (MDB2::isError($result)) {
             return $result;
         }
         return $db->query($query, $types, $result_class, $result_wrap_class);
     }
-
     // }}}
     // {{{ execParam()
-
     /**
      * Execute a parameterized DML statement.
      *
@@ -305,29 +287,23 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         if (empty($params)) {
             return $db->exec($query);
         }
-
         $stmt = $db->prepare($query, $param_types, MDB2_PREPARE_MANIP);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (MDB2::isError($result)) {
             return $result;
         }
-
         $stmt->free();
         return $result;
     }
-
     // }}}
     // {{{ getOne()
-
     /**
      * Fetch the first column of the first row of data returned from a query.
      * Takes care of doing the query and freeing the results when finished.
@@ -349,32 +325,26 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         settype($type, 'array');
         if (empty($params)) {
             return $db->queryOne($query, $type, $colnum);
         }
-
         $stmt = $db->prepare($query, $param_types, $type);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (!MDB2::isResultCommon($result)) {
             return $result;
         }
-
         $one = $result->fetchOne($colnum);
         $stmt->free();
         $result->free();
         return $one;
     }
-
     // }}}
     // {{{ getRow()
-
     /**
      * Fetch the first row of data returned from a query.  Takes care
      * of doing the query and freeing the results when finished.
@@ -396,31 +366,25 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         if (empty($params)) {
             return $db->queryRow($query, $types, $fetchmode);
         }
-
         $stmt = $db->prepare($query, $param_types, $types);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (!MDB2::isResultCommon($result)) {
             return $result;
         }
-
         $row = $result->fetchRow($fetchmode);
         $stmt->free();
         $result->free();
         return $row;
     }
-
     // }}}
     // {{{ getCol()
-
     /**
      * Fetch a single column from a result set and return it as an
      * indexed array.
@@ -442,32 +406,26 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         settype($type, 'array');
         if (empty($params)) {
             return $db->queryCol($query, $type, $colnum);
         }
-
         $stmt = $db->prepare($query, $param_types, $type);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (!MDB2::isResultCommon($result)) {
             return $result;
         }
-
         $col = $result->fetchCol($colnum);
         $stmt->free();
         $result->free();
         return $col;
     }
-
     // }}}
     // {{{ getAll()
-
     /**
      * Fetch all the rows returned from a query.
      *
@@ -498,31 +456,25 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         if (empty($params)) {
             return $db->queryAll($query, $types, $fetchmode, $rekey, $force_array, $group);
         }
-
         $stmt = $db->prepare($query, $param_types, $types);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (!MDB2::isResultCommon($result)) {
             return $result;
         }
-
         $all = $result->fetchAll($fetchmode, $rekey, $force_array, $group);
         $stmt->free();
         $result->free();
         return $all;
     }
-
     // }}}
     // {{{ getAssoc()
-
     /**
      * Fetch the entire result set of a query and return it as an
      * associative array using the first column as the key.
@@ -603,31 +555,25 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         settype($params, 'array');
         if (empty($params)) {
             return $db->queryAll($query, $types, $fetchmode, true, $force_array, $group);
         }
-
         $stmt = $db->prepare($query, $param_types, $types);
         if (MDB2::isError($stmt)) {
             return $stmt;
         }
-
         $result = $stmt->execute($params);
         if (!MDB2::isResultCommon($result)) {
             return $result;
         }
-
         $all = $result->fetchAll($fetchmode, true, $force_array, $group);
         $stmt->free();
         $result->free();
         return $all;
     }
-
     // }}}
     // {{{ executeMultiple()
-
     /**
      * This function does several execute() calls on the same statement handle.
      * $params must be an array indexed numerically from 0, one execute call is
@@ -656,10 +602,8 @@ class MDB2_Extended extends MDB2_Module_Common
         }
         return MDB2_OK;
     }
-
     // }}}
     // {{{ getBeforeID()
-
     /**
      * Returns the next free id of a sequence if the RDBMS
      * does not support auto increment
@@ -678,7 +622,6 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if ($db->supports('auto_increment') !== true) {
             $seq = $table.(empty($field) ? '' : '_'.$field);
             $id = $db->nextID($seq, $ondemand);
@@ -691,10 +634,8 @@ class MDB2_Extended extends MDB2_Module_Common
         }
         return 'NULL';
     }
-
     // }}}
     // {{{ getAfterID()
-
     /**
      * Returns the autoincrement ID if supported or $id
      *
@@ -711,13 +652,11 @@ class MDB2_Extended extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if ($db->supports('auto_increment') !== true) {
             return $id;
         }
         return $db->lastInsertID($table, $field);
     }
-
     // }}}
 }
 ?>

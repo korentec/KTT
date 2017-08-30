@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin CompileBase
  * 
@@ -7,7 +6,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * This class does extend all internal compile plugins
  */
@@ -17,7 +15,6 @@ class Smarty_Internal_CompileBase {
     public $optional_attributes = array();
     public $shorttag_order = array();
     public $option_flags = array('nocache');
-
 
     /**
      * This function checks if the attributes passed are valid
@@ -97,10 +94,8 @@ class Smarty_Internal_CompileBase {
                 $_indexed_attr[$flag] = false;
             } 
         } 
-
         return $_indexed_attr;
     } 
-
     /**
      * Push opening tag name on stack
      * 
@@ -113,7 +108,6 @@ class Smarty_Internal_CompileBase {
     {
         array_push($this->compiler->_tag_stack, array($open_tag, $data));
     } 
-
     /**
      * Pop closing tag
      * 
@@ -146,5 +140,4 @@ class Smarty_Internal_CompileBase {
         return;
     } 
 } 
-
 ?>

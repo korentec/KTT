@@ -25,7 +25,6 @@ $_smarty_tpl->decodeProperties(array (
 
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['open'];?>
-
 <table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr>
   <td valign="top">
@@ -78,7 +77,6 @@ if ($_smarty_tpl->_count($_from) > 0){
 		<td>
     	<?php if ($_smarty_tpl->tpl_vars['activity']->value['aprojects_all']){?>
     		<?php echo $_smarty_tpl->getVariable('i18n')->value['controls']['all'];?>
-
     	<?php }else{ ?>
 	    	<?php if ($_smarty_tpl->tpl_vars['activity']->value['aprojects']){?>
 		    	<?php  $_smarty_tpl->tpl_vars['project'] = new Smarty_Variable;
@@ -91,7 +89,6 @@ if ($_smarty_tpl->_count($_from) > 0){
 		    	<?php }} ?>
 	    	<?php }else{ ?>
 	    		<?php echo $_smarty_tpl->getVariable('i18n')->value['controls']['notbind'];?>
-
 	    	<?php }?>
 	   	<?php }?>
     	</td>
@@ -140,7 +137,6 @@ if ($_smarty_tpl->_count($_from) > 0){
     	<td>
     	<?php if ($_smarty_tpl->tpl_vars['activity']->value['aprojects_all']){?>
     		<?php echo $_smarty_tpl->getVariable('i18n')->value['controls']['all'];?>
-
     	<?php }else{ ?>
 	    	<?php if ($_smarty_tpl->tpl_vars['activity']->value['aprojects']){?>
 		    	<?php  $_smarty_tpl->tpl_vars['project'] = new Smarty_Variable;
@@ -153,7 +149,6 @@ if ($_smarty_tpl->_count($_from) > 0){
 		    	<?php }} ?>
 	    	<?php }else{ ?>
 	    		<?php echo $_smarty_tpl->getVariable('i18n')->value['controls']['notbind'];?>
-
 	    	<?php }?>
 	    <?php }?>
     	</td>

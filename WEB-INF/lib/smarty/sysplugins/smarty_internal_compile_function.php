@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Function Class
  */
@@ -17,7 +16,6 @@ class Smarty_Internal_Compile_Function extends Smarty_Internal_CompileBase {
     public $required_attributes = array('name');
     public $shorttag_order = array('name');
     public $optional_attributes = array('_any'); 
-
     /**
      * Compiles code for the {function} tag
      * 
@@ -31,7 +29,6 @@ class Smarty_Internal_Compile_Function extends Smarty_Internal_CompileBase {
         $this->compiler = $compiler;
         // check and get attributes
         $_attr = $this->_get_attributes($args);
-
         if ($_attr['nocache'] === true) {
         	$this->compiler->trigger_template_error('nocache option not allowed', $this->compiler->lex->taglineno);
         }
@@ -67,7 +64,6 @@ class Smarty_Internal_Compile_Function extends Smarty_Internal_CompileBase {
         return true;
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile Functionclose Class
  */
@@ -130,5 +126,4 @@ class Smarty_Internal_Compile_Functionclose extends Smarty_Internal_CompileBase 
         return $output;
     } 
 } 
-
 ?>

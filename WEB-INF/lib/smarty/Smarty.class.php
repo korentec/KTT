@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        Smarty.class.php
@@ -30,14 +29,12 @@
  * @package Smarty
  * @version 3.0.7
  */
-
 /**
  * define shorthand directory separator constant
  */
 if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 } 
-
 /**
  * set SMARTY_DIR to absolute path to Smarty library files.
  * Sets SMARTY_DIR only if user application has not already defined it.
@@ -45,7 +42,6 @@ if (!defined('DS')) {
 if (!defined('SMARTY_DIR')) {
     define('SMARTY_DIR', dirname(__FILE__) . DS);
 } 
-
 /**
  * set SMARTY_SYSPLUGINS_DIR to absolute path to Smarty internal plugins.
  * Sets SMARTY_SYSPLUGINS_DIR only if user application has not already defined it.
@@ -62,14 +58,12 @@ if (!defined('SMARTY_RESOURCE_CHAR_SET')) {
 if (!defined('SMARTY_RESOURCE_DATE_FORMAT')) {
     define('SMARTY_RESOURCE_DATE_FORMAT', '%b %e, %Y');
 } 
-
 /**
  * register the class autoloader
  */
 if (!defined('SMARTY_SPL_AUTOLOAD')) {
     define('SMARTY_SPL_AUTOLOAD', 0);
 } 
-
 if (SMARTY_SPL_AUTOLOAD && set_include_path(get_include_path() . PATH_SEPARATOR . SMARTY_SYSPLUGINS_DIR) !== false) {
     $registeredAutoLoadFunctions = spl_autoload_functions();
     if (!isset($registeredAutoLoadFunctions['spl_autoload'])) {
@@ -78,7 +72,6 @@ if (SMARTY_SPL_AUTOLOAD && set_include_path(get_include_path() . PATH_SEPARATOR 
 } else {
     spl_autoload_register('smartyAutoload');
 } 
-
 /**
  * This is the main Smarty class
  */
@@ -112,13 +105,11 @@ class Smarty extends Smarty_Internal_Data {
 	const PLUGIN_BLOCK = 'block';
 	const PLUGIN_COMPILER = 'compiler';
 	const PLUGIN_MODIFIER = 'modifier';
-
 	/**
 	* static variables
 	*/
     // assigned global tpl vars
     static $global_tpl_vars = array(); 
-
 	/**
 	* variables
 	*/
@@ -240,7 +231,6 @@ class Smarty extends Smarty_Internal_Data {
     public $_version = self::SMARTY_VERSION;
     // self pointer to Smarty object
     public $smarty;
-
     /**
      * Class constructor, initializes basic smarty properties
      */
@@ -263,14 +253,12 @@ class Smarty extends Smarty_Internal_Data {
             $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
         } 
     } 
-
     /**
      * Class destructor
      */
     public function __destruct()
     { 
     } 
-
     /**
      * fetches a rendered Smarty template
      * 
@@ -367,7 +355,6 @@ class Smarty extends Smarty_Internal_Data {
             return $_output;
         } 
     } 
-
     /**
      * displays a Smarty template
      * 
@@ -381,7 +368,6 @@ class Smarty extends Smarty_Internal_Data {
         // display template
         $this->fetch ($template, $cache_id, $compile_id, $parent, true);
     } 
-
     /**
      * test if cache i valid
      * 
@@ -402,7 +388,6 @@ class Smarty extends Smarty_Internal_Data {
         // return cache status of template
         return $template->isCached();
     } 
-
     /**
      * creates a data object
      * 
@@ -413,7 +398,6 @@ class Smarty extends Smarty_Internal_Data {
     {
         return new Smarty_Data($parent, $this);
     } 
-
     /**
      * creates a template object
      * 
@@ -466,7 +450,6 @@ class Smarty extends Smarty_Internal_Data {
     } 
     
      
-
     /**
      * Check if a template resource exists
      * 
@@ -483,7 +466,6 @@ class Smarty extends Smarty_Internal_Data {
         $this->template_objects = $save;
         return $result;
     } 
-
     /**
      * Returns a single or all global  variables
      * 
@@ -507,7 +489,6 @@ class Smarty extends Smarty_Internal_Data {
             return $_result;
         } 
     } 
-
     /**
     * Empty cache folder
     * 
@@ -520,7 +501,6 @@ class Smarty extends Smarty_Internal_Data {
        // load cache resource and call clearAll
         return $this->loadCacheResource($type)->clearAll($exp_time);
     }        
-
     /**
     * Empty cache for a specific template
     * 
@@ -536,7 +516,6 @@ class Smarty extends Smarty_Internal_Data {
        // load cache resource and call clear
         return $this->loadCacheResource($type)->clear($template_name, $cache_id, $compile_id, $exp_time);
     }
-
     /**
      * Loads security class and enables security
      */
@@ -555,7 +534,6 @@ class Smarty extends Smarty_Internal_Data {
             throw new SmartyException("Security class '$security_class' is not defined");
         } 
     } 
-
     /**
      * Disable security
      */
@@ -563,7 +541,6 @@ class Smarty extends Smarty_Internal_Data {
     {
        $this->security_policy = null;
     } 
-
     /**
     * Loads cache resource.
     * 
@@ -590,7 +567,6 @@ class Smarty extends Smarty_Internal_Data {
         } 
     } 
 
-
     /**
      * Set template directory
      * 
@@ -601,7 +577,6 @@ class Smarty extends Smarty_Internal_Data {
         $this->template_dir = (array)$template_dir;
         return;
     } 
-
     /**
      * Adds template directory(s) to existing ones
      * 
@@ -626,7 +601,6 @@ class Smarty extends Smarty_Internal_Data {
         return;
     } 
 
-
     /**
      * return a reference to a registered object
      * 
@@ -637,13 +611,10 @@ class Smarty extends Smarty_Internal_Data {
     {
         if (!isset($this->registered_objects[$name]))
             throw new SmartyException("'$name' is not a registered object");
-
         if (!is_object($this->registered_objects[$name][0]))
             throw new SmartyException("registered '$name' is not an object");
-
         return $this->registered_objects[$name][0];
     } 
-
 
     /**
      * return name of debugging template
@@ -654,7 +625,6 @@ class Smarty extends Smarty_Internal_Data {
     {
         return $this->debug_tpl;
     } 
-
     /**
      * set the debug template
      * 
@@ -665,7 +635,6 @@ class Smarty extends Smarty_Internal_Data {
     {
         return $this->debug_tpl = $tpl_name;
     } 
-
     /**
      * Takes unknown classes and loads plugin files for them
      * class name format: Smarty_PluginType_PluginName
@@ -713,7 +682,6 @@ class Smarty extends Smarty_Internal_Data {
         // no plugin loaded
         return false;
     } 
-
     /**
     * clean up properties on cloned object
      */
@@ -727,7 +695,6 @@ class Smarty extends Smarty_Internal_Data {
     	unset($this->register);  
     	unset($this->filter);  
 	}
-
 
     /**
      * Handle unknown class methods
@@ -788,7 +755,6 @@ class Smarty extends Smarty_Internal_Data {
         throw new SmartyException("Call of unknown function '$name'.");
    } 
 } 
-
 /**
  * Autoloader
  */
@@ -799,17 +765,14 @@ function smartyAutoload($class)
         include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
     } 
 } 
-
 /**
  * Smarty exception class
  */
 Class SmartyException extends Exception {
 }
-
 /**
  * Smarty compiler exception class
  */
 Class SmartyCompilerException extends SmartyException  {
 }
-
 ?>

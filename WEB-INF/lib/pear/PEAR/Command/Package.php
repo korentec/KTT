@@ -16,12 +16,10 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 0.1
  */
-
 /**
  * base class
  */
 require_once 'PEAR/Command/Common.php';
-
 /**
  * PEAR commands for login/logout
  *
@@ -36,7 +34,6 @@ require_once 'PEAR/Command/Common.php';
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 0.1
  */
-
 class PEAR_Command_Package extends PEAR_Command_Common
 {
     var $commands = array(
@@ -162,7 +159,6 @@ of a specific release.
  revisions of what files were in that release.  If need to fix something
  after running svntag once, but before the tarball is released to the public,
  use the "slide" option to move the release tag.
-
  to include files (such as a second package.xml, or tests not included in the
  release), pass them as additional parameters.
  ',
@@ -199,7 +195,6 @@ packaged a distribution tarball with the "package" command to tag what
 revisions of what files were in that release.  If need to fix something
 after running cvstag once, but before the tarball is released to the public,
 use the "slide" option to move the release tag.
-
 to include files (such as a second package.xml, or tests not included in the
 release), pass them as additional parameters.
 ',
@@ -244,11 +239,9 @@ by the PEAR package name, defaults to "PEAR::%s".',
                     ),
                 ),
             'doc' => '<package-file>
-
 Creates an RPM .spec file for wrapping a PEAR package inside an RPM
 package.  Intended to be used from the SPECS directory, with the PEAR
 package tarball in the SOURCES directory:
-
 $ pear makerpm ../SOURCES/Net_Socket-1.0.tgz
 Wrote RPM spec file PEAR::Net_Geo-1.0.spec
 $ rpm -bb PEAR::Net_Socket-1.0.spec
@@ -275,9 +268,7 @@ used for automated conversion or learning the format.
 '
             ),
         );
-
     var $output;
-
     /**
      * PEAR_Command_Package constructor.
      *
@@ -287,7 +278,6 @@ used for automated conversion or learning the format.
     {
         parent::PEAR_Command_Common($ui, $config);
     }
-
     function _displayValidationResults($err, $warn, $strict = false)
     {
         foreach ($err as $e) {
@@ -304,7 +294,6 @@ used for automated conversion or learning the format.
         }
         return true;
     }
-
     function &getPackager()
     {
         if (!class_exists('PEAR_Packager')) {
@@ -313,7 +302,6 @@ used for automated conversion or learning the format.
         $a = &new PEAR_Packager;
         return $a;
     }
-
     function &getPackageFile($config, $debug = false)
     {
         if (!class_exists('PEAR_Common')) {
@@ -328,7 +316,6 @@ used for automated conversion or learning the format.
         $a->setLogger($common);
         return $a;
     }
-
     function doPackage($command, $options, $params)
     {
         $this->output = '';
@@ -337,33 +324,27 @@ used for automated conversion or learning the format.
         if (!$pkg2 && !isset($params[0]) && file_exists('package2.xml')) {
             $pkg2 = 'package2.xml';
         }
-
         $packager = &$this->getPackager();
         $compress = empty($options['nocompress']) ? true : false;
         $result   = $packager->package($pkginfofile, $compress, $pkg2);
         if (PEAR::isError($result)) {
             return $this->raiseError($result);
         }
-
         // Don't want output, only the package file name just created
         if (isset($options['showname'])) {
             $this->output = $result;
         }
-
         if ($this->output) {
             $this->ui->outputData($this->output, $command);
         }
-
         return true;
     }
-
     function doPackageValidate($command, $options, $params)
     {
         $this->output = '';
         if (count($params) < 1) {
             $params[0] = 'package.xml';
         }
-
         $obj = &$this->getPackageFile($this->config, $this->_debug);
         $obj->rawReturn();
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
@@ -378,12 +359,10 @@ used for automated conversion or learning the format.
                 $info->getPackage() . '-' . $info->getVersion() . DIRECTORY_SEPARATOR .
                 basename($info->getPackageFile()));
         }
-
         PEAR::staticPopErrorHandling();
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $valid = false;
         if ($info->getPackagexmlVersion() == '2.0') {
             if ($valid = $info->validate(PEAR_VALIDATE_NORMAL)) {
@@ -393,7 +372,6 @@ used for automated conversion or learning the format.
         } else {
             $valid = $info->validate(PEAR_VALIDATE_PACKAGING);
         }
-
         $err = $warn = array();
         if ($errors = $info->getValidationWarnings()) {
             foreach ($errors as $error) {
@@ -404,12 +382,10 @@ used for automated conversion or learning the format.
                 }
             }
         }
-
         $this->_displayValidationResults($err, $warn);
         $this->ui->outputData($this->output, $command);
         return true;
     }
-
     function doSvnTag($command, $options, $params)
     {
         $this->output = '';
@@ -418,7 +394,6 @@ used for automated conversion or learning the format.
             $help = $this->getHelp($command);
             return $this->raiseError("$command: missing parameter: $help[0]");
         }
-
         $packageFile = realpath($params[0]);
         $dir = dirname($packageFile);
         $dir = substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1);
@@ -427,7 +402,6 @@ used for automated conversion or learning the format.
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $err = $warn = array();
         if (!$info->validate()) {
             foreach ($info->getValidationWarnings() as $error) {
@@ -438,22 +412,17 @@ used for automated conversion or learning the format.
                 }
             }
         }
-
         if (!$this->_displayValidationResults($err, $warn, true)) {
             $this->ui->outputData($this->output, $command);
             return $this->raiseError('SVN tag failed');
         }
-
         $version    = $info->getVersion();
         $package    = $info->getName();
         $svntag     = "$package-$version";
-
         if (isset($options['delete'])) {
             return $this->_svnRemoveTag($version, $package, $svntag, $packageFile, $options);
         }
-
         $path = $this->_svnFindPath($packageFile);
-
         // Check if there are any modified files
         $fp = popen('svn st --xml ' . dirname($packageFile), "r");
         $out = '';
@@ -461,7 +430,6 @@ used for automated conversion or learning the format.
             $out .= rtrim($line)."\n";
         }
         pclose($fp);
-
         if (!isset($options['quiet']) && strpos($out, 'item="modified"')) {
             $params = array(array(
                 'name' => 'modified',
@@ -470,27 +438,22 @@ used for automated conversion or learning the format.
                 'prompt' => 'You have files in your SVN checkout (' . $path['from']  . ') that have been modified but not commited, do you still want to tag ' . $version . '?',
             ));
             $answers = $this->ui->confirmDialog($params);
-
             if (!in_array($answers['modified'], array('y', 'yes', 'on', '1'))) {
                 return true;
             }
         }
-
         if (isset($options['slide'])) {
             $this->_svnRemoveTag($version, $package, $svntag, $packageFile, $options);
         }
-
         // Check if tag already exists
         $releaseTag = $path['local']['base'] . 'tags' . DIRECTORY_SEPARATOR . $svntag;
         $existsCommand = 'svn ls ' . $path['base'] . 'tags/';
-
         $fp = popen($existsCommand, "r");
         $out = '';
         while ($line = fgets($fp, 1024)) {
             $out .= rtrim($line)."\n";
         }
         pclose($fp);
-
         if (in_array($svntag . DIRECTORY_SEPARATOR, explode("\n", $out))) {
             $this->ui->outputData($this->output, $command);
             return $this->raiseError('SVN tag ' . $svntag . ' for ' . $package . ' already exists.');
@@ -512,27 +475,22 @@ used for automated conversion or learning the format.
                 $this->output .= "$out\n";
             }
         }
-
         $command = 'svn';
         if (isset($options['quiet'])) {
             $command .= ' -q';
         }
-
         $command .= ' copy --parents ';
-
         $dir   = dirname($packageFile);
         $dir   = substr($dir, strrpos($dir, DIRECTORY_SEPARATOR) + 1);
         $files = array_keys($info->getFilelist());
         if (!in_array(basename($packageFile), $files)) {
             $files[] = basename($packageFile);
         }
-
         array_shift($params);
         if (count($params)) {
             // add in additional files to be tagged (package files and such)
             $files = array_merge($files, $params);
         }
-
         $commands = array();
         foreach ($files as $file) {
             if (!file_exists($file)) {
@@ -541,7 +499,6 @@ used for automated conversion or learning the format.
             $commands[] = $command . ' ' . escapeshellarg($file) . ' ' .
                           escapeshellarg($releaseTag . DIRECTORY_SEPARATOR . $file);
         }
-
         $this->output .= implode("\n", $commands) . "\n";
         if (empty($options['dry-run'])) {
             foreach ($commands as $command) {
@@ -552,7 +509,6 @@ used for automated conversion or learning the format.
                 pclose($fp);
             }
         }
-
         $command = 'svn ci -m "Tagging the ' . $version  . ' release" ' . $releaseTag . "\n";
         $this->output .= "+ $command\n";
         if (empty($options['dry-run'])) {
@@ -562,11 +518,9 @@ used for automated conversion or learning the format.
             }
             pclose($fp);
         }
-
         $this->ui->outputData($this->output, $_cmd);
         return true;
     }
-
     function _svnFindPath($file)
     {
         $xml = '';
@@ -578,40 +532,31 @@ used for automated conversion or learning the format.
         pclose($fp);
         $url_tag = strpos($xml, '<url>');
         $url = substr($xml, $url_tag + 5, strpos($xml, '</url>', $url_tag + 5) - ($url_tag + 5));
-
         $path = array();
         $path['from'] = substr($url, 0, strrpos($url, '/'));
         $path['base'] = substr($path['from'], 0, strrpos($path['from'], '/') + 1);
-
         // Figure out the local paths - see http://pear.php.net/bugs/17463
         $pos = strpos($file, DIRECTORY_SEPARATOR . 'trunk' . DIRECTORY_SEPARATOR);
         if ($pos === false) {
             $pos = strpos($file, DIRECTORY_SEPARATOR . 'branches' . DIRECTORY_SEPARATOR);
         }
         $path['local']['base'] = substr($file, 0, $pos + 1);
-
         return $path;
     }
-
     function _svnRemoveTag($version, $package, $tag, $packageFile, $options)
     {
         $command = 'svn';
-
         if (isset($options['quiet'])) {
             $command .= ' -q';
         }
-
         $command .= ' remove';
         $command .= ' -m "Removing tag for the ' . $version  . ' release."';
-
         $path = $this->_svnFindPath($packageFile);
         $command .= ' ' . $path['base'] . 'tags/' . $tag;
-
 
         if ($this->config->get('verbose') > 1) {
             $this->output .= "+ $command\n";
         }
-
         $this->output .= "+ $command\n";
         if (empty($options['dry-run'])) {
             $fp = popen($command, "r");
@@ -620,11 +565,9 @@ used for automated conversion or learning the format.
             }
             pclose($fp);
         }
-
         $this->ui->outputData($this->output, $command);
         return true;
     }
-
     function doCvsTag($command, $options, $params)
     {
         $this->output = '';
@@ -633,14 +576,12 @@ used for automated conversion or learning the format.
             $help = $this->getHelp($command);
             return $this->raiseError("$command: missing parameter: $help[0]");
         }
-
         $packageFile = realpath($params[0]);
         $obj  = &$this->getPackageFile($this->config, $this->_debug);
         $info = $obj->fromAnyFile($packageFile, PEAR_VALIDATE_NORMAL);
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $err = $warn = array();
         if (!$info->validate()) {
             foreach ($info->getValidationWarnings() as $error) {
@@ -651,12 +592,10 @@ used for automated conversion or learning the format.
                 }
             }
         }
-
         if (!$this->_displayValidationResults($err, $warn, true)) {
             $this->ui->outputData($this->output, $command);
             return $this->raiseError('CVS tag failed');
         }
-
         $version    = $info->getVersion();
         $cvsversion = preg_replace('/[^a-z0-9]/i', '_', $version);
         $cvstag     = "RELEASE_$cvsversion";
@@ -665,27 +604,22 @@ used for automated conversion or learning the format.
         if (isset($options['quiet'])) {
             $command .= ' -q';
         }
-
         if (isset($options['reallyquiet'])) {
             $command .= ' -Q';
         }
-
         $command .= ' tag';
         if (isset($options['slide'])) {
             $command .= ' -F';
         }
-
         if (isset($options['delete'])) {
             $command .= ' -d';
         }
-
         $command .= ' ' . $cvstag . ' ' . escapeshellarg($params[0]);
         array_shift($params);
         if (count($params)) {
             // add in additional files to be tagged
             $files = array_merge($files, $params);
         }
-
         $dir = dirname($packageFile);
         $dir = substr($dir, strrpos($dir, '/') + 1);
         foreach ($files as $file) {
@@ -694,11 +628,9 @@ used for automated conversion or learning the format.
             }
             $command .= ' ' . escapeshellarg($file);
         }
-
         if ($this->config->get('verbose') > 1) {
             $this->output .= "+ $command\n";
         }
-
         $this->output .= "+ $command\n";
         if (empty($options['dry-run'])) {
             $fp = popen($command, "r");
@@ -707,11 +639,9 @@ used for automated conversion or learning the format.
             }
             pclose($fp);
         }
-
         $this->ui->outputData($this->output, $_cmd);
         return true;
     }
-
     function doCvsDiff($command, $options, $params)
     {
         $this->output = '';
@@ -719,14 +649,12 @@ used for automated conversion or learning the format.
             $help = $this->getHelp($command);
             return $this->raiseError("$command: missing parameter: $help[0]");
         }
-
         $file = realpath($params[0]);
         $obj  = &$this->getPackageFile($this->config, $this->_debug);
         $info = $obj->fromAnyFile($file, PEAR_VALIDATE_NORMAL);
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $err = $warn = array();
         if (!$info->validate()) {
             foreach ($info->getValidationWarnings() as $error) {
@@ -737,12 +665,10 @@ used for automated conversion or learning the format.
                 }
             }
         }
-
         if (!$this->_displayValidationResults($err, $warn, true)) {
             $this->ui->outputData($this->output, $command);
             return $this->raiseError('CVS diff failed');
         }
-
         $info1 = $info->getFilelist();
         $files = $info1;
         $cmd = "cvs";
@@ -750,25 +676,21 @@ used for automated conversion or learning the format.
             $cmd .= ' -q';
             unset($options['quiet']);
         }
-
         if (isset($options['reallyquiet'])) {
             $cmd .= ' -Q';
             unset($options['reallyquiet']);
         }
-
         if (isset($options['release'])) {
             $cvsversion = preg_replace('/[^a-z0-9]/i', '_', $options['release']);
             $cvstag = "RELEASE_$cvsversion";
             $options['revision'] = $cvstag;
             unset($options['release']);
         }
-
         $execute = true;
         if (isset($options['dry-run'])) {
             $execute = false;
             unset($options['dry-run']);
         }
-
         $cmd .= ' diff';
         // the rest of the options are passed right on to "cvs diff"
         foreach ($options as $option => $optarg) {
@@ -782,15 +704,12 @@ used for automated conversion or learning the format.
                 $cmd .= ($short ? '' : '=') . escapeshellarg($optarg);
             }
         }
-
         foreach ($files as $file) {
             $cmd .= ' ' . escapeshellarg($file['name']);
         }
-
         if ($this->config->get('verbose') > 1) {
             $this->output .= "+ $cmd\n";
         }
-
         if ($execute) {
             $fp = popen($cmd, "r");
             while ($line = fgets($fp, 1024)) {
@@ -798,18 +717,15 @@ used for automated conversion or learning the format.
             }
             pclose($fp);
         }
-
         $this->ui->outputData($this->output, $command);
         return true;
     }
-
     function doPackageDependencies($command, $options, $params)
     {
         // $params[0] -> the PEAR package to list its information
         if (count($params) !== 1) {
             return $this->raiseError("bad parameter(s), try \"help $command\"");
         }
-
         $obj = &$this->getPackageFile($this->config, $this->_debug);
         if (is_file($params[0]) || strpos($params[0], '.xml') > 0) {
            $info = $obj->fromAnyFile($params[0], PEAR_VALIDATE_NORMAL);
@@ -817,11 +733,9 @@ used for automated conversion or learning the format.
             $reg  = $this->config->getRegistry();
             $info = $obj->fromArray($reg->packageInfo($params[0]));
         }
-
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $deps = $info->getDeps();
         if (is_array($deps)) {
             if ($info->getPackagexmlVersion() == '1.0') {
@@ -830,7 +744,6 @@ used for automated conversion or learning the format.
                     'border' => true,
                     'headline' => array("Required?", "Type", "Name", "Relation", "Version"),
                     );
-
                 foreach ($deps as $d) {
                     if (isset($d['optional'])) {
                         if ($d['optional'] == 'yes') {
@@ -841,31 +754,26 @@ used for automated conversion or learning the format.
                     } else {
                         $req = 'Yes';
                     }
-
                     if (isset($this->_deps_rel_trans[$d['rel']])) {
                         $rel = $this->_deps_rel_trans[$d['rel']];
                     } else {
                         $rel = $d['rel'];
                     }
-
                     if (isset($this->_deps_type_trans[$d['type']])) {
                         $type = ucfirst($this->_deps_type_trans[$d['type']]);
                     } else {
                         $type = $d['type'];
                     }
-
                     if (isset($d['name'])) {
                         $name = $d['name'];
                     } else {
                         $name = '';
                     }
-
                     if (isset($d['version'])) {
                         $version = $d['version'];
                     } else {
                         $version = '';
                     }
-
                     $data['data'][] = array($req, $type, $name, $rel, $version);
                 }
             } else { // package.xml 2.0 dependencies display
@@ -886,25 +794,20 @@ used for automated conversion or learning the format.
                         } else {
                             $group = '';
                         }
-
                         if (!isset($subd[0])) {
                             $subd = array($subd);
                         }
-
                         foreach ($subd as $groupa) {
                             foreach ($groupa as $deptype => $depinfo) {
                                 if ($deptype == 'attribs') {
                                     continue;
                                 }
-
                                 if ($deptype == 'pearinstaller') {
                                     $deptype = 'pear Installer';
                                 }
-
                                 if (!isset($depinfo[0])) {
                                     $depinfo = array($depinfo);
                                 }
-
                                 foreach ($depinfo as $inf) {
                                     $name = '';
                                     if (isset($inf['channel'])) {
@@ -913,7 +816,6 @@ used for automated conversion or learning the format.
                                             $alias = '(channel?) ' .$inf['channel'];
                                         }
                                         $name = $alias . '/';
-
                                     }
                                     if (isset($inf['name'])) {
                                         $name .= $inf['name'];
@@ -922,17 +824,14 @@ used for automated conversion or learning the format.
                                     } else {
                                         $name .= '';
                                     }
-
                                     if (isset($inf['uri'])) {
                                         $name .= ' [' . $inf['uri'] .  ']';
                                     }
-
                                     if (isset($inf['conflicts'])) {
                                         $ver = 'conflicts';
                                     } else {
                                         $ver = $d->_getExtraString($inf);
                                     }
-
                                     $data['data'][] = array($req, ucfirst($deptype), $name,
                                         $ver, $group);
                                 }
@@ -941,15 +840,12 @@ used for automated conversion or learning the format.
                     }
                 }
             }
-
             $this->ui->outputData($data, $command);
             return true;
         }
-
         // Fallback
         $this->ui->outputData("This package does not have any dependencies.", $command);
     }
-
     function doSign($command, $options, $params)
     {
         // should move most of this code into PEAR_Packager
@@ -957,45 +853,35 @@ used for automated conversion or learning the format.
         if (count($params) !== 1) {
             return $this->raiseError("bad parameter(s), try \"help $command\"");
         }
-
         require_once 'System.php';
         require_once 'Archive/Tar.php';
-
         if (!file_exists($params[0])) {
             return $this->raiseError("file does not exist: $params[0]");
         }
-
         $obj = $this->getPackageFile($this->config, $this->_debug);
         $info = $obj->fromTgzFile($params[0], PEAR_VALIDATE_NORMAL);
         if (PEAR::isError($info)) {
             return $this->raiseError($info);
         }
-
         $tar = new Archive_Tar($params[0]);
-
         $tmpdir = $this->config->get('temp_dir');
         $tmpdir = System::mktemp(' -t "' . $tmpdir . '" -d pearsign');
         if (!$tar->extractList('package2.xml package.xml package.sig', $tmpdir)) {
             return $this->raiseError("failed to extract tar file");
         }
-
         if (file_exists("$tmpdir/package.sig")) {
             return $this->raiseError("package already signed");
         }
-
         $packagexml = 'package.xml';
         if (file_exists("$tmpdir/package2.xml")) {
             $packagexml = 'package2.xml';
         }
-
         if (file_exists("$tmpdir/package.sig")) {
             unlink("$tmpdir/package.sig");
         }
-
         if (!file_exists("$tmpdir/$packagexml")) {
             return $this->raiseError("Extracted file $tmpdir/$packagexml not found.");
         }
-
         $input = $this->ui->userDialog($command,
                                        array('GnuPG Passphrase'),
                                        array('password'));
@@ -1003,26 +889,21 @@ used for automated conversion or learning the format.
             //use empty passphrase
             $input[0] = '';
         }
-
         $devnull = (isset($options['verbose'])) ? '' : ' 2>/dev/null';
         $gpg = popen("gpg --batch --passphrase-fd 0 --armor --detach-sign --output $tmpdir/package.sig $tmpdir/$packagexml" . $devnull, "w");
         if (!$gpg) {
             return $this->raiseError("gpg command failed");
         }
-
         fwrite($gpg, "$input[0]\n");
         if (pclose($gpg) || !file_exists("$tmpdir/package.sig")) {
             return $this->raiseError("gpg sign failed");
         }
-
         if (!$tar->addModify("$tmpdir/package.sig", '', $tmpdir)) {
             return $this->raiseError('failed adding signature to file');
         }
-
         $this->ui->outputData("Package signed.", $command);
         return true;
     }
-
     /**
      * For unit testing purposes
      */
@@ -1034,7 +915,6 @@ used for automated conversion or learning the format.
         $a = &new PEAR_Installer($ui);
         return $a;
     }
-
     /**
      * For unit testing purposes
      */
@@ -1046,19 +926,15 @@ used for automated conversion or learning the format.
                 include_once 'PEAR/Command/Packaging.php';
             }
         }
-
         if (class_exists('PEAR_Command_Packaging')) {
             $a = &new PEAR_Command_Packaging($ui, $config);
         } else {
             $a = null;
         }
-
         return $a;
     }
-
     function doMakeRPM($command, $options, $params)
     {
-
         // Check to see if PEAR_Command_Packaging is installed, and
         // transparently switch to use the "make-rpm-spec" command from it
         // instead, if it does. Otherwise, continue to use the old version
@@ -1069,13 +945,11 @@ used for automated conversion or learning the format.
                 'newer "make-rpm-spec" command instead');
             return $packaging_cmd->run('make-rpm-spec', $options, $params);
         }
-
         $this->ui->outputData('WARNING: "pear makerpm" is no longer available; an '.
           'improved version is available via "pear make-rpm-spec", which '.
           'is available by installing PEAR_Command_Packaging');
         return true;
     }
-
     function doConvert($command, $options, $params)
     {
         $packagexml    = isset($params[0]) ? $params[0] : 'package.xml';
@@ -1093,12 +967,10 @@ used for automated conversion or learning the format.
             }
             return $this->raiseError($pf);
         }
-
         if (is_a($pf, 'PEAR_PackageFile_v2')) {
             $this->ui->outputData($packagexml . ' is already a package.xml version 2.0');
             return true;
         }
-
         $gen   = &$pf->getDefaultGenerator();
         $newpf = &$gen->toV2();
         $newpf->setPackagefile($newpackagexml);
@@ -1113,11 +985,9 @@ used for automated conversion or learning the format.
                     $this->ui->outputData($warning['message']);
                 }
             }
-
             $this->ui->outputData($saved->getMessage());
             return true;
         }
-
         $this->ui->outputData('Wrote new version 2.0 package.xml to "' . $saved . '"');
         return true;
     }

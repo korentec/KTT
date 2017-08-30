@@ -1,5 +1,4 @@
 <?php
-
 if(!function_exists('smarty_mb_str_replace')) {
   function smarty_mb_str_replace($search, $replace, $subject, &$count=0) { 
       if (!is_array($search) && is_array($replace)) { 
@@ -34,5 +33,4 @@ if(!function_exists('smarty_mb_str_replace')) {
       return $subject; 
   }
 }
-
 ?>

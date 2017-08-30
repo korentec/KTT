@@ -6,7 +6,6 @@
  * @subpackage Security
  * @author Uwe Tews 
  */ 
-
 /**
  * This class does contain the security settings
  */
@@ -24,7 +23,6 @@ class Smarty_Security {
      * @var integer 
      */
     public $php_handling = Smarty::PHP_PASSTHRU;
-
     /**
      * This is the list of template directories that are considered secure.
      * $template_dir is in this list implicitly.
@@ -32,7 +30,6 @@ class Smarty_Security {
      * @var array 
      */
     public $secure_dir = array();
-
 
     /**
      * This is an array of directories where trusted php scripts reside.
@@ -42,7 +39,6 @@ class Smarty_Security {
      */
     public $trusted_dir = array();
 
-
     /**
      * This is an array of trusted static classes.
      *
@@ -51,7 +47,6 @@ class Smarty_Security {
      * @var array 
      */
     public $static_classes = array();
-
     /**
      * This is an array of trusted PHP functions.
      *
@@ -61,7 +56,6 @@ class Smarty_Security {
      */
     public $php_functions = array('isset', 'empty',
             'count', 'sizeof','in_array', 'is_array','time','nl2br');
-
     /**
      * This is an array of trusted PHP modifers.
      *
@@ -70,7 +64,6 @@ class Smarty_Security {
      * @var array 
      */
     public $php_modifiers = array('escape','count');
-
     /**
      * This is an array of trusted streams.
      *
@@ -91,7 +84,6 @@ class Smarty_Security {
      * + flag if the {php} and {include_php} tag can be executed
      */
     public $allow_php_tag = false;
-
     public function __construct($smarty)
     {
         $this->smarty = $smarty; 
@@ -112,7 +104,6 @@ class Smarty_Security {
             return false;
         } 
     } 
-
     /**
      * Check if static class is trusted.
      * 
@@ -161,7 +152,6 @@ class Smarty_Security {
             return false;
         } 
     } 
-
     /**
      * Check if directory of file resource is trusted.
      * 
@@ -193,7 +183,6 @@ class Smarty_Security {
                 } 
             } 
         } 
-
         throw new SmartyException ("directory '{$_rp}' not allowed by security setting");
         return false;
     } 
@@ -220,10 +209,8 @@ class Smarty_Security {
                 } 
             } 
         } 
-
         throw new SmartyException ("directory '{$_rp}' not allowed by security setting");
         return false;
     } 
 } 
-
 ?>

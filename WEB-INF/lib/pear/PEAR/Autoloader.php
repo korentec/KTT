@@ -3,7 +3,6 @@
  * Class auto-loader
  *
  * PHP versions 4
-
  *
  * @category   pear
  * @package    PEAR
@@ -15,19 +14,15 @@
  * @since      File available since Release 0.1
  * @deprecated File deprecated in Release 1.4.0a1
  */
-
 // /* vim: set expandtab tabstop=4 shiftwidth=4: */
-
 if (!extension_loaded("overload")) {
     // die hard without ext/overload
     die("Rebuild PHP with the `overload' extension to use PEAR_Autoloader");
 }
-
 /**
  * Include for PEAR_Error and PEAR classes
  */
 require_once "PEAR.php";
-
 /**
  * This class is for objects where you want to separate the code for
  * some methods into separate classes.  This is useful if you have a
@@ -53,7 +48,6 @@ require_once "PEAR.php";
 class PEAR_Autoloader extends PEAR
 {
     // {{{ properties
-
     /**
      * Map of methods and classes where they are defined
      *
@@ -62,7 +56,6 @@ class PEAR_Autoloader extends PEAR
      * @access private
      */
     var $_autoload_map = array();
-
     /**
      * Map of methods and aggregate objects
      *
@@ -71,10 +64,8 @@ class PEAR_Autoloader extends PEAR
      * @access private
      */
     var $_method_map = array();
-
     // }}}
     // {{{ addAutoload()
-
     /**
      * Add one or more autoload entries.
      *
@@ -100,10 +91,8 @@ class PEAR_Autoloader extends PEAR
             $this->_autoload_map[strtolower($method)] = $classname;
         }
     }
-
     // }}}
     // {{{ removeAutoload()
-
     /**
      * Remove an autoload entry.
      *
@@ -120,10 +109,8 @@ class PEAR_Autoloader extends PEAR
         unset($this->_autoload_map[$method]);
         return $ok;
     }
-
     // }}}
     // {{{ addAggregateObject()
-
     /**
      * Add an aggregate object to this object.  If the specified class
      * is not defined, loading it will be attempted following PEAR's
@@ -153,10 +140,8 @@ class PEAR_Autoloader extends PEAR
             }
         }
     }
-
     // }}}
     // {{{ removeAggregateObject()
-
     /**
      * Remove an aggregate object.
      *
@@ -179,10 +164,8 @@ class PEAR_Autoloader extends PEAR
         }
         return $ok;
     }
-
     // }}}
     // {{{ __call()
-
     /**
      * Overloaded object call handler, called each time an
      * undefined/aggregated method is invoked.  This method repeats
@@ -209,10 +192,7 @@ class PEAR_Autoloader extends PEAR
         }
         return false;
     }
-
     // }}}
 }
-
 overload("PEAR_Autoloader");
-
 ?>

@@ -13,7 +13,6 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.7.0
  */
-
 /**
  * @category   pear
  * @package    PEAR
@@ -30,14 +29,12 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
      * @var PEAR_Installer
      */
     var $installer;
-
     /**
      * the md5 of the original file
      *
      * @var unknown_type
      */
     var $md5 = null;
-
     /**
      * Do any unusual setup here
      * @param PEAR_Installer
@@ -57,7 +54,6 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
             }
         }
     }
-
     function processInstallation($pkg, $atts, $file, $tmp_path, $layer = null)
     {
         $test = parent::processInstallation($pkg, $atts, $file, $tmp_path, $layer);
@@ -85,7 +81,6 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
                 } else {
                     $newloc = $tmpcfg;
                 }
-
                 $temp_file = $newloc . DIRECTORY_SEPARATOR . uniqid('savefile');
                 if (!@copy($old, $temp_file)) {
                     PEAR::popErrorHandling();
@@ -93,14 +88,12 @@ class PEAR_Installer_Role_Cfg extends PEAR_Installer_Role_Common
                         $old . ', unable to install.  Please set temp_dir ' .
                         'configuration variable to a writeable location and try again');
                 }
-
                 PEAR::popErrorHandling();
                 $this->installer->log(0, "WARNING: configuration file $old is being installed as $test[2], you should manually merge in changes to the existing configuration file");
                 $this->installer->addFileOperation('rename', array($temp_file, $old, false));
                 $this->installer->addFileOperation('delete', array($temp_file));
             }
         }
-
         return $test;
     }
 }

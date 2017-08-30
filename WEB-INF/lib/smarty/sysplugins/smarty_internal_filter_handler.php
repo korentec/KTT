@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Filter Handler
  * 
@@ -9,7 +8,6 @@
  * @subpackage PluginsInternal
  * @author Uwe Tews 
  */
-
 /**
  * Class for filter processing
  */
@@ -63,5 +61,4 @@ class Smarty_Internal_Filter_Handler {
         return $output;
     } 
 } 
-
 ?>

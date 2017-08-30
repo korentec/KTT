@@ -13,12 +13,10 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a12
  */
-
 /**
  * For downloading REST xml/txt files
  */
 require_once 'PEAR/REST.php';
-
 /**
  * Implement REST 1.0
  *
@@ -41,7 +39,6 @@ class PEAR_REST_10
     {
         $this->_rest = &new PEAR_REST($config, $options);
     }
-
     /**
      * Retrieve information about a remote package to be downloaded from a REST server
      *
@@ -65,34 +62,28 @@ class PEAR_REST_10
         if (!$states) {
             return PEAR::raiseError('"' . $prefstate . '" is not a valid state');
         }
-
         $channel  = $packageinfo['channel'];
         $package  = $packageinfo['package'];
         $state    = isset($packageinfo['state'])   ? $packageinfo['state']   : null;
         $version  = isset($packageinfo['version']) ? $packageinfo['version'] : null;
         $restFile = $base . 'r/' . strtolower($package) . '/allreleases.xml';
-
         $info = $this->_rest->retrieveData($restFile, false, false, $channel);
         if (PEAR::isError($info)) {
             return PEAR::raiseError('No releases available for package "' .
                 $channel . '/' . $package . '"');
         }
-
         if (!isset($info['r'])) {
             return false;
         }
-
         $release = $found = false;
         if (!is_array($info['r']) || !isset($info['r'][0])) {
             $info['r'] = array($info['r']);
         }
-
         foreach ($info['r'] as $release) {
             if (!isset($this->_rest->_options['force']) && ($installed &&
                   version_compare($release['v'], $installed, '<'))) {
                 continue;
             }
-
             if (isset($state)) {
                 // try our preferred state first
                 if ($release['s'] == $state) {
@@ -117,10 +108,8 @@ class PEAR_REST_10
                 }
             }
         }
-
         return $this->_returnDownloadURL($base, $package, $release, $info, $found, false, $channel);
     }
-
     function getDepDownloadURL($base, $xsdversion, $dependency, $deppackage,
                                $prefstate = 'stable', $installed = false, $channel = false)
     {
@@ -128,23 +117,19 @@ class PEAR_REST_10
         if (!$states) {
             return PEAR::raiseError('"' . $prefstate . '" is not a valid state');
         }
-
         $channel  = $dependency['channel'];
         $package  = $dependency['name'];
         $state    = isset($dependency['state'])   ? $dependency['state']   : null;
         $version  = isset($dependency['version']) ? $dependency['version'] : null;
         $restFile = $base . 'r/' . strtolower($package) . '/allreleases.xml';
-
         $info = $this->_rest->retrieveData($restFile, false, false, $channel);
         if (PEAR::isError($info)) {
             return PEAR::raiseError('Package "' . $deppackage['channel'] . '/' . $deppackage['package']
                 . '" dependency "' . $channel . '/' . $package . '" has no releases');
         }
-
         if (!is_array($info) || !isset($info['r'])) {
             return false;
         }
-
         $exclude = array();
         $min = $max = $recommended = false;
         if ($xsdversion == '1.0') {
@@ -242,7 +227,6 @@ class PEAR_REST_10
         }
         return $this->_returnDownloadURL($base, $package, $release, $info, $found, false, $channel);
     }
-
     /**
      * Take raw data and return the array needed for processing a download URL
      *
@@ -262,7 +246,6 @@ class PEAR_REST_10
         if (!$found) {
             $release = $info['r'][0];
         }
-
         $packageLower = strtolower($package);
         $pinfo = $this->_rest->retrieveCacheFirst($base . 'p/' . $packageLower . '/' .
             'info.xml', false, false, $channel);
@@ -270,51 +253,42 @@ class PEAR_REST_10
             return PEAR::raiseError('Package "' . $package .
                 '" does not have REST info xml available');
         }
-
         $releaseinfo = $this->_rest->retrieveCacheFirst($base . 'r/' . $packageLower . '/' .
             $release['v'] . '.xml', false, false, $channel);
         if (PEAR::isError($releaseinfo)) {
             return PEAR::raiseError('Package "' . $package . '" Version "' . $release['v'] .
                 '" does not have REST xml available');
         }
-
         $packagexml = $this->_rest->retrieveCacheFirst($base . 'r/' . $packageLower . '/' .
             'deps.' . $release['v'] . '.txt', false, true, $channel);
         if (PEAR::isError($packagexml)) {
             return PEAR::raiseError('Package "' . $package . '" Version "' . $release['v'] .
                 '" does not have REST dependency information available');
         }
-
         $packagexml = unserialize($packagexml);
         if (!$packagexml) {
             $packagexml = array();
         }
-
         $allinfo = $this->_rest->retrieveData($base . 'r/' . $packageLower .
             '/allreleases.xml', false, false, $channel);
         if (PEAR::isError($allinfo)) {
             return $allinfo;
         }
-
         if (!is_array($allinfo['r']) || !isset($allinfo['r'][0])) {
             $allinfo['r'] = array($allinfo['r']);
         }
-
         $compatible = false;
         foreach ($allinfo['r'] as $release) {
             if ($release['v'] != $releaseinfo['v']) {
                 continue;
             }
-
             if (!isset($release['co'])) {
                 break;
             }
-
             $compatible = array();
             if (!is_array($release['co']) || !isset($release['co'][0])) {
                 $release['co'] = array($release['co']);
             }
-
             foreach ($release['co'] as $entry) {
                 $comp = array();
                 $comp['name']    = $entry['p'];
@@ -324,17 +298,13 @@ class PEAR_REST_10
                 if (isset($entry['x']) && !is_array($entry['x'])) {
                     $comp['exclude'] = $entry['x'];
                 }
-
                 $compatible[] = $comp;
             }
-
             if (count($compatible) == 1) {
                 $compatible = $compatible[0];
             }
-
             break;
         }
-
         $deprecated = false;
         if (isset($pinfo['dc']) && isset($pinfo['dp'])) {
             if (is_array($pinfo['dp'])) {
@@ -345,7 +315,6 @@ class PEAR_REST_10
                                     'package' => trim($pinfo['dp']));
             }
         }
-
         $return = array(
             'version'    => $releaseinfo['v'],
             'info'       => $packagexml,
@@ -354,34 +323,27 @@ class PEAR_REST_10
             'compatible' => $compatible,
             'deprecated' => $deprecated,
         );
-
         if ($found) {
             $return['url'] = $releaseinfo['g'];
             return $return;
         }
-
         $return['php'] = $phpversion;
         return $return;
     }
-
     function listPackages($base, $channel = false)
     {
         $packagelist = $this->_rest->retrieveData($base . 'p/packages.xml', false, false, $channel);
         if (PEAR::isError($packagelist)) {
             return $packagelist;
         }
-
         if (!is_array($packagelist) || !isset($packagelist['p'])) {
             return array();
         }
-
         if (!is_array($packagelist['p'])) {
             $packagelist['p'] = array($packagelist['p']);
         }
-
         return $packagelist['p'];
     }
-
     /**
      * List all categories of a REST server
      *
@@ -391,7 +353,6 @@ class PEAR_REST_10
     function listCategories($base, $channel = false)
     {
         $categories = array();
-
         // c/categories.xml does not exist;
         // check for every package its category manually
         // This is SLOOOWWWW : ///
@@ -399,16 +360,13 @@ class PEAR_REST_10
         if (PEAR::isError($packagelist)) {
             return $packagelist;
         }
-
         if (!is_array($packagelist) || !isset($packagelist['p'])) {
             $ret = array();
             return $ret;
         }
-
         if (!is_array($packagelist['p'])) {
             $packagelist['p'] = array($packagelist['p']);
         }
-
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
         foreach ($packagelist['p'] as $package) {
                 $inf = $this->_rest->retrieveData($base . 'p/' . strtolower($package) . '/info.xml', false, false, $channel);
@@ -421,10 +379,8 @@ class PEAR_REST_10
                     $categories[$cat] = $inf['ca'];
                 }
         }
-
         return array_values($categories);
     }
-
     /**
      * List a category of a REST server
      *
@@ -440,18 +396,15 @@ class PEAR_REST_10
         if (PEAR::isError($packagelist)) {
             return $packagelist;
         }
-
         if (!is_array($packagelist) || !isset($packagelist['p'])) {
             return array();
         }
-
         if (!is_array($packagelist['p']) ||
             !isset($packagelist['p'][0])) { // only 1 pkg
             $packagelist = array($packagelist['p']);
         } else {
             $packagelist = $packagelist['p'];
         }
-
         if ($info == true) {
             // get individual package info
             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
@@ -475,10 +428,8 @@ class PEAR_REST_10
             }
             PEAR::popErrorHandling();
         }
-
         return $packagelist;
     }
-
 
     function listAll($base, $dostable, $basic = true, $searchpackage = false, $searchsummary = false, $channel = false)
     {
@@ -497,7 +448,6 @@ class PEAR_REST_10
         if (!is_array($packagelist['p'])) {
             $packagelist['p'] = array($packagelist['p']);
         }
-
         // only search-packagename = quicksearch !
         if ($searchpackage && (!$searchsummary || empty($searchpackage))) {
             $newpackagelist = array();
@@ -521,7 +471,6 @@ class PEAR_REST_10
                     $next += .1;
                 }
             }
-
             if ($basic) { // remote-list command
                 if ($dostable) {
                     $latest = $this->_rest->retrieveData($base . 'r/' . strtolower($package) .
@@ -647,28 +596,23 @@ class PEAR_REST_10
         PEAR::popErrorHandling();
         return $ret;
     }
-
     function listLatestUpgrades($base, $pref_state, $installed, $channel, &$reg)
     {
         $packagelist = $this->_rest->retrieveData($base . 'p/packages.xml', false, false, $channel);
         if (PEAR::isError($packagelist)) {
             return $packagelist;
         }
-
         $ret = array();
         if (!is_array($packagelist) || !isset($packagelist['p'])) {
             return $ret;
         }
-
         if (!is_array($packagelist['p'])) {
             $packagelist['p'] = array($packagelist['p']);
         }
-
         foreach ($packagelist['p'] as $package) {
             if (!isset($installed[strtolower($package)])) {
                 continue;
             }
-
             $inst_version = $reg->packageInfo($package, 'version', $channel);
             $inst_state   = $reg->packageInfo($package, 'release_state', $channel);
             PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
@@ -678,16 +622,13 @@ class PEAR_REST_10
             if (PEAR::isError($info)) {
                 continue; // no remote releases
             }
-
             if (!isset($info['r'])) {
                 continue;
             }
-
             $release = $found = false;
             if (!is_array($info['r']) || !isset($info['r'][0])) {
                 $info['r'] = array($info['r']);
             }
-
             // $info['r'] is sorted by version number
             usort($info['r'], array($this, '_sortReleasesByVersionNumber'));
             foreach ($info['r'] as $release) {
@@ -695,7 +636,6 @@ class PEAR_REST_10
                     // not newer than the one installed
                     break;
                 }
-
                 // new version > installed version
                 if (!$pref_state) {
                     // every state is a good state
@@ -717,27 +657,22 @@ class PEAR_REST_10
                     }
                 }
             }
-
             if (!$found) {
                 continue;
             }
-
             $relinfo = $this->_rest->retrieveCacheFirst($base . 'r/' . strtolower($package) . '/' .
                 $release['v'] . '.xml', false, false, $channel);
             if (PEAR::isError($relinfo)) {
                 return $relinfo;
             }
-
             $ret[$package] = array(
                 'version'  => $release['v'],
                 'state'    => $release['s'],
                 'filesize' => $relinfo['f'],
             );
         }
-
         return $ret;
     }
-
     function packageInfo($base, $package, $channel = false)
     {
         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
@@ -747,7 +682,6 @@ class PEAR_REST_10
             return PEAR::raiseError('Unknown package: "' . $package . '" in channel "' . $channel . '"' . "\n". 'Debug: ' .
                 $pinfo->getMessage());
         }
-
         $releases = array();
         $allreleases = $this->_rest->retrieveData($base . 'r/' . strtolower($package) .
             '/allreleases.xml', false, false, $channel);
@@ -755,11 +689,9 @@ class PEAR_REST_10
             if (!class_exists('PEAR_PackageFile_v2')) {
                 require_once 'PEAR/PackageFile/v2.php';
             }
-
             if (!is_array($allreleases['r']) || !isset($allreleases['r'][0])) {
                 $allreleases['r'] = array($allreleases['r']);
             }
-
             $pf = new PEAR_PackageFile_v2;
             foreach ($allreleases['r'] as $release) {
                 $ds = $this->_rest->retrieveCacheFirst($base . 'r/' . strtolower($package) . '/deps.' .
@@ -767,20 +699,16 @@ class PEAR_REST_10
                 if (PEAR::isError($ds)) {
                     continue;
                 }
-
                 if (!isset($latest)) {
                     $latest = $release['v'];
                 }
-
                 $pf->setDeps(unserialize($ds));
                 $ds = $pf->getDeps();
                 $info = $this->_rest->retrieveCacheFirst($base . 'r/' . strtolower($package)
                     . '/' . $release['v'] . '.xml', false, false, $channel);
-
                 if (PEAR::isError($info)) {
                     continue;
                 }
-
                 $releases[$release['v']] = array(
                     'doneby' => $info['m'],
                     'license' => $info['l'],
@@ -795,7 +723,6 @@ class PEAR_REST_10
         } else {
             $latest = '';
         }
-
         PEAR::popErrorHandling();
         if (isset($pinfo['dc']) && isset($pinfo['dp'])) {
             if (is_array($pinfo['dp'])) {
@@ -808,11 +735,9 @@ class PEAR_REST_10
         } else {
             $deprecated = false;
         }
-
         if (!isset($latest)) {
             $latest = '';
         }
-
         return array(
             'name' => $pinfo['n'],
             'channel' => $pinfo['c'],
@@ -825,7 +750,6 @@ class PEAR_REST_10
             'deprecated' => $deprecated,
             );
     }
-
     /**
      * Return an array containing all of the states that are more stable than
      * or equal to the passed in state
@@ -841,14 +765,11 @@ class PEAR_REST_10
         if ($i === false) {
             return false;
         }
-
         if ($include) {
             $i--;
         }
-
         return array_slice($states, $i + 1);
     }
-
     /**
      * Sort releases by version number
      *
@@ -859,11 +780,9 @@ class PEAR_REST_10
         if (version_compare($a['v'], $b['v'], '=')) {
             return 0;
         }
-
         if (version_compare($a['v'], $b['v'], '>')) {
             return -1;
         }
-
         if (version_compare($a['v'], $b['v'], '<')) {
             return 1;
         }

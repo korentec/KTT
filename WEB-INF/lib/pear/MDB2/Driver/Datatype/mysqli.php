@@ -45,9 +45,7 @@
 //
 // $Id: mysqli.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 require_once 'MDB2/Driver/Datatype/Common.php';
-
 /**
  * MDB2 MySQLi driver
  *
@@ -58,7 +56,6 @@ require_once 'MDB2/Driver/Datatype/Common.php';
 class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
 {
     // {{{ _getCharsetFieldDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to set the CHARACTER SET
      * of a field declaration to be used in statements like CREATE TABLE.
@@ -71,10 +68,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
     {
         return 'CHARACTER SET '.$charset;
     }
-
     // }}}
     // {{{ _getCollationFieldDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to set the COLLATION
      * of a field declaration to be used in statements like CREATE TABLE.
@@ -87,10 +82,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
     {
         return 'COLLATE '.$collation;
     }
-
     // }}}
     // {{{ getDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to declare
      * of the given type
@@ -116,10 +109,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         }
         return parent::getDeclaration($type, $name, $field);
     }
-
     // }}}
     // {{{ getTypeDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to declare an text type
      * field to be used in statements like CREATE TABLE.
@@ -149,7 +140,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         switch ($field['type']) {
         case 'text':
             if (empty($field['length']) && array_key_exists('default', $field)) {
@@ -224,10 +214,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         }
         return '';
     }
-
     // }}}
     // {{{ _getIntegerDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to declare an integer type
      * field to be used in statements like CREATE TABLE.
@@ -260,7 +248,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $default = $autoinc = '';
         if (!empty($field['autoincrement'])) {
             $autoinc = ' AUTO_INCREMENT PRIMARY KEY';
@@ -270,7 +257,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
             }
             $default = ' DEFAULT '.$this->quote($field['default'], 'integer');
         }
-
         $notnull = empty($field['notnull']) ? '' : ' NOT NULL';
         $unsigned = empty($field['unsigned']) ? '' : ' UNSIGNED';
         if (empty($default) && empty($notnull)) {
@@ -279,10 +265,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         $name = $db->quoteIdentifier($name, true);
         return $name.' '.$this->getTypeDeclaration($field).$unsigned.$default.$notnull.$autoinc;
     }
-
     // }}}
     // {{{ _getFloatDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to declare an float type
      * field to be used in statements like CREATE TABLE.
@@ -316,10 +300,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         // @see http://bugs.mysql.com/bug.php?id=31032
         return $this->_getIntegerDeclaration($name, $field);
     }
-
     // }}}
     // {{{ _getDecimalDeclaration()
-
     /**
      * Obtain DBMS specific SQL code portion needed to declare an decimal type
      * field to be used in statements like CREATE TABLE.
@@ -352,7 +334,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $default = '';
         if (array_key_exists('default', $field)) {
             if ($field['default'] === '') {
@@ -362,16 +343,13 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         } elseif (empty($field['notnull'])) {
             $default = ' DEFAULT NULL';
         }
-
         $notnull = empty($field['notnull']) ? '' : ' NOT NULL';
         $unsigned = empty($field['unsigned']) ? '' : ' UNSIGNED';
         $name = $db->quoteIdentifier($name, true);
         return $name.' '.$this->getTypeDeclaration($field).$unsigned.$default.$notnull;
     }
-
     // }}}
     // {{{ matchPattern()
-
     /**
      * build a pattern matching string
      *
@@ -390,7 +368,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $match = '';
         if (null !== $operator) {
             $field = (null === $field) ? '' : $field.' ';
@@ -427,10 +404,8 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         $match.= $this->patternEscapeString();
         return $match;
     }
-
     // }}}
     // {{{ _mapNativeDatatype()
-
     /**
      * Maps a native array description of a field to a MDB2 datatype and length
      *
@@ -584,21 +559,16 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
             if (MDB2::isError($db)) {
                 return $db;
             }
-
             return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
                 'unknown database attribute type: '.$db_type, __FUNCTION__);
         }
-
         if ((int)$length <= 0) {
             $length = null;
         }
-
         return array($type, $length, $unsigned, $fixed);
     }
-
     // }}}
     // {{{ mapPrepareDatatype()
-
     /**
      * Maps an MDB2 datatype to native prepare type
      *
@@ -612,7 +582,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if (!empty($db->options['datatype_map'][$type])) {
             $type = $db->options['datatype_map'][$type];
             if (!empty($db->options['datatype_map_callback'][$type])) {
@@ -620,7 +589,6 @@ class MDB2_Driver_Datatype_mysqli extends MDB2_Driver_Datatype_Common
                 return call_user_func_array($db->options['datatype_map_callback'][$type], array(&$db, __FUNCTION__, $parameter));
             }
         }
-
         switch ($type) {
             case 'boolean':
             case 'integer':

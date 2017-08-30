@@ -8,7 +8,6 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile If Class
  */
@@ -54,7 +53,6 @@ class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase {
         } 
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile Else Class
  */
@@ -72,11 +70,9 @@ class Smarty_Internal_Compile_Else extends Smarty_Internal_CompileBase {
         $this->compiler = $compiler; 
         list($nesting, $compiler->tag_nocache) = $this->_close_tag(array('if', 'elseif'));
         $this->_open_tag('else',array($nesting,$compiler->tag_nocache));
-
         return "<?php }else{ ?>";
     } 
 } 
-
 /**
  * Smarty Internal Plugin Compile ElseIf Class
  */
@@ -94,9 +90,7 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
         $this->compiler = $compiler;
         // check and get attributes
         $_attr = $this->_get_attributes($args);
-
         list($nesting, $compiler->tag_nocache) = $this->_close_tag(array('if', 'elseif'));
-
 		if (is_array($parameter['if condition'])) {
 			$condition_by_assign = true;
 			if ($this->compiler->nocache) {
@@ -113,7 +107,6 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
 		} else {
 			$condition_by_assign = false;
 		}
-
         if (empty($this->compiler->prefix_code)) {
         	if ($condition_by_assign) {
             	$this->_open_tag('elseif', array($nesting + 1, $compiler->tag_nocache));
@@ -149,7 +142,6 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
         } 
     } 
 } 
-
 /**
 * Smarty Internal Plugin Compile Ifclose Class
 */
@@ -175,5 +167,4 @@ class Smarty_Internal_Compile_Ifclose extends Smarty_Internal_CompileBase {
         return "<?php {$tmp}?>";
     } 
 } 
-
 ?>

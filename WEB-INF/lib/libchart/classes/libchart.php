@@ -16,7 +16,6 @@
 	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	 * 
 	 */
-
 	require_once 'model/Point.php';
 	require_once 'model/DataSet.php';
 	require_once 'model/XYDataSet.php';

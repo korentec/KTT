@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {html_image} function plugin
  * 
@@ -57,7 +56,6 @@ function smarty_function_html_image($params, $template)
             case 'basedir':
                 $$_key = $_val;
                 break;
-
             case 'alt':
                 if (!is_array($_val)) {
                     $$_key = smarty_function_escape_special_chars($_val);
@@ -65,13 +63,11 @@ function smarty_function_html_image($params, $template)
                     throw new SmartyException ("html_image: extra attribute '$_key' cannot be an array", E_USER_NOTICE);
                 } 
                 break;
-
             case 'link':
             case 'href':
                 $prefix = '<a href="' . $_val . '">';
                 $suffix = '</a>';
                 break;
-
             default:
                 if (!is_array($_val)) {
                     $extra .= ' ' . $_key . '="' . smarty_function_escape_special_chars($_val) . '"';
@@ -81,18 +77,15 @@ function smarty_function_html_image($params, $template)
                 break;
         } 
     } 
-
     if (empty($file)) {
         trigger_error("html_image: missing 'file' parameter", E_USER_NOTICE);
         return;
     } 
-
     if (substr($file, 0, 1) == '/') {
         $_image_path = $basedir . $file;
     } else {
         $_image_path = $file;
     } 
-
     if (!isset($params['width']) || !isset($params['height'])) {
         if (!$_image_data = @getimagesize($_image_path)) {
             if (!file_exists($_image_path)) {
@@ -111,7 +104,6 @@ function smarty_function_html_image($params, $template)
                 return;
             } 
         } 
-
         if (!isset($params['width'])) {
             $width = $_image_data[0];
         } 
@@ -119,7 +111,6 @@ function smarty_function_html_image($params, $template)
             $height = $_image_data[1];
         } 
     } 
-
     if (isset($params['dpi'])) {
         if (strstr($server_vars['HTTP_USER_AGENT'], 'Mac')) {
             $dpi_default = 72;
@@ -130,8 +121,6 @@ function smarty_function_html_image($params, $template)
         $width = round($width * $_resize);
         $height = round($height * $_resize);
     } 
-
     return $prefix . '<img src="' . $path_prefix . $file . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"' . $extra . ' />' . $suffix;
 } 
-
 ?>

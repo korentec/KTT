@@ -18,7 +18,6 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['exportForm']['open'];?>
-
 <table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr>
     <td align="center">

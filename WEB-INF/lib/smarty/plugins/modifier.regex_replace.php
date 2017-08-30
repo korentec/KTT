@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsModifier
  */
-
 /**
  * Smarty regex_replace modifier plugin
  *
@@ -28,10 +27,8 @@ function smarty_modifier_regex_replace($string, $search, $replace)
     } else {
       $search = _smarty_regex_replace_check($search);
     }       
-
     return preg_replace($search, $replace, $string);
 }
-
 function _smarty_regex_replace_check($search)
 {
     if (($pos = strpos($search,"\0")) !== false)
@@ -42,5 +39,4 @@ function _smarty_regex_replace_check($search)
     }
     return $search;
 }
-
 ?>

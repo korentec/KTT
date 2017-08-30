@@ -6,7 +6,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {math} function plugin
  *
@@ -27,15 +26,12 @@ function smarty_function_math($params, $template)
         trigger_error("math: missing equation parameter",E_USER_WARNING);
         return;
     }
-
     $equation = $params['equation'];
-
     // make sure parenthesis are balanced
     if (substr_count($equation,"(") != substr_count($equation,")")) {
         trigger_error("math: unbalanced parenthesis",E_USER_WARNING);
         return;
     }
-
     // match all vars in equation, make sure all are passed
     preg_match_all("!(?:0x[a-fA-F0-9]+)|([a-zA-Z][a-zA-Z0-9_]*)!",$equation, $match);
     $allowed_funcs = array('int','abs','ceil','cos','exp','floor','log','log10',
@@ -47,7 +43,6 @@ function smarty_function_math($params, $template)
             return;
         }
     }
-
     foreach($params as $key => $val) {
         if ($key != "equation" && $key != "format" && $key != "assign") {
             // make sure value is not empty
@@ -64,7 +59,6 @@ function smarty_function_math($params, $template)
     }
     $smarty_math_result = null;
     eval("\$smarty_math_result = ".$equation.";");
-
     if (empty($params['format'])) {
         if (empty($params['assign'])) {
             return $smarty_math_result;
@@ -79,5 +73,4 @@ function smarty_function_math($params, $template)
         }
     }
 }
-
 ?>

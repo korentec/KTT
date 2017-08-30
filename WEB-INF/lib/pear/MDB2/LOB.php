@@ -43,15 +43,12 @@
 // +----------------------------------------------------------------------+
 //
 // $Id: LOB.php 222350 2006-10-25 11:52:21Z lsmith $
-
 /**
  * @package  MDB2
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-
 require_once 'MDB2.php';
-
 /**
  * MDB2_LOB: user land stream wrapper implementation for LOB support
  *
@@ -69,7 +66,6 @@ class MDB2_LOB
      * @access protected
      */
     var $db_index;
-
     /**
      * contains the key to the global MDB2_LOB instance array of the associated
      * MDB2_LOB instance
@@ -78,9 +74,7 @@ class MDB2_LOB
      * @access protected
      */
     var $lob_index;
-
     // {{{ stream_open()
-
     /**
      * open stream
      *
@@ -113,9 +107,7 @@ class MDB2_LOB
         return true;
     }
     // }}}
-
     // {{{ stream_read()
-
     /**
      * read stream
      *
@@ -129,7 +121,6 @@ class MDB2_LOB
         if (isset($GLOBALS['_MDB2_databases'][$this->db_index])) {
             $db =& $GLOBALS['_MDB2_databases'][$this->db_index];
             $db->datatype->_retrieveLOB($db->datatype->lobs[$this->lob_index]);
-
             $data = $db->datatype->_readLOB($db->datatype->lobs[$this->lob_index], $count);
             $length = strlen($data);
             if ($length == 0) {
@@ -140,9 +131,7 @@ class MDB2_LOB
         }
     }
     // }}}
-
     // {{{ stream_write()
-
     /**
      * write stream, note implemented
      *
@@ -156,9 +145,7 @@ class MDB2_LOB
         return 0;
     }
     // }}}
-
     // {{{ stream_tell()
-
     /**
      * return the current position
      *
@@ -173,9 +160,7 @@ class MDB2_LOB
         }
     }
     // }}}
-
     // {{{ stream_eof()
-
     /**
      * Check if stream reaches EOF
      *
@@ -187,7 +172,6 @@ class MDB2_LOB
         if (!isset($GLOBALS['_MDB2_databases'][$this->db_index])) {
             return true;
         }
-
         $db =& $GLOBALS['_MDB2_databases'][$this->db_index];
         $result = $db->datatype->_endOfLOB($db->datatype->lobs[$this->lob_index]);
         if (version_compare(phpversion(), "5.0", ">=")
@@ -198,9 +182,7 @@ class MDB2_LOB
         return $result;
     }
     // }}}
-
     // {{{ stream_seek()
-
     /**
      * Seek stream, not implemented
      *
@@ -215,9 +197,7 @@ class MDB2_LOB
         return false;
     }
     // }}}
-
     // {{{ stream_stat()
-
     /**
      * return information about stream
      *
@@ -234,9 +214,7 @@ class MDB2_LOB
         }
     }
     // }}}
-
     // {{{ stream_close()
-
     /**
      * close stream
      *
@@ -254,11 +232,9 @@ class MDB2_LOB
     }
     // }}}
 }
-
 // register streams wrapper
 if (!stream_wrapper_register("MDB2LOB", "MDB2_LOB")) {
     MDB2::raiseError();
     return false;
 }
-
 ?>

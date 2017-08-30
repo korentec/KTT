@@ -43,28 +43,20 @@
  * @version     CVS: $Id: smtp.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
-
 /** Error: Failed to create a Net_SMTP object */
 define('PEAR_MAIL_SMTP_ERROR_CREATE', 10000);
-
 /** Error: Failed to connect to SMTP server */
 define('PEAR_MAIL_SMTP_ERROR_CONNECT', 10001);
-
 /** Error: SMTP authentication failure */
 define('PEAR_MAIL_SMTP_ERROR_AUTH', 10002);
-
 /** Error: No From: address has been provided */
 define('PEAR_MAIL_SMTP_ERROR_FROM', 10003);
-
 /** Error: Failed to set sender */
 define('PEAR_MAIL_SMTP_ERROR_SENDER', 10004);
-
 /** Error: Failed to add recipient */
 define('PEAR_MAIL_SMTP_ERROR_RECIPIENT', 10005);
-
 /** Error: Failed to send data */
 define('PEAR_MAIL_SMTP_ERROR_DATA', 10006);
-
 /**
  * SMTP implementation of the PEAR Mail interface. Requires the Net_SMTP class.
  * @access public
@@ -72,7 +64,6 @@ define('PEAR_MAIL_SMTP_ERROR_DATA', 10006);
  * @version $Revision: 294747 $
  */
 class Mail_smtp extends Mail {
-
     /**
      * SMTP connection object.
      *
@@ -80,26 +71,22 @@ class Mail_smtp extends Mail {
      * @access private
      */
     var $_smtp = null;
-
     /**
      * The list of service extension parameters to pass to the Net_SMTP
      * mailFrom() command.
      * @var array
      */
     var $_extparams = array();
-
     /**
      * The SMTP host to connect to.
      * @var string
      */
     var $host = 'localhost';
-
     /**
      * The port the SMTP server is on.
      * @var integer
      */
     var $port = 25;
-
     /**
      * Should SMTP authentication be used?
      *
@@ -112,19 +99,16 @@ class Mail_smtp extends Mail {
      * @var mixed
      */
     var $auth = false;
-
     /**
      * The username to use if the SMTP server requires authentication.
      * @var string
      */
     var $username = '';
-
     /**
      * The password to use if the SMTP server requires authentication.
      * @var string
      */
     var $password = '';
-
     /**
      * Hostname or domain that will be sent to the remote SMTP server in the
      * HELO / EHLO message.
@@ -132,21 +116,18 @@ class Mail_smtp extends Mail {
      * @var string
      */
     var $localhost = 'localhost';
-
     /**
      * SMTP connection timeout value.  NULL indicates no timeout.
      *
      * @var integer
      */
     var $timeout = null;
-
     /**
      * Turn on Net_SMTP debugging?
      *
      * @var boolean $debug
      */
     var $debug = false;
-
     /**
      * Indicates whether or not the SMTP connection should persist over
      * multiple calls to the send() method.
@@ -154,7 +135,6 @@ class Mail_smtp extends Mail {
      * @var boolean
      */
     var $persist = false;
-
     /**
      * Use SMTP command pipelining (specified in RFC 2920) if the SMTP server
      * supports it. This speeds up delivery over high-latency connections. By
@@ -162,7 +142,6 @@ class Mail_smtp extends Mail {
      * @var bool
      */
     var $pipelining;
-
     /**
      * Constructor.
      *
@@ -200,15 +179,12 @@ class Mail_smtp extends Mail {
         if (isset($params['debug'])) $this->debug = (bool)$params['debug'];
         if (isset($params['persist'])) $this->persist = (bool)$params['persist'];
         if (isset($params['pipelining'])) $this->pipelining = (bool)$params['pipelining'];
-
         // Deprecated options
         if (isset($params['verp'])) {
             $this->addServiceExtensionParameter('XVERP', is_bool($params['verp']) ? null : $params['verp']);
         }
-
         register_shutdown_function(array(&$this, '_Mail_smtp'));
     }
-
     /**
      * Destructor implementation to ensure that we disconnect from any
      * potentially-alive persistent SMTP connections.
@@ -217,7 +193,6 @@ class Mail_smtp extends Mail {
     {
         $this->disconnect();
     }
-
     /**
      * Implements Mail::send() function using SMTP.
      *
@@ -249,33 +224,27 @@ class Mail_smtp extends Mail {
         if (PEAR::isError($result)) {
             return $result;
         }
-
         if (!is_array($headers)) {
             return PEAR::raiseError('$headers must be an array');
         }
-
         $this->_sanitizeHeaders($headers);
-
         $headerElements = $this->prepareHeaders($headers);
         if (is_a($headerElements, 'PEAR_Error')) {
             $this->_smtp->rset();
             return $headerElements;
         }
         list($from, $textHeaders) = $headerElements;
-
         /* Since few MTAs are going to allow this header to be forged
          * unless it's in the MAIL FROM: exchange, we'll use
          * Return-Path instead of From: if it's set. */
         if (!empty($headers['Return-Path'])) {
             $from = $headers['Return-Path'];
         }
-
         if (!isset($from)) {
             $this->_smtp->rset();
             return PEAR::raiseError('No From: address has been provided',
                                     PEAR_MAIL_SMTP_ERROR_FROM);
         }
-
         $params = null;
         if (!empty($this->_extparams)) {
             foreach ($this->_extparams as $key => $val) {
@@ -287,13 +256,11 @@ class Mail_smtp extends Mail {
             $this->_smtp->rset();
             return PEAR::raiseError($error, PEAR_MAIL_SMTP_ERROR_SENDER);
         }
-
         $recipients = $this->parseRecipients($recipients);
         if (is_a($recipients, 'PEAR_Error')) {
             $this->_smtp->rset();
             return $recipients;
         }
-
         foreach ($recipients as $recipient) {
             $res = $this->_smtp->rcptTo($recipient);
             if (is_a($res, 'PEAR_Error')) {
@@ -302,33 +269,26 @@ class Mail_smtp extends Mail {
                 return PEAR::raiseError($error, PEAR_MAIL_SMTP_ERROR_RECIPIENT);
             }
         }
-
         /* Send the message's headers and the body as SMTP data. */
         $res = $this->_smtp->data($textHeaders . "\r\n\r\n" . $body);
 		list(,$args) = $this->_smtp->getResponse();
-
 		if (preg_match("/Ok: queued as (.*)/", $args, $queued)) {
 			$this->queued_as = $queued[1];
 		}
-
 		/* we need the greeting; from it we can extract the authorative name of the mail server we've really connected to.
 		 * ideal if we're connecting to a round-robin of relay servers and need to track which exact one took the email */
 		$this->greeting = $this->_smtp->getGreeting();
-
         if (is_a($res, 'PEAR_Error')) {
             $error = $this->_error('Failed to send data', $res);
             $this->_smtp->rset();
             return PEAR::raiseError($error, PEAR_MAIL_SMTP_ERROR_DATA);
         }
-
         /* If persistent connections are disabled, destroy our SMTP object. */
         if ($this->persist === false) {
             $this->disconnect();
         }
-
         return true;
     }
-
     /**
      * Connect to the SMTP server by instantiating a Net_SMTP object.
      *
@@ -344,23 +304,19 @@ class Mail_smtp extends Mail {
         if (is_object($this->_smtp) !== false) {
             return $this->_smtp;
         }
-
         include_once 'Net/SMTP.php';
         $this->_smtp = &new Net_SMTP($this->host,
                                      $this->port,
                                      $this->localhost);
-
         /* If we still don't have an SMTP object at this point, fail. */
         if (is_object($this->_smtp) === false) {
             return PEAR::raiseError('Failed to create a Net_SMTP object',
                                     PEAR_MAIL_SMTP_ERROR_CREATE);
         }
-
         /* Configure the SMTP connection. */
         if ($this->debug) {
             $this->_smtp->setDebug(true);
         }
-
         /* Attempt to connect to the configured SMTP server. */
         if (PEAR::isError($res = $this->_smtp->connect($this->timeout))) {
             $error = $this->_error('Failed to connect to ' .
@@ -368,11 +324,9 @@ class Mail_smtp extends Mail {
                                    $res);
             return PEAR::raiseError($error, PEAR_MAIL_SMTP_ERROR_CONNECT);
         }
-
         /* Attempt to authenticate if authentication has been enabled. */
         if ($this->auth) {
             $method = is_string($this->auth) ? $this->auth : '';
-
             if (PEAR::isError($res = $this->_smtp->auth($this->username,
                                                         $this->password,
                                                         $method))) {
@@ -382,10 +336,8 @@ class Mail_smtp extends Mail {
                 return PEAR::raiseError($error, PEAR_MAIL_SMTP_ERROR_AUTH);
             }
         }
-
         return $this->_smtp;
     }
-
     /**
      * Add parameter associated with a SMTP service extension.
      *
@@ -399,7 +351,6 @@ class Mail_smtp extends Mail {
     {
         $this->_extparams[$keyword] = $value;
     }
-
     /**
      * Disconnect and destroy the current SMTP connection.
      *
@@ -414,11 +365,9 @@ class Mail_smtp extends Mail {
         if (is_object($this->_smtp) && $this->_smtp->disconnect()) {
             $this->_smtp = null;
         }
-
         /* We are disconnected if we no longer have an SMTP object. */
         return ($this->_smtp === null);
     }
-
     /**
      * Build a standardized string describing the current SMTP error.
      *
@@ -434,11 +383,9 @@ class Mail_smtp extends Mail {
     {
         /* Split the SMTP response into a code and a response string. */
         list($code, $response) = $this->_smtp->getResponse();
-
         /* Build our standardized error string. */
         return $text
             . ' [SMTP: ' . $error->getMessage()
             . " (code: $code, response: $response)]";
     }
-
 }

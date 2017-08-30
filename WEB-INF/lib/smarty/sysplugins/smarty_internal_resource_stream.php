@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Resource Stream
  * 
@@ -25,7 +24,6 @@ class Smarty_Internal_Resource_Stream {
     // properties
     public $usesCompiler = true;
     public $isEvaluated = true;
-
     /**
      * Return flag if template source is existing
      * 
@@ -51,7 +49,6 @@ class Smarty_Internal_Resource_Stream {
         // return resource name for compiler error messages
         return str_replace(':', '://', $_template->template_resource);
     } 
-
     /**
      * Get timestamp to template source
      * 
@@ -63,7 +60,6 @@ class Smarty_Internal_Resource_Stream {
         // strings must always be compiled and have no timestamp
         return false;
     } 
-
     /**
      * Retuen template source from resource name
      * 
@@ -79,10 +75,8 @@ class Smarty_Internal_Resource_Stream {
             $_template->template_source .= fgets($fp);
         } 
         fclose($fp);
-
         return true;
     } 
-
     /**
      * Get filepath to compiled template
      * 
@@ -95,5 +89,4 @@ class Smarty_Internal_Resource_Stream {
         return false;
     } 
 } 
-
 ?>

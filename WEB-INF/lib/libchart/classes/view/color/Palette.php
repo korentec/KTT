@@ -43,7 +43,6 @@
 					new Color(201, 201, 201),
 					new Color(158, 158, 158)
 			);
-
 			// Colors for the background
 			$this->aquaColor = array(
 					new Color(242, 242, 242),
@@ -65,7 +64,6 @@
 					new Color(167, 192, 199),
 					new Color(218, 233, 202)
 			), 0.75);
-
 			// Colors for the lines
 			$this->lineColorSet = new ColorSet(array(
 					new Color(172, 172, 210),
@@ -85,7 +83,6 @@
 					new Color(98, 174, 35),
 					new Color(93, 129, 1)
 			), 0.75);
-
 			// Colors for the pie
 			$this->pieColorSet = new ColorSet(array(
 				new Color(2, 78, 0),

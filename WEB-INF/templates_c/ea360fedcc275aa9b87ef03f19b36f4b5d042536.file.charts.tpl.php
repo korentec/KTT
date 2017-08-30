@@ -20,7 +20,6 @@ $_smarty_tpl->decodeProperties(array (
 <?php if (!is_callable('smarty_modifier_escape')) include 'C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\WEB-INF\lib\smarty\plugins\modifier.escape.php';
 ?><p></p>
 <?php echo $_smarty_tpl->getVariable('forms')->value['chartForm']['open'];?>
-
 <table border="0" width="720">
   <tr>
 <?php if ($_smarty_tpl->getVariable('on_behalf_control')->value){?>
@@ -62,7 +61,6 @@ if ($_smarty_tpl->tpl_vars['smarty']->value['section']['i']['show']) {
 } else
     $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['total'] = 0;
 if ($_smarty_tpl->tpl_vars['smarty']->value['section']['i']['show']):
-
             for ($_smarty_tpl->tpl_vars['smarty']->value['section']['i']['index'] = $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['start'], $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['iteration'] = 1;
                  $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['iteration'] <= $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['total'];
                  $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['index'] += $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['step'], $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['iteration']++):
@@ -91,6 +89,5 @@ $_smarty_tpl->tpl_vars['smarty']->value['section']['i']['last']       = ($_smart
 </td></tr>
 </table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['chartForm']['close'];?>
-
 
 

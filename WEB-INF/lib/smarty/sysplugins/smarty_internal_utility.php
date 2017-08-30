@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Project:     Smarty: the PHP compiling template engine
  * File:        smarty_internal_utility.php
@@ -31,15 +30,12 @@
  * @subpackage PluginsInternal
  * @version 3-SVN$Rev: 3286 $
  */
-
 class Smarty_Internal_Utility {
     protected $smarty;
-
     function __construct($smarty)
     {
         $this->smarty = $smarty;
     } 
-
     /**
      * Compile all template files
      * 
@@ -104,7 +100,6 @@ class Smarty_Internal_Utility {
         } 
         return $_count;
     } 
-
     /**
      * Compile all config files
      * 
@@ -165,7 +160,6 @@ class Smarty_Internal_Utility {
         } 
         return $_count;
     } 
-
     /**
      * Delete compiled template file
      * 
@@ -217,7 +211,6 @@ class Smarty_Internal_Utility {
         } 
         return $_count;
     } 
-
     /**
      * Return array of tag/attributes of all tags used by an template
      * 
@@ -234,11 +227,8 @@ class Smarty_Internal_Utility {
     function testInstall()
     {
         echo "<PRE>\n";
-
         echo "Smarty Installation test...\n";
-
         echo "Testing template directory...\n";
-
         foreach((array)$this->smarty->template_dir as $template_dir) {
             if (!is_dir($template_dir))
                 echo "FAILED: $template_dir is not a directory.\n";
@@ -247,9 +237,7 @@ class Smarty_Internal_Utility {
             else
                 echo "$template_dir is OK.\n";
         } 
-
         echo "Testing compile directory...\n";
-
         if (!is_dir($this->smarty->compile_dir))
             echo "FAILED: {$this->smarty->compile_dir} is not a directory.\n";
         elseif (!is_readable($this->smarty->compile_dir))
@@ -258,9 +246,7 @@ class Smarty_Internal_Utility {
             echo "FAILED: {$this->smarty->compile_dir} is not writable.\n";
         else
             echo "{$this->smarty->compile_dir} is OK.\n";
-
         echo "Testing plugins directory...\n";
-
         foreach((array)$this->smarty->plugins_dir as $plugin_dir) {
             if (!is_dir($plugin_dir))
                 echo "FAILED: $plugin_dir is not a directory.\n";
@@ -269,9 +255,7 @@ class Smarty_Internal_Utility {
             else
                 echo "$plugin_dir is OK.\n";
         } 
-
         echo "Testing cache directory...\n";
-
         if (!is_dir($this->smarty->cache_dir))
             echo "FAILED: {$this->smarty->cache_dir} is not a directory.\n";
         elseif (!is_readable($this->smarty->cache_dir))
@@ -280,20 +264,15 @@ class Smarty_Internal_Utility {
             echo "FAILED: {$this->smarty->cache_dir} is not writable.\n";
         else
             echo "{$this->smarty->cache_dir} is OK.\n";
-
         echo "Testing configs directory...\n";
-
         if (!is_dir($this->smarty->config_dir))
             echo "FAILED: {$this->smarty->config_dir} is not a directory.\n";
         elseif (!is_readable($this->smarty->config_dir))
             echo "FAILED: {$this->smarty->config_dir} is not readable.\n";
         else
             echo "{$this->smarty->config_dir} is OK.\n";
-
         echo "Tests complete.\n";
-
         echo "</PRE>\n";
-
         return true;
     } 
 }

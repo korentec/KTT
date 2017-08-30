@@ -42,7 +42,6 @@
  * @version     CVS: $Id: mock.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
-
 /**
  * Mock implementation of the PEAR Mail:: interface for testing.
  * @access public
@@ -50,7 +49,6 @@
  * @version $Revision: 294747 $
  */
 class Mail_mock extends Mail {
-
     /**
      * Array of messages that have been sent with the mock.
      *
@@ -58,21 +56,18 @@ class Mail_mock extends Mail {
      * @access public
      */
     var $sentMessages = array();
-
     /**
      * Callback before sending mail.
      *
      * @var callback
      */
     var $_preSendCallback;
-
     /**
      * Callback after sending mai.
      *
      * @var callback
      */
     var $_postSendCallback;
-
     /**
      * Constructor.
      *
@@ -90,13 +85,11 @@ class Mail_mock extends Mail {
             is_callable($params['preSendCallback'])) {
             $this->_preSendCallback = $params['preSendCallback'];
         }
-
         if (isset($params['postSendCallback']) &&
             is_callable($params['postSendCallback'])) {
             $this->_postSendCallback = $params['postSendCallback'];
         }
     }
-
     /**
      * Implements Mail_mock::send() function. Silently discards all
      * mail.
@@ -128,16 +121,12 @@ class Mail_mock extends Mail {
             call_user_func_array($this->_preSendCallback,
                                  array(&$this, $recipients, $headers, $body));
         }
-
         $entry = array('recipients' => $recipients, 'headers' => $headers, 'body' => $body);
         $this->sentMessages[] = $entry;
-
         if ($this->_postSendCallback) {
             call_user_func_array($this->_postSendCallback,
                                  array(&$this, $recipients, $headers, $body));
         }
-
         return true;
     }
-
 }

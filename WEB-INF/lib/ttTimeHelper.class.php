@@ -25,9 +25,7 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 import('DateAndTime');
-
 // The ttTimeHelper is a class to help with time-related values.
 class ttTimeHelper {
 	
@@ -36,7 +34,6 @@ class ttTimeHelper {
 	$weekDay = date('w', strtotime($date));
     return ($weekDay == WEEKEND_START_DAY || $weekDay == (WEEKEND_START_DAY + 1) % 7);
   }*/
-
   // isValidTime validates a value as a time string.
   static function isValidTime($value) {
     if (strlen($value)==0 || !isset($value)) return false;
@@ -64,7 +61,6 @@ class ttTimeHelper {
     if (preg_match('/^(0[1-9]|1[0-2]):?[0-5][0-9]\s?(am|AM|pm|PM)$/', $value)) { // 01:00 - 12:59 am, 0100 - 1259 am
       return true;	
     }
-
     return false;
   }
   
@@ -73,7 +69,6 @@ class ttTimeHelper {
     if (strlen($value)==0 || !isset($value)) return false;
     
     if ($value == '24:00' || $value == '2400') return true;
-
     if (preg_match('/^([0-1]{0,1}[0-9]|2[0-3]):?[0-5][0-9]$/', $value )) { // 0:00 - 23:59, 000 - 2359
       if ('00:00' == ttTimeHelper::normalizeDuration($value))
         return false;
@@ -111,7 +106,6 @@ class ttTimeHelper {
           
     $time_a = explode(':', $time_value);
     $res = '';
-
     // 0-99
     if ((strlen($time_value) >= 1) && (strlen($time_value) <= 2) && !isset($time_a[1])) {
       $hours = $time_a[0];
@@ -119,7 +113,6 @@ class ttTimeHelper {
         $hours = '0'.$hours;
        return $hours.':00';
     }
-
     // 000-2359 (2400)
     if ((strlen($time_value) >= 3) && (strlen($time_value) <= 4) && !isset($time_a[1])) {
       if (strlen($time_value)==3) $time_value = '0'.$time_value;
@@ -128,7 +121,6 @@ class ttTimeHelper {
         $hours = '0'.$hours;
       return $hours.':'.substr($time_value,2,2);
     }
-
     // 0:00-23:59 (24:00)
     if ((strlen($time_value) >= 4) && (strlen($time_value) <= 5) && isset($time_a[1])) {
       $hours = $time_a[0];
@@ -136,7 +128,6 @@ class ttTimeHelper {
         $hours = '0'.$hours;
       return $hours.':'.$time_a[1];
     }
-
     return $res;
   }
   
@@ -183,7 +174,6 @@ class ttTimeHelper {
   	
   	// Algorithm: use regular expressions to find a matching pattern, starting with most popular patterns first.
   	$tmp_val = trim($value);
-
   	// 24 hour patterns.
   	if (preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]$/', $tmp_val)) { // 00:00 - 23:59
   	  // We already have a 24-hour format. Just return it. 
@@ -265,7 +255,6 @@ class ttTimeHelper {
   	    return $res;
   	  }  
     } // AM cases handling.
-
     // 12 hour PM patterns.
     if (preg_match('/.(pm|PM)$/', $tmp_val)) {
       	
@@ -317,7 +306,6 @@ class ttTimeHelper {
         return $res;
   	  }    
     } // PM cases handling.
-
     return $res;
   }
   
@@ -331,7 +319,6 @@ class ttTimeHelper {
     $minutesFinish = ttTimeHelper::toMinutes($finish);
     if ($minutesFinish > $minutesStart)
       return true;
-
     return false;
   }
   
@@ -339,7 +326,6 @@ class ttTimeHelper {
   static function insert($fields)
   {
     $mdb2 = getConnection();
-
     $timestamp = isset($fields['timestamp']) ? $fields['timestamp'] : '';
     $user_id = $fields['user_id'];
     $date = $fields['date'];
@@ -358,14 +344,12 @@ class ttTimeHelper {
       $status_f = ', status';
       $status_v = ', '.$mdb2->quote($fields['status']);
     }
-
     $start = ttTimeHelper::to24HourFormat($start);
     if ($finish) {
       $finish = ttTimeHelper::to24HourFormat($finish);
       if ('00:00' == $finish) $finish = '24:00';
     }
     $duration = ttTimeHelper::normalizeDuration($duration);
-
     if (!$timestamp) {
       $timestamp = date('YmdHis');//yyyymmddhhmmss
     }
@@ -382,14 +366,12 @@ class ttTimeHelper {
       $duration = ttTimeHelper::toDuration($start, $finish);
       if ($duration === false) $duration = 0;
       if (!$duration && ttTimeHelper::getUncompleted($user_id)) return false;
-
       $sql = "insert into tt_log (timestamp, user_id, date, start, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
         "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
       $affected = $mdb2->exec($sql);
       if (is_a($affected, 'PEAR_Error'))
         return false;
     }
-
     $id = $mdb2->lastInsertID('tt_log', 'id');
     return $id;
   }
@@ -398,7 +380,6 @@ class ttTimeHelper {
   static function update($fields)
   {
     $mdb2 = getConnection();
-
     $id = $fields['id'];
     $date = $fields['date'];
     $user_id = $fields['user_id'];
@@ -413,12 +394,10 @@ class ttTimeHelper {
     $duration = $fields['duration'];
     $note = $fields['note'];
     $billable = $fields['billable'];
-
     $start = ttTimeHelper::to24HourFormat($start);
     $finish = ttTimeHelper::to24HourFormat($finish);
     if ('00:00' == $finish) $finish = '24:00';
     $duration = ttTimeHelper::normalizeDuration($duration);
-
     if (!$billable) $billable = 0;
     if ($start) $duration = '';
   
@@ -436,21 +415,18 @@ class ttTimeHelper {
       $uncompleted = ttTimeHelper::getUncompleted($user_id);
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
-
+      $sql = "UPDATE tt_log SET approved=0 where (start <> '$start' or duration <> '$duration') and id = $id";      $affected = $mdb2->exec($sql);
       $sql = "UPDATE tt_log SET start = '$start', duration = '$duration', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
         "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
       $affected = $mdb2->exec($sql);
-      if (is_a($affected, 'PEAR_Error'))
-        return false;
-    }
+      if (is_a($affected, 'PEAR_Error'))        return false;          }
     return true;
   }
   
   // delete - deletes a record from tt_log table and its associated custom field values.
   static function delete($id, $user_id) {
     $mdb2 = getConnection();
-
     $sql = "update tt_log set status = NULL where id = $id and user_id = $user_id";
     $affected = $mdb2->exec($sql);
     if (is_a($affected, 'PEAR_Error'))
@@ -467,7 +443,6 @@ class ttTimeHelper {
   // getTimeForDay - gets total time for a user for a specific date.
   static function getTimeForDay($user_id, $date) {
     $mdb2 = getConnection();
-
     $sql = "select sum(time_to_sec(duration)) as sm from tt_log where user_id = $user_id and date = '$date' and status = 1";
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
@@ -481,7 +456,6 @@ class ttTimeHelper {
   static function getTimeForWeek($user_id, $date) {
     import('Period');
     $mdb2 = getConnection();
-
     $period = new Period(INTERVAL_THIS_WEEK, $date);
     $sql = "select sum(time_to_sec(duration)) as sm from tt_log where user_id = $user_id and date >= '".$period->getBeginDate(DB_DATEFORMAT)."' and date <= '".$period->getEndDate(DB_DATEFORMAT)."' and status = 1";
     $res = $mdb2->query($sql);
@@ -495,7 +469,6 @@ class ttTimeHelper {
   // getUncompleted - retrieves an uncompleted record for user, if one exists.
   static function getUncompleted($user_id) {
     $mdb2 = getConnection();
-
     $sql = "select id from tt_log  
       where user_id = $user_id and start is not null and time_to_sec(duration) = 0 and status = 1";
     $res = $mdb2->query($sql);
@@ -562,19 +535,16 @@ class ttTimeHelper {
   	  $sql_time_format = "'%h:%i %p'"; // 12 hour format for MySQL TIME_FORMAT function.
   	
     $mdb2 = getConnection();
-
     $sql = "select l.id as id, l.timestamp as timestamp, TIME_FORMAT(l.start, $sql_time_format) as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish,
       TIME_FORMAT(l.duration, '%k:%i') as duration,
       p.name as project_name, t.name as task_name, l.comment, l.client_id, l.project_id, l.task_id, l.invoice_id, l.billable, l.date
 	  , l.al_activity_id, 
-	  l.al_location_id,activities.a_name,locations.l_name
+	  l.al_location_id,activities.a_name,locations.l_name,l.approved
       from tt_log l
       left join tt_projects p on (p.id = l.project_id)
       left join tt_tasks t on (t.id = l.task_id) left join activities   on (l.al_activity_id = activities.a_id) left join locations   on (l.al_location_id = locations.l_id)
-      where l.id = $id and l.user_id = $user_id and l.status = 1";
-    $res = $mdb2->query($sql);
-    if (!is_a($res, 'PEAR_Error')) {
+      where l.id = $id and l.user_id = $user_id and l.status = 1";       $res = $mdb2->query($sql);       if (!is_a($res, 'PEAR_Error')) {
       if (!$res->numRows()) {
         return false;
       }
@@ -588,13 +558,11 @@ class ttTimeHelper {
   // getAllRecords - returns all time records for a certain user.
   static function getAllRecords($user_id) {
     $result = array();
-
     $mdb2 = getConnection();
-
     $sql = "select l.id, l.timestamp, l.user_id, l.date, TIME_FORMAT(l.start, '%k:%i') as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), '%k:%i') as finish,
       TIME_FORMAT(l.duration, '%k:%i') as duration,
-      l.client_id, l.project_id, l.task_id, l.invoice_id, l.comment, l.billable, l.status
+      l.client_id, l.project_id, l.task_id, l.invoice_id, l.comment, l.billable, l.status,l.approved
       from tt_log l where l.user_id = $user_id order by l.id";
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
@@ -602,7 +570,6 @@ class ttTimeHelper {
         $result[] = $val;
       }
     } else return false;
-
     return $result;
   }
   
@@ -615,7 +582,6 @@ class ttTimeHelper {
   	  	
     $result = array();
     $mdb2 = getConnection();
-
     $client_field = null;
     if (in_array('cl', explode(',', $user->plugins)))
       $client_field = ", c.name as client";
@@ -624,11 +590,10 @@ class ttTimeHelper {
       " left join tt_tasks t on (l.task_id = t.id)     left join activities   on (l.al_activity_id = activities.a_id) left join locations   on (l.al_location_id = locations.l_id)";
     if (in_array('cl', explode(',', $user->plugins)))
       $left_joins .= " left join tt_clients c on (l.client_id = c.id)";
-
     $sql = "select l.id as id, TIME_FORMAT(l.start, $sql_time_format) as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish,
       TIME_FORMAT(l.duration, '%k:%i') as duration, p.name as project, t.name as task, l.comment, l.billable, l.invoice_id $client_field, l.al_activity_id, 
-	  l.al_location_id,activities.a_name,locations.l_name
+	  l.al_location_id,activities.a_name,locations.l_name,l.approved
       from tt_log l
       $left_joins
       where l.date = '$date' and l.user_id = $user_id and l.status = 1
@@ -643,9 +608,7 @@ class ttTimeHelper {
         $result[] = $val;
       }
     } else return false;
-
     return $result;
   }
-
 }
 ?>

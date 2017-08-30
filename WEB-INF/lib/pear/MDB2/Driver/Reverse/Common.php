@@ -44,22 +44,18 @@
 //
 // $Id: Common.php 327310 2012-08-27 15:16:18Z danielc $
 //
-
 /**
  * @package MDB2
  * @category Database
  */
-
 /**
  * These are constants for the tableInfo-function
  * they are bitwised or'ed. so if there are more constants to be defined
  * in the future, adjust MDB2_TABLEINFO_FULL accordingly
  */
-
 define('MDB2_TABLEINFO_ORDER',      1);
 define('MDB2_TABLEINFO_ORDERTABLE', 2);
 define('MDB2_TABLEINFO_FULL',       3);
-
 /**
  * Base class for the schema reverse engineering module that is extended by each MDB2 driver
  *
@@ -73,7 +69,6 @@ define('MDB2_TABLEINFO_FULL',       3);
 class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
 {
     // {{{ splitTableSchema()
-
     /**
      * Split the "[owner|schema].table" notation into an array
      *
@@ -90,10 +85,8 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         }
         return array(null, $table);
     }
-
     // }}}
     // {{{ getTableFieldDefinition()
-
     /**
      * Get the structure of a field into an array
      *
@@ -111,14 +104,11 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
     }
-
     // }}}
     // {{{ getTableIndexDefinition()
-
     /**
      * Get the structure of an index into an array
      *
@@ -145,14 +135,11 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
     }
-
     // }}}
     // {{{ getTableConstraintDefinition()
-
     /**
      * Get the structure of an constraints into an array
      *
@@ -197,14 +184,11 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
     }
-
     // }}}
     // {{{ getSequenceDefinition()
-
     /**
      * Get the structure of a sequence into an array
      *
@@ -224,7 +208,6 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         $start = $db->currId($sequence);
         if (MDB2::isError($start)) {
             return $start;
@@ -241,10 +224,8 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         }
         return $definition;
     }
-
     // }}}
     // {{{ getTriggerDefinition()
-
     /**
      * Get the structure of a trigger into an array
      *
@@ -277,14 +258,11 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
             'method not implemented', __FUNCTION__);
     }
-
     // }}}
     // {{{ tableInfo()
-
     /**
      * Returns information about a table or a result set
      *
@@ -411,29 +389,23 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
         if (MDB2::isError($db)) {
             return $db;
         }
-
         if (!is_string($result)) {
             return $db->raiseError(MDB2_ERROR_UNSUPPORTED, null, null,
                 'method not implemented', __FUNCTION__);
         }
-
         $db->loadModule('Manager', null, true);
         $fields = $db->manager->listTableFields($result);
         if (MDB2::isError($fields)) {
             return $fields;
         }
-
         $flags = array();
-
         $idxname_format = $db->getOption('idxname_format');
         $db->setOption('idxname_format', '%s');
-
         $indexes = $db->manager->listTableIndexes($result);
         if (MDB2::isError($indexes)) {
             $db->setOption('idxname_format', $idxname_format);
             return $indexes;
         }
-
         foreach ($indexes as $index) {
             $definition = $this->getTableIndexDefinition($result, $index);
             if (MDB2::isError($definition)) {
@@ -446,12 +418,10 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
                 }
             }
         }
-
         $constraints = $db->manager->listTableConstraints($result);
         if (MDB2::isError($constraints)) {
             return $constraints;
         }
-
         foreach ($constraints as $constraint) {
             $definition = $this->getTableConstraintDefinition($result, $constraint);
             if (MDB2::isError($definition)) {
@@ -469,13 +439,10 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
                 }
             }
         }
-
         $res = array();
-
         if ($mode) {
             $res['num_fields'] = count($fields);
         }
-
         foreach ($fields as $i => $field) {
             $definition = $this->getTableFieldDefinition($result, $field);
             if (MDB2::isError($definition)) {
@@ -501,7 +468,6 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
             if (!empty($res[$i]['default'])) {
                 $res[$i]['flags'].= ' default_'.rawurlencode($res[$i]['default']);
             }
-
             if ($mode & MDB2_TABLEINFO_ORDER) {
                 $res['order'][$res[$i]['name']] = $i;
             }
@@ -509,7 +475,6 @@ class MDB2_Driver_Reverse_Common extends MDB2_Module_Common
                 $res['ordertable'][$res[$i]['table']][$res[$i]['name']] = $i;
             }
         }
-
         $db->setOption('idxname_format', $idxname_format);
         return $res;
     }

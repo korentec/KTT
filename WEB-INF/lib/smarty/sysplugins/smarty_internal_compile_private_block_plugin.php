@@ -8,14 +8,12 @@
  * @subpackage Compiler
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Compile Block Plugin Class
  */
 class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_CompileBase {
 	// attribute definitions
     public $optional_attributes = array('_any'); 
-
     /**
      * Compiles code for the execution of block plugin
      * 
@@ -47,7 +45,6 @@ class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_Compi
                 } 
             } 
             $_params = 'array(' . implode(",", $_paramsArray) . ')';
-
             $this->_open_tag($tag, array($_params, $this->compiler->nocache)); 
             // maybe nocache because of nocache variables or nocache plugin
             $this->compiler->nocache = $this->compiler->nocache | $this->compiler->tag_nocache; 
@@ -74,5 +71,4 @@ class Smarty_Internal_Compile_Private_Block_Plugin extends Smarty_Internal_Compi
         return $output . "\n";
     } 
 } 
-
 ?>

@@ -1,5 +1,4 @@
 {$forms.importForm.open}
-
 <table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr>
     <td align="center">

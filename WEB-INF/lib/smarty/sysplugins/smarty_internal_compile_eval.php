@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Compile Eval
  *
@@ -8,7 +7,6 @@
  * @subpackage Compiler
  * @author Uwe Tews
  */
-
 /**
  * Smarty Internal Plugin Compile Eval Class
  */ 
@@ -16,7 +14,6 @@ class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase {
     public $required_attributes = array('var');
     public $optional_attributes = array('assign'); 
     public $shorttag_order = array('var','assign');
-
     /**
      * Compiles code for the {eval} tag
      * 
@@ -47,5 +44,4 @@ class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase {
         return "<?php $_output ?>";
     } 
 } 
-
 ?>

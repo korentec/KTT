@@ -25,7 +25,6 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 require_once('initialize.php');
 import('form.Form');
 import('ttUserHelper');
@@ -33,7 +32,6 @@ import('ttTeamHelper');
 import('ttClientHelper');
 import('ttTimeHelper');
 import('DateAndTime');
-
 import('ttSysConfig');
 import('ChartHelper');
 	
@@ -43,13 +41,11 @@ import('ChartHelper');
   // as from a desktop shortcut (on first request only).
   // die ("Your browser's cookie functionality is turned off. Please turn it on.");
 // }
-
 // Access check.
 if (!ttAccessCheck(right_data_entry)) {
   header('Location: access_denied.php');
   exit();
 }
-
 // Initialize and store date in session.
 $cl_date = $request->getParameter('date', @$_SESSION['date']);
 $selected_date = new DateAndTime(DB_DATEFORMAT, $cl_date);
@@ -58,14 +54,12 @@ if($selected_date->isError())
 if(!$cl_date)
   $cl_date = $selected_date->toString(DB_DATEFORMAT);
 $_SESSION['date'] = $cl_date;
-
 // Use custom fields plugin if it is enabled.
 if (in_array('cf', explode(',', $user->plugins))) {
   require_once('plugins/CustomFields.class.php');
   $custom_fields = new CustomFields($user->team_id);
   $smarty->assign('custom_fields', $custom_fields);
 }
-
 // Initialize variables.
 $cl_start = trim($request->getParameter('start'));
 $cl_finish = trim($request->getParameter('finish'));
@@ -94,8 +88,6 @@ $_SESSION['project'] = $cl_project;
 	$_SESSION['location'] = $cl_location;
 $cl_task = $request->getParameter('task', ($request->getMethod()=='POST'? null : @$_SESSION['task']));
 $_SESSION['task'] = $cl_task;
-
-
 
 
 $cl_chperiod	= $request->getParameter('chPeriod',($request->getMethod()!="POST"?@$_SESSION['chPeriod']:null));
@@ -127,7 +119,6 @@ if ($user->canManageTeam()) {
     $smarty->assign('on_behalf_control', 1);
   }
 }
-
 // Dropdown for clients in MODE_TIME. Use all active clients.
 if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plugins))) {
     $active_clients = ttTeamHelper::getActiveClients($user->team_id, true);
@@ -142,7 +133,6 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
     ));
   // Note: in other modes the client list is filtered to relevant clients only. See below.
 }
-
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
 	
 	
@@ -158,7 +148,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
     'datakeys'=>array('id','name'),
     'empty'=>array(''=>$i18n->getKey('controls.select.project'))
   ));
-
  
   
   //hagay
@@ -174,7 +163,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
 		"datakeys"=>array("a_id","a_name"),
 		"empty"=>array(""=>$i18n->getKey('controls.select.activity'))
 		));
-
 	 $form->addInput(array("type"=>"text","name"=>"subactivity","value"=>$cl_sub_activity));
   
   
@@ -189,7 +177,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
 		"datakeys"=>array("l_id","l_name"),
 		"empty"=>array(""=>$i18n->getKey('controls.select.location'))
 		));
-
   //hagay
   
   
@@ -200,7 +187,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
     // We need an array of assigned project ids to do some trimming. 
     foreach($project_list as $project)
       $projects_assigned_to_user[] = $project['id'];
-
     // Build a client list out of active clients. Use only clients that are relevant to user.
     // Also trim their associated project list to only assigned projects (to user).
     foreach($active_clients as $client) {
@@ -222,7 +208,6 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
     ));
   }
 }
-
 if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
   $task_list = ttTeamHelper::getActiveTasks($user->team_id);
   $form->addInput(array('type'=>'combobox',
@@ -235,8 +220,6 @@ if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
   ));
 }
 
-
-
 // elements of form 'chartForm'
    $chperiod_data = array();
    $chperiod_data["1"]=$i18n->getKey('controls.per_td');
@@ -244,7 +227,6 @@ if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
    $chperiod_data["3"]=$i18n->getKey('controls.per_tm');
 	$chperiod_data["4"]=$i18n->getKey('controls.per_ty');
    $chperiod_data["5"]=$i18n->getKey('controls.per_at');
-
    $form3 = new Form('chartForm');
 	$form3->addInput(array("type"=>"combobox",
 		"onchange"=>"if(this.form) this.form.submit();",
@@ -253,7 +235,6 @@ if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
 		"data"=>$chperiod_data
 	));
 	
-
 // Add other controls.
 if ((TYPE_START_FINISH == $user->record_type) || (TYPE_ALL == $user->record_type)) {
   $form->addInput(array('type'=>'text','name'=>'start','value'=>$cl_start,'onchange'=>"formDisable('start');"));
@@ -288,7 +269,6 @@ if ($custom_fields && $custom_fields->fields[0]) {
     ));
   }
 }
-
 // Determine lock date. Time entries earlier than lock date cannot be created or modified. 
 $lock_interval = $user->lock_interval;
 $lockdate = 0;
@@ -296,7 +276,6 @@ if ($lock_interval > 0) {
   $lockdate = new DateAndTime();
   $lockdate->decDay($lock_interval);
 }
-
 // Submit.
 if ($request->getMethod() == 'POST') {
   if ($request->getParameter('btn_submit')) {
@@ -343,7 +322,6 @@ if ($request->getMethod() == 'POST') {
     }
     if (!ttValidString($cl_note, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.note'));
     // Finished validating user input.
-
     // Prohibit creating entries in future.
     if (defined('FUTURE_ENTRIES') && !isTrue(FUTURE_ENTRIES)) {
       $browser_today = new DateAndTime(DB_DATEFORMAT, $request->getParameter('browser_today', null));
@@ -366,7 +344,6 @@ if ($request->getMethod() == 'POST') {
       if (ttTimeHelper::overlaps($user->getActiveUser(), $cl_date, $cl_start, $cl_finish))
         $errors->add($i18n->getKey('error.overlap'));
     }  
-
     // Insert record.
     if ($errors->isEmpty()) {
       $id = ttTimeHelper::insert(array(
@@ -442,9 +419,7 @@ if ($request->getMethod() == 'POST') {
     }
   }
 }
-
 $week_total = ttTimeHelper::getTimeForWeek($user->getActiveUser(), $selected_date);
-
 $smarty->assign('week_total', $week_total);
 $smarty->assign('day_total', ttTimeHelper::getTimeForDay($user->getActiveUser(), $cl_date));
 $smarty->assign('time_records', ttTimeHelper::getRecords($user->getActiveUser(), $cl_date));
@@ -452,7 +427,6 @@ $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign('activity_list', $activity_list);
 $smarty->assign('task_list', $task_list);
-
 /*
 $smarty->assign("chart_href", "charts.php?r=".md5(uniqid("random"))."&period=".$cl_chperiod);
 $chart_data = ChartHelper::getActivityChartData($user->getUserId(), $cl_chperiod, $ud['u_pie_mode'] == 2 ? 'project' : '');

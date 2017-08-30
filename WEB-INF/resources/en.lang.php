@@ -25,19 +25,15 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 // Note: escape apostrophes with THREE backslashes, like here:  choisir l\\\'option 
 // Other characters (such as double-quotes in http links, etc.) do not have to be escaped.
-
 $i18n_language = 'English';
 $i18n_months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 $i18n_weekdays = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
 $i18n_weekdays_short = array('Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa');
 // format mm/dd
 $i18n_holidays = array('01/01', '01/16', '02/20', '05/28', '07/04', '09/03', '10/10', '11/11', '11/24', '12/25');
-
 $i18n_key_words = array(
-
 // Menus - short selection strings that are displayed on the top of application web pages.
 // Example: https://timetracker.anuko.com (black menu on top).
 'menu.login' => 'Login',
@@ -57,12 +53,10 @@ $i18n_key_words = array(
 'menu.export' => 'Export',
 'menu.clients' => 'Clients',
 'menu.options' => 'Options',
-
 // Footer - strings on the bottom of most pages.
 'footer.mobile_phones' => 'Time Tracker is available on mobile phones.',
 'footer.credits' => 'Credits',
 'footer.license' => 'License',
-
 // Error messages.
 'error.access_denied' => 'Access denied.',
 'error.sys' => 'System error.',
@@ -92,7 +86,6 @@ $i18n_key_words = array(
 'error.goto_uncompleted' => 'Go to uncompleted entry.',
 'error.overlap' => 'Time interval overlaps with existing records.',
 'error.future_date' => 'Date is in future.',
-
 // Labels for buttons.
 'button.login' => 'Login',
 'button.now' => 'Now',
@@ -116,7 +109,6 @@ $i18n_key_words = array(
 'button.import' => 'Import team',
 'button.close' => 'Close',
 'button.stop' => 'Stop',
-
 // Labels for controls on forms. Labels in this section are used on multiple forms.
 'label.team_name' => 'Team name',
 'label.address' => 'Address',
@@ -190,9 +182,8 @@ $i18n_key_words = array(
 'label.required' => 'Required',
 'label.fav_report' => 'Favorite report',
 'label.cron_schedule' => 'Cron schedule',
-'label.what_is_it' => 'What is it?',
-
-// Form titles.
+'label.what_is_it' => 'What is it?','label.approved' => 'Approved',
+// Form titles.
 'title.login' => 'Login',
 'title.teams' => 'Teams',
 'title.create_team' => 'Creating Team',
@@ -248,7 +239,6 @@ $i18n_key_words = array(
 'title.cf_add_dropdown_option' => 'Adding Option',
 'title.cf_edit_dropdown_option' => 'Editing Option',
 'title.cf_delete_dropdown_option' => 'Deleting Option',
-
 // Section for common strings inside combo boxes on forms. Strings shared between forms shall be placed here.
 // Strings that are used in a single form must go to the specific form section.
 'dropdown.all' => '--- all ---',
@@ -270,32 +260,25 @@ $i18n_key_words = array(
 'dropdown.status_inactive' => 'inactive',
 'dropdown.delete'=>'delete',
 'dropdown.do_not_delete'=>'do not delete',
-
 // Below is a section for strings that are used on individual forms. When a string is used only on one form it should be placed here.
 // One exception is for closely related forms such as "Time" and "Editing Time Record" with similar controls. In such cases
 // a string can be defined on the main form and used on related forms. The reasoning for this is to make translation effort easier.
 // Strings that are used on multiple unrelated forms should be placed in shared sections such as label.<stringname>, etc.
-
 // Login form. See example at https://timetracker.anuko.com/login.php.
 'form.login.forgot_password' => 'Forgot password?',
 'form.login.about' =>'Anuko <a href="https://www.anuko.com/lp/tt_2.htm" target="_blank">Time Tracker</a> is a simple, easy to use, open source time tracking system.',
-
 // Resetting Password form. See example at https://timetracker.anuko.com/password_reset.php.
 'form.reset_password.message' => 'Password reset request sent by email.',
 'form.reset_password.email_subject' => 'Anuko Time Tracker password reset request',
 'form.reset_password.email_body' => "Dear User,\n\nSomeone, possibly you, requested your Anuko Time Tracker password reset. Please visit this link if you want to reset your password.\n\n%s\n\nAnuko Time Tracker is a simple, easy to use, open source time tracking system. Visit https://www.anuko.com for more information.\n\n",
-
 // Changing Password form. See example at https://timetracker.anuko.com/password_change.php?ref=1.
 'form.change_password.tip' => 'Type new password and click on Save.',
-
 // Time form. See example at https://timetracker.anuko.com/time.php.
 'form.time.duration_format' => '(hh:mm or 0.0h)',
 'form.time.billable' => 'Billable',
 'form.time.uncompleted' => 'Uncompleted',
-
 // Editing Time Record form. See example at https://timetracker.anuko.com/time_edit.php (get there by editing an uncompleted time record).
 'form.time_edit.uncompleted' => 'This record was saved with only start time. It is not an error.',
-
 // Reports form. See example at https://timetracker.anuko.com/reports.php
 'form.reports.save_as_favorite' => 'Save as favorite',
 'form.reports.confirm_delete' => 'Are you sure you want to delete this favorite report?',
@@ -315,30 +298,24 @@ $i18n_key_words = array(
 'form.reports.group_by_project' => 'project',
 'form.reports.group_by_task' => 'task',
 'form.reports.totals_only' => 'Totals only',
-
 // Report form. See example at https://timetracker.anuko.com/report.php
 // (after generating a report at https://timetracker.anuko.com/reports.php).
 'form.report.export' => 'Export',
-
 // Invoice form. See example at https://timetracker.anuko.com/invoice.php
 // (you can get to this form after generating a report).
 'form.invoice.number' => 'Invoice number',
 'form.invoice.person' => 'Person',
 'form.invoice.invoice_to_delete' => 'Invoice to delete',
 'form.invoice.invoice_entries' => 'Invoice entries',
-
 // Charts form. See example at https://timetracker.anuko.com/charts.php
 'form.charts.interval' => 'Interval',
 'form.charts.chart' => 'Chart',
-
 // Projects form. See example at https://timetracker.anuko.com/projects.php
 'form.projects.active_projects' => 'Active Projects',
 'form.projects.inactive_projects' => 'Inactive Projects',
-
 // Tasks form. See example at https://timetracker.anuko.com/tasks.php
 'form.tasks.active_tasks' => 'Active Tasks',
 'form.tasks.inactive_tasks' => 'Inactive Tasks',
-
 // Users form. See example at https://timetracker.anuko.com/users.php
 'form.users.active_users' => 'Active Users',
 'form.users.inactive_users' => 'Inactive Users',
@@ -347,29 +324,23 @@ $i18n_key_words = array(
 'form.users.comanager' => 'Co-manager',
 'form.users.rate' => 'Rate',
 'form.users.default_rate' => 'Default hourly rate',
-
 // Client delete form. See example at https://timetracker.anuko.com/client_delete.php
 'form.client.client_to_delete' => 'Client to delete',
 'form.client.client_entries' => 'Client entries',
-
 // Clients form. See example at https://timetracker.anuko.com/clients.php
 'form.clients.active_clients' => 'Active Clients',
 'form.clients.inactive_clients' => 'Inactive Clients',
-
 // Strings for Exporting Team Data form. See example at https://timetracker.anuko.com/export.php
 'form.export.hint' => 'You can export all team data into an xml file. It could be useful if you are migrating data to your own server.',
 'form.export.compression' => 'Compression',
 'form.export.compression_none' => 'none',
 'form.export.compression_bzip' => 'bzip',
-
 // Strings for Importing Team Data form. See example at https://timetracker.anuko.com/imort.php (login as admin first).
 'form.import.hint' => 'Import team data from an xml file.',
 'form.import.file' => 'Select file',
 'form.import.success' => 'Import completed successfully.',
-
 // Teams form. See example at https://timetracker.anuko.com/admin_teams.php (login as admin first).
 'form.teams.hint' =>  'Create a new team by creating a new team manager account.<br>You can also import team data from an xml file from another Anuko Time Tracker server (no login collisions are allowed).',
-
 // Profile form. See example at https://timetracker.anuko.com/profile_edit.php.
 'form.profile.12_hours' => '12 hours',
 'form.profile.24_hours' => '24 hours',
@@ -382,7 +353,6 @@ $i18n_key_words = array(
 'form.profile.type_start_finish' => 'start and finish',
 'form.profile.type_duration' => 'duration',
 'form.profile.plugins' => 'Plugins',
-
 // Mail form. See example at https://timetracker.anuko.com/report_send.php when emailing a report.
 'form.mail.from' => 'From',
 'form.mail.to' => 'To',

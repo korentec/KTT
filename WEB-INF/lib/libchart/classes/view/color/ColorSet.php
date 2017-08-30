@@ -36,11 +36,9 @@
 		public function ColorSet($colorList, $shadowFactor) {
 			$this->colorList = $colorList;
 			$this->shadowColorList = array();
-
 			// Generate the shadow color set
 			foreach ($colorList as $color) {
 				$shadowColor = $color->getShadowColor($shadowFactor);
-
 				array_push($this->shadowColorList, $shadowColor);
 			}
 		}
@@ -52,7 +50,6 @@
 			reset($this->colorList);
 			reset($this->shadowColorList);
 		}
-
 		/**
 		 * Iterate over the colors and shadow colors. When we go after the last one, loop over.
 		 *
@@ -66,7 +63,6 @@
 				$this->reset();
 			}
 		}
-
 		/**
 		 * Returns the current color.
 		 *
@@ -75,7 +71,6 @@
 		public function currentColor() {
 			return current($this->colorList);
 		}
-
 		/**
 		 * Returns the current shadow color.
 		 *

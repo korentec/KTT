@@ -43,7 +43,6 @@
 		 * Left padding.
 		 */
 		public $left;
-
 		/**
 		 * Creates a new padding.
 		 *

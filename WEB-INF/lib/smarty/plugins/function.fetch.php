@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsFunction
  */
-
 /**
  * Smarty {fetch} plugin
  *
@@ -26,7 +25,6 @@ function smarty_function_fetch($params, $template)
         trigger_error("[plugin] fetch parameter 'file' cannot be empty",E_USER_NOTICE);
         return;
     }
-
     $content = '';
     if (isset($template->security_policy) && !preg_match('!^(http|ftp)://!i', $params['file'])) {
         if(!$template->security_policy->isTrustedResourceDir($params['file'])) {
@@ -142,7 +140,6 @@ function smarty_function_fetch($params, $template)
                 } else {
                     $fp = fsockopen($server_name,$port,$errno,$errstr,$timeout);
                 }
-
                 if(!$fp) {
                     trigger_error("[plugin] unable to fetch: $errstr ($errno)",E_USER_NOTICE);
                     return;
@@ -172,16 +169,13 @@ function smarty_function_fetch($params, $template)
                     if(!empty($user) && !empty($pass)) {
                         fputs($fp, "Authorization: BASIC ".base64_encode("$user:$pass")."\r\n");
                     }
-
                     fputs($fp, "\r\n");
                     while(!feof($fp)) {
                         $content .= fgets($fp,4096);
                     }
                     fclose($fp);
                     $csplit = preg_split("!\r\n\r\n!",$content,2);
-
                     $content = $csplit[1];
-
                     if(!empty($params['assign_headers'])) {
                         $template->assign($params['assign_headers'],preg_split("!\r\n!",$csplit[0]));
                     }
@@ -202,9 +196,7 @@ function smarty_function_fetch($params, $template)
                 return;
             }
         }
-
     }
-
 
     if (!empty($params['assign'])) {
         $template->assign($params['assign'],$content);
@@ -212,5 +204,4 @@ function smarty_function_fetch($params, $template)
         return $content;
     }
 }
-
 ?>

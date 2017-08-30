@@ -44,13 +44,11 @@
 //
 // $Id: Date.php 327316 2012-08-27 15:17:02Z danielc $
 //
-
 /**
  * @package  MDB2
  * @category Database
  * @author   Lukas Smith <smith@pooteeweet.org>
  */
-
 /**
  * Several methods to convert the MDB2 native timestamp format (ISO based)
  * to and from data structures that are convenient to worth with in side of php.
@@ -63,7 +61,6 @@
 class MDB2_Date
 {
     // {{{ mdbNow()
-
     /**
      * return the current datetime
      *
@@ -75,9 +72,7 @@ class MDB2_Date
         return date('Y-m-d H:i:s');
     }
     // }}}
-
     // {{{ mdbToday()
-
     /**
      * return the current date
      *
@@ -89,9 +84,7 @@ class MDB2_Date
         return date('Y-m-d');
     }
     // }}}
-
     // {{{ mdbTime()
-
     /**
      * return the current time
      *
@@ -103,9 +96,7 @@ class MDB2_Date
         return date('H:i:s');
     }
     // }}}
-
     // {{{ date2Mdbstamp()
-
     /**
      * convert a date into a MDB2 timestamp
      *
@@ -125,9 +116,7 @@ class MDB2_Date
         return MDB2_Date::unix2Mdbstamp(mktime($hour, $minute, $second, $month, $day, $year, -1));
     }
     // }}}
-
     // {{{ unix2Mdbstamp()
-
     /**
      * convert a unix timestamp into a MDB2 timestamp
      *
@@ -141,9 +130,7 @@ class MDB2_Date
         return date('Y-m-d H:i:s', $unix_timestamp);
     }
     // }}}
-
     // {{{ mdbstamp2Unix()
-
     /**
      * convert a MDB2 timestamp into a unix timestamp
      *
@@ -155,13 +142,10 @@ class MDB2_Date
     public static function mdbstamp2Unix($mdb_timestamp)
     {
         $arr = MDB2_Date::mdbstamp2Date($mdb_timestamp);
-
         return mktime($arr['hour'], $arr['minute'], $arr['second'], $arr['month'], $arr['day'], $arr['year'], -1);
     }
     // }}}
-
     // {{{ mdbstamp2Date()
-
     /**
      * convert a MDB2 timestamp into an array containing all
      * values necessary to pass to php's date() function
@@ -179,5 +163,4 @@ class MDB2_Date
     }
     // }}}
 }
-
 ?>

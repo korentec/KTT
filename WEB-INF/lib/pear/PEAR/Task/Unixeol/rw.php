@@ -37,17 +37,14 @@ class PEAR_Task_Unixeol_rw extends PEAR_Task_Unixeol
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
-
     function validate()
     {
         return true;
     }
-
     function getName()
     {
         return 'unixeol';
     }
-
     function getXml()
     {
         return '';

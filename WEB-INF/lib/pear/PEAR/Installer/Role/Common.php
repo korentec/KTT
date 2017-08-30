@@ -35,7 +35,6 @@ class PEAR_Installer_Role_Common
      * @access protected
      */
     var $config;
-
     /**
      * @param PEAR_Config
      */
@@ -43,7 +42,6 @@ class PEAR_Installer_Role_Common
     {
         $this->config = $config;
     }
-
     /**
      * Retrieve configuration information about a file role from its XML info
      *
@@ -57,7 +55,6 @@ class PEAR_Installer_Role_Common
         }
         return $GLOBALS['_PEAR_INSTALLER_ROLES'][$role];
     }
-
     /**
      * This is called for each file to set up the directories and files
      * @param PEAR_PackageFile_v1|PEAR_PackageFile_v2
@@ -105,7 +102,6 @@ class PEAR_Installer_Role_Common
             $dest_file = $dest_dir . DIRECTORY_SEPARATOR . $atts['install-as'];
         }
         $orig_file = $tmp_path . DIRECTORY_SEPARATOR . $file;
-
         // Clean up the DIRECTORY_SEPARATOR mess
         $ds2 = DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR;
         
@@ -115,7 +111,6 @@ class PEAR_Installer_Role_Common
                                                     array($dest_dir, $dest_file, $orig_file));
         return array($save_destdir, $dest_dir, $dest_file, $orig_file);
     }
-
     /**
      * Get the name of the configuration variable that specifies the location of this file
      * @return string|false
@@ -129,7 +124,6 @@ class PEAR_Installer_Role_Common
         }
         return $roleInfo['locationconfig'];
     }
-
     /**
      * Do any unusual setup here
      * @param PEAR_Installer
@@ -140,7 +134,6 @@ class PEAR_Installer_Role_Common
     function setup(&$installer, $pkg, $atts, $file)
     {
     }
-
     function isExecutable()
     {
         $roleInfo = PEAR_Installer_Role_Common::getInfo('PEAR_Installer_Role_' . 
@@ -150,7 +143,6 @@ class PEAR_Installer_Role_Common
         }
         return $roleInfo['executable'];
     }
-
     function isInstallable()
     {
         $roleInfo = PEAR_Installer_Role_Common::getInfo('PEAR_Installer_Role_' . 
@@ -160,7 +152,6 @@ class PEAR_Installer_Role_Common
         }
         return $roleInfo['installable'];
     }
-
     function isExtension()
     {
         $roleInfo = PEAR_Installer_Role_Common::getInfo('PEAR_Installer_Role_' . 

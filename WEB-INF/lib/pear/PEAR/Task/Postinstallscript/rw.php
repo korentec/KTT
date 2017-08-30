@@ -52,17 +52,14 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
         $this->_pkg = &$pkg;
         $this->_params = array();
     }
-
     function validate()
     {
         return $this->validateXml($this->_pkg, $this->_params, $this->config, $this->_contents);
     }
-
     function getName()
     {
         return 'postinstallscript';
     }
-
     /**
      * add a simple <paramgroup> to the post-install script
      *
@@ -94,7 +91,6 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
         }
         $this->_params[$this->_pkg->getTasksNs() . ':paramgroup'][] = $stuff;
     }
-
     /**
      * add a complex <paramgroup> to the post-install script with conditions
      *
@@ -137,12 +133,10 @@ class PEAR_Task_Postinstallscript_rw extends PEAR_Task_Postinstallscript
         }
         $this->_params[$this->_pkg->getTasksNs() . ':paramgroup'][] = $stuff;
     }
-
     function getXml()
     {
         return $this->_params;
     }
-
     /**
      * Use to set up a param tag for use in creating a paramgroup
      * @static

@@ -5,7 +5,6 @@
  * @package Smarty
  * @subpackage PluginsModifier
  */
-
 /**
  * Smarty date_format modifier plugin
  * 
@@ -57,5 +56,4 @@ function smarty_modifier_date_format($string, $format = SMARTY_RESOURCE_DATE_FOR
         return date($format, $timestamp);
     }
 } 
-
 ?>

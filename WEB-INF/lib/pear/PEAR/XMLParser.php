@@ -14,7 +14,6 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      File available since Release 1.4.0a1
  */
-
 /**
  * Parser for any xml file
  * @category  pear
@@ -34,37 +33,31 @@ class PEAR_XMLParser
      * @var string $_serializedData
      */
     var $_unserializedData = null;
-
     /**
      * name of the root tag
      * @var string $_root
      */
     var $_root = null;
-
     /**
      * stack for all data that is found
      * @var array    $_dataStack
      */
     var $_dataStack = array();
-
     /**
      * stack for all values that are generated
      * @var array    $_valStack
      */
     var $_valStack = array();
-
     /**
      * current tag depth
      * @var int    $_depth
      */
     var $_depth = 0;
-
     /**
      * The XML encoding to use
      * @var string $encoding
      */
     var $encoding = 'ISO-8859-1';
-
     /**
      * @return array
      */
@@ -72,7 +65,6 @@ class PEAR_XMLParser
     {
         return $this->_unserializedData;
     }
-
     /**
      * @param string xml content
      * @return true|PEAR_Error
@@ -85,7 +77,6 @@ class PEAR_XMLParser
         }
         $this->_dataStack =  $this->_valStack = array();
         $this->_depth = 0;
-
         if (
             strpos($data, 'encoding="UTF-8"')
             || strpos($data, 'encoding="utf-8"')
@@ -94,12 +85,10 @@ class PEAR_XMLParser
         ) {
             $this->encoding = 'UTF-8';
         }
-
         if (version_compare(phpversion(), '5.0.0', 'lt') && $this->encoding == 'UTF-8') {
             $data = utf8_decode($data);
             $this->encoding = 'ISO-8859-1';
         }
-
         $xp = xml_parser_create($this->encoding);
         xml_parser_set_option($xp, XML_OPTION_CASE_FOLDING, 0);
         xml_set_object($xp, $this);
@@ -115,7 +104,6 @@ class PEAR_XMLParser
         xml_parser_free($xp);
         return true;
     }
-
     /**
      * Start element handler for XML parser
      *
@@ -129,7 +117,6 @@ class PEAR_XMLParser
     {
         $this->_depth++;
         $this->_dataStack[$this->_depth] = null;
-
         $val = array(
             'name'         => $element,
             'value'        => null,
@@ -137,16 +124,13 @@ class PEAR_XMLParser
             'childrenKeys' => array(),
             'aggregKeys'   => array()
        );
-
         if (count($attribs) > 0) {
             $val['children'] = array();
             $val['type'] = 'array';
             $val['children']['attribs'] = $attribs;
         }
-
         array_push($this->_valStack, $val);
     }
-
     /**
      * post-process data
      *
@@ -157,7 +141,6 @@ class PEAR_XMLParser
     {
         return trim($data);
     }
-
     /**
      * End element handler for XML parser
      *
@@ -170,7 +153,6 @@ class PEAR_XMLParser
     {
         $value = array_pop($this->_valStack);
         $data  = $this->postProcess($this->_dataStack[$this->_depth], $element);
-
         // adjust type of the value
         switch (strtolower($value['type'])) {
             // unserialize an array
@@ -178,17 +160,14 @@ class PEAR_XMLParser
                 if ($data !== '') {
                     $value['children']['_content'] = $data;
                 }
-
                 $value['value'] = isset($value['children']) ? $value['children'] : array();
                 break;
-
             /*
              * unserialize a null value
              */
             case 'null':
                 $data = null;
                 break;
-
             /*
              * unserialize any scalar value
              */
@@ -197,14 +176,12 @@ class PEAR_XMLParser
                 $value['value'] = $data;
                 break;
         }
-
         $parent = array_pop($this->_valStack);
         if ($parent === null) {
             $this->_unserializedData = &$value['value'];
             $this->_root = &$value['name'];
             return true;
         }
-
         // parent has to be an array
         if (!isset($parent['children']) || !is_array($parent['children'])) {
             $parent['children'] = array();
@@ -212,7 +189,6 @@ class PEAR_XMLParser
                 $parent['type'] = 'array';
             }
         }
-
         if (!empty($value['name'])) {
             // there already has been a tag with this name
             if (in_array($value['name'], $parent['childrenKeys'])) {
@@ -234,10 +210,8 @@ class PEAR_XMLParser
             array_push($parent['children'],$value['value']);
         }
         array_push($this->_valStack, $parent);
-
         $this->_depth--;
     }
-
     /**
      * Handler for character data
      *

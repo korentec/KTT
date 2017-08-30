@@ -23,7 +23,6 @@
 * Contributors: Igor Melnik <igor.melnik at mail.ru>
 * 
 */
-
 /**
  * Class ClientHelper for manipulation with the Client data
  * @package TimeTracker
@@ -53,7 +52,6 @@ class LocationHelper {
   		
   		return $result;
 	}
-
         /**
          * Finds client data by it ID. Returns array of data.
          * @param User $user
@@ -86,7 +84,6 @@ class LocationHelper {
      */
     function insert($fields)      
     {
-
   		$db = DB::connect(DSN);
     	if (DB::isError($db))
     		return false;
@@ -109,13 +106,11 @@ class LocationHelper {
      * @param array $fields
      * @return int 
      */
-
   	function update($fields)
     {   
   		$db = DB::connect(DSN);
     	if (DB::isError($db))
     		return false;
-
     	$id = $fields['id'];
       $name = $fields['name'];
      
@@ -142,7 +137,6 @@ class LocationHelper {
 		$db = DB::connect(DSN);
     	if (DB::isError($db))
     		return false;
-
 		$sth = $db->prepare("DELETE FROM locations WHERE l_id = $id");
 		$rc = $db->execute($sth);
 		if (DB::isError($rc) == 0) {
@@ -160,6 +154,5 @@ class LocationHelper {
 		$location_arr = Helper::findLocationById($location_id);
 		$bean->setAttribute("name",$location_arr["l_name"]);
 	}
-
 }
 ?>

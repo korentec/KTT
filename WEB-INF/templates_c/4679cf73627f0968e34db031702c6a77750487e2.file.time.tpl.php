@@ -311,7 +311,6 @@ if ($_smarty_tpl->_count($_from) > 0){
 </table>
 
 <?php echo $_smarty_tpl->getVariable('forms')->value['timeRecordForm']['open'];?>
-
 <table cellspacing="4" cellpadding="7" border="0">
 <tr>
   <td>

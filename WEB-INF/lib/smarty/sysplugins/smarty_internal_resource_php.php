@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Resource PHP
  * 
@@ -9,7 +8,6 @@
  * @subpackage TemplateResources
  * @author Uwe Tews 
  */
-
 /**
  * Smarty Internal Plugin Resource PHP
  */
@@ -25,7 +23,6 @@ class Smarty_Internal_Resource_PHP {
     // properties
     public $usesCompiler = false;
     public $isEvaluated = false;
-
     /**
      * Return flag if template source is existing
      * 
@@ -39,7 +36,6 @@ class Smarty_Internal_Resource_PHP {
             return true;
         } 
     } 
-
     /**
      * Get filepath to template source
      * 
@@ -49,14 +45,12 @@ class Smarty_Internal_Resource_PHP {
     public function getTemplateFilepath($_template)
     {
         $_filepath = $_template->buildTemplateFilepath ();
-
         if (is_object($_template->smarty->security_policy)) {
             $_template->smarty->security_policy->isTrustedResourceDir($_filepath);
         } 
         $_template->templateUid = sha1($_filepath);
         return $_filepath;
     } 
-
     /**
      * Get timestamp to template source
      * 
@@ -67,7 +61,6 @@ class Smarty_Internal_Resource_PHP {
     {
         return filemtime($_template->getTemplateFilepath());
     } 
-
     /**
      * Read template source from file
      * 
@@ -83,7 +76,6 @@ class Smarty_Internal_Resource_PHP {
             return false;
         } 
     } 
-
     /**
      * Get filepath to compiled template
      * 
@@ -95,7 +87,6 @@ class Smarty_Internal_Resource_PHP {
         // no filepath for PHP templates
         return false;
     } 
-
     /**
      * renders the PHP template
      */
@@ -123,5 +114,4 @@ class Smarty_Internal_Resource_PHP {
         return;
     } 
 } 
-
 ?>

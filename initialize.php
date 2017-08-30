@@ -25,26 +25,21 @@
 // | Contributors:
 // | https://www.anuko.com/time_tracker/credits.htm
 // +----------------------------------------------------------------------+
-
 // Report all errors except E_NOTICE and E_STRICT.
 // Ignoring E_STRICT is here because PEAR 1.9.4 that we use is not E_STRICT compliant.
 if (!defined('E_STRICT')) define('E_STRICT', 2048);
 // if (!defined('E_DEPRECATED')) define('E_DEPRECATED', 8192);
 error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); // & ~E_DEPRECATED);
 // E_ALL tends to change as PHP evloves, therefore we use & here instead of exclusive OR (^).
-
 // Disable displaying errors on screen.
 ini_set('display_errors', 'Off');
-
 // require_once('init_auth.php');
 define("APP_DIR", dirname(__FILE__));
 define("LIBRARY_DIR", APP_DIR."/WEB-INF/lib");
 define("TEMPLATE_DIR", APP_DIR."/WEB-INF/templates");
 // Date format for database and URI parameters.
 define('DB_DATEFORMAT', '%Y-%m-%d');
-
 require_once(LIBRARY_DIR.'/common.lib.php');
-
 // Require the configuration file with application settings.
 if (!file_exists(APP_DIR."/WEB-INF/config.php")) die ("WEB-INF/config.php file does not exist.");
 require_once("WEB-INF/config.php");
@@ -52,7 +47,6 @@ require_once("WEB-INF/config.php");
 if (!defined("DSN")) {
   die ("DSN value is not defined. Check your config.php file.");
 }
-
 // Depending on DSN, require either mysqli or mysql extensions.
 if (strrpos(DSN, 'mysqli://', -strlen(DSN)) !== FALSE) {
   check_extension('mysqli'); // DSN starts with mysqli:// - require mysqli extension.
@@ -60,10 +54,8 @@ if (strrpos(DSN, 'mysqli://', -strlen(DSN)) !== FALSE) {
 if (strrpos(DSN, 'mysql://', -strlen(DSN)) !== FALSE) {
   check_extension('mysql');  // DSN starts with mysql:// - require mysql extension.
 }
-
 // Require other extensions.
 check_extension('mbstring');
-
 // If auth params are not defined (in config.php) - initialize with an empty array.
 if (!isset($GLOBALS['AUTH_MODULE_PARAMS']) || !is_array($GLOBALS['AUTH_MODULE_PARAMS']))
   $GLOBALS['AUTH_MODULE_PARAMS'] = array();
@@ -75,12 +67,10 @@ $smarty->use_sub_dirs = false;
 $smarty->template_dir = TEMPLATE_DIR;
 $smarty->compile_dir  = TEMPLATE_DIR.'_c';
 $GLOBALS['SMARTY'] = &$smarty;
-
 // Note: these 3 settings below used to be in .htaccess file. Moved them here to eliminate "error 500" problems
 // with some shared hostings that do not have AllowOverride Options or AllowOverride All in their apache configurations.
 // Change http cache expiration time to 1 minute.
 session_cache_expire(1);
-
 $phpsessid_ttl = defined('PHPSESSID_TTL') ? PHPSESSID_TTL : 60*60*24;
 // Set lifetime for garbage collection.
 ini_set('session.gc_maxlifetime', $phpsessid_ttl);
@@ -91,35 +81,28 @@ if (isset($_COOKIE['tt_PHPSESSID'])) {
   // so that users don't have to re-login during this period from now. 
   setcookie('tt_PHPSESSID', $_COOKIE['tt_PHPSESSID'],  time() + $phpsessid_ttl, '/');
 }
-
 // Start or resume PHP session.
 session_name('tt_PHPSESSID'); // "tt_" prefix is to avoid sharing session with other PHP apps that do not name session.  
 @session_start();
-
 // Authorization.
 import('Auth');
 $auth = Auth::factory(AUTH_MODULE, $GLOBALS['AUTH_MODULE_PARAMS']);
-
 // Some defines we'll need.
 //
 define('RESOURCE_DIR', APP_DIR.'/WEB-INF/resources');
 define('COOKIE_EXPIRE', 60*60*24*30); // Cookies expire in 30 days.
-
 // Status values for projects, users, etc.
 define('ACTIVE', 1);
 define('INACTIVE', 0);
 // define('DELETED', -1); // DELETED items should have a NULL status. This allows us to have duplicate NULL status entries with existing indexes.
-
 // Definitions for tracking mode types.
 define('MODE_TIME', 0); // Tracking time only. There are no projects or tasks.
 define('MODE_PROJECTS', 1); // Tracking time per projects. There are no tasks.
 define('MODE_PROJECTS_AND_TASKS', 2); // Tracking time for projects and tasks.
-
 // Definitions of types for time records.
 define('TYPE_ALL', 0); // Time record can be specified with either duration or start and finish times.
 define('TYPE_START_FINISH', 1); // Time record has start and finish times.
 define('TYPE_DURATION', 2); // Time record has only duration, no start and finish times.
-
 // User access rights - bits that collectively define an access mask to the system (a role).
 // We'll have some bits here (1,2, etc...) reserved for future use.
 define('right_data_entry', 4);     // Right to enter work hours and expenses.
@@ -130,7 +113,6 @@ define('right_manage_team', 64);   // Right to manage team. Note that this is no
 define('right_assign_roles', 128); // Right to assign user roles.
 define('right_export_team', 256);  // Right to export team data to a file.
 define('right_administer_site', 1024); // Admin account right to manage the application as a whole. 
-
 // User roles.
 define('ROLE_USER', 4);          // Regular user.
 define('ROLE_CLIENT', 16);       // Client (to view reports and invoices).
@@ -138,23 +120,17 @@ define('ROLE_COMANAGER', 68);    // Team co-manager. Can do many things but not 
 define('ROLE_MANAGER', 324);     // Team manager. Can do everything for a team.
 define('ROLE_SITE_ADMIN', 1024); // Site administrator.
 
-
 define('CHARSET', 'utf-8');
-
 date_default_timezone_set(@date_default_timezone_get());
-
 // Strip auto-inserted extra slashes when magic_quotes ON for PHP versions prior to 5.4.0.
 if (get_magic_quotes_gpc())
   magic_quotes_off();
-
 // Initialize global objects that are needed for the application.
 import('html.HttpRequest');
 $request = new ttHttpRequest();
-
 import('form.ActionErrors');
 $errors = new ActionErrors();
 $messages = new ActionErrors();
-
 // Create an instance of ttUser class. This gets us most of user details.
 import('ttUser');
 $user = new ttUser(null, $auth->getUserId());
@@ -163,11 +139,9 @@ if ($user->custom_logo) {
   $smarty->assign('mobile_custom_logo', '../images/'.$user->team_id.'.png');
 }
 $smarty->assign('user', $user);
-
 // Localization.
 import('I18n');
 $i18n = new I18n();
-
 // Determine the language to use.
 $lang = $user->lang;
 if (!$lang) {
@@ -184,18 +158,14 @@ if (!$lang) {
     }
   }
 }
-
 // Load i18n file.
 $i18n->load($lang);
 $GLOBALS['I18N'] = &$i18n;
-
 $GLOBALS['USER'] = &$user;
-
 // Assign things for smarty to use in template files.
 $smarty->assign('i18n', $i18n->keys);
 $smarty->assign('errors', $errors);
 $smarty->assign('messages', $messages);
-
 // TODO: move this code out of here to the files that use it. 
   
 // We use js/strftime.js to print dates in JavaScript (in DateField controls).
@@ -208,21 +178,17 @@ $smarty->assign('messages', $messages);
 // var d = new Date();
 // d.locale = "fr";           // Remember to initialize locale.
 // d.strftime("%d.%m.%Y %a"); // This will output a localized %a as in "31.05.2013 Ven"
-
 // Initialize date locale for JavaScript.
 init_js_date_locale();
-
 function init_js_date_locale()
 {
   global $i18n, $smarty;
   $lang = $i18n->lang;
-
   $days = $i18n->weekdayNames;
   $short_day_names = array();
   foreach($days as $k => $v) {
     $short_day_names[$k] = mb_substr($v, 0, 3, 'utf-8');
   }
-
   /*
   $months = $i18n->monthNames;
   $short_month_names = array();

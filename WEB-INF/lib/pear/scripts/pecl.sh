@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # first find which PHP binary to use
 if test "x$PHP_PEAR_PHP_BIN" != "x"; then
   PHP="$PHP_PEAR_PHP_BIN"
@@ -10,7 +9,6 @@ else
     PHP="@php_bin@"
   fi
 fi
-
 # then look for the right pear include dir
 if test "x$PHP_PEAR_INSTALL_DIR" != "x"; then
   INCDIR=$PHP_PEAR_INSTALL_DIR
@@ -24,5 +22,4 @@ else
     INCARG="-d include_path=@php_dir@"
   fi
 fi
-
 exec $PHP -C -n -q $INCARG -d date.timezone=UTC -d output_buffering=1 -d variables_order=EGPCS -d safe_mode=0 -d register_argc_argv="On" $INCDIR/peclcmd.php "$@"

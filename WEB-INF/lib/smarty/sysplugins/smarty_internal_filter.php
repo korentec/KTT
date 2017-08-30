@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Filter
  * 
@@ -8,12 +7,10 @@
  * @package Smarty
  * @author Uwe Tews 
  */
-
 /**
  * Class for filter methods
  */
 class Smarty_Internal_Filter {
-
     function __construct($smarty)
     {
         $this->smarty = $smarty;
@@ -28,7 +25,6 @@ class Smarty_Internal_Filter {
 	{
    		$this->smarty->registered_filters[$type][$this->_get_filter_name($callback)] = $callback;
 	}
-
     /**
      * Unregisters a filter function
      * 
@@ -42,7 +38,6 @@ class Smarty_Internal_Filter {
       		unset($this->smarty->registered_filters[$type][$name]);
    		}
 	}
-
 
     /**
      * Return internal filter name
@@ -59,7 +54,6 @@ class Smarty_Internal_Filter {
             return $function_name;
         } 
     } 
-
 
     /**
      * load a filter of specified type and name
@@ -83,7 +77,6 @@ class Smarty_Internal_Filter {
         throw new SmartyException("{$type}filter \"{$name}\" not callable");
         return false;
     } 
-
 
 }
 ?>

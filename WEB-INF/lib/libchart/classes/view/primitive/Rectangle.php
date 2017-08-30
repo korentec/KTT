@@ -28,7 +28,6 @@
 		 * Top left X.
 		 */
 		public $x1;
-
 		/**
 		 * Top left Y.
 		 */

@@ -18,7 +18,6 @@
  * @since      File available since Release 1.3.3
  */
 
-
 /**
  * Base PEAR_Exception Class
  *
@@ -103,7 +102,6 @@ class PEAR_Exception extends Exception
     private static $_observers = array();
     private static $_uniqueid = 0;
     private $_trace;
-
     /**
      * Supported signatures:
      *  - PEAR_Exception(string $message);
@@ -144,7 +142,6 @@ class PEAR_Exception extends Exception
         parent::__construct($message, $code);
         $this->signal();
     }
-
     /**
      * @param mixed $callback  - A valid php callback, see php func is_callable()
      *                         - A PEAR_Exception::OBSERVER_* constant
@@ -157,12 +154,10 @@ class PEAR_Exception extends Exception
     {
         self::$_observers[$label] = $callback;
     }
-
     public static function removeObserver($label = 'default')
     {
         unset(self::$_observers[$label]);
     }
-
     /**
      * @return int unique identifier for an observer
      */
@@ -170,7 +165,6 @@ class PEAR_Exception extends Exception
     {
         return self::$_uniqueid++;
     }
-
     private function signal()
     {
         foreach (self::$_observers as $func) {
@@ -197,7 +191,6 @@ class PEAR_Exception extends Exception
             }
         }
     }
-
     /**
      * Return specific error information that can be used for more detailed
      * error messages or translation.
@@ -216,7 +209,6 @@ class PEAR_Exception extends Exception
     {
         return array();
     }
-
     /**
      * Returns the exception that caused this exception to be thrown
      * @access public
@@ -226,7 +218,6 @@ class PEAR_Exception extends Exception
     {
         return $this->cause;
     }
-
     /**
      * Function must be public to call on caused exceptions
      * @param array
@@ -287,7 +278,6 @@ class PEAR_Exception extends Exception
             }
         }
     }
-
     public function getTraceSafe()
     {
         if (!isset($this->_trace)) {
@@ -299,19 +289,16 @@ class PEAR_Exception extends Exception
         }
         return $this->_trace;
     }
-
     public function getErrorClass()
     {
         $trace = $this->getTraceSafe();
         return $trace[0]['class'];
     }
-
     public function getErrorMethod()
     {
         $trace = $this->getTraceSafe();
         return $trace[0]['function'];
     }
-
     public function __toString()
     {
         if (isset($_SERVER['REQUEST_URI'])) {
@@ -319,7 +306,6 @@ class PEAR_Exception extends Exception
         }
         return $this->toText();
     }
-
     public function toHtml()
     {
         $trace = $this->getTraceSafe();
@@ -337,7 +323,6 @@ class PEAR_Exception extends Exception
                . '<tr><td style="text-align: center; background: #cccccc; width:20px; font-weight: bold;">#</td>'
                . '<td style="text-align: center; background: #cccccc; font-weight: bold;">Function</td>'
                . '<td style="text-align: center; background: #cccccc; font-weight: bold;">Location</td></tr>' . "\n";
-
         foreach ($trace as $k => $v) {
             $html .= '<tr><td style="text-align: center;">' . $k . '</td>'
                    . '<td>';
@@ -373,7 +358,6 @@ class PEAR_Exception extends Exception
                . '</table>';
         return $html;
     }
-
     public function toText()
     {
         $causes = array();

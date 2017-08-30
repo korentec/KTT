@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Smarty Internal Plugin Config File Compiler
  * 
@@ -27,7 +26,6 @@ class Smarty_Internal_Config_File_Compiler {
         $this->config_data['sections'] = array();
         $this->config_data['vars'] = array();
     } 
-
     /**
      * Methode to compile a Smarty template
      * 
@@ -102,5 +100,4 @@ class Smarty_Internal_Config_File_Compiler {
         throw new SmartyCompilerException($error_text);
     } 
 } 
-
 ?>

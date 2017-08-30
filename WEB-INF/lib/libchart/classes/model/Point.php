@@ -37,7 +37,6 @@
 			$this->x = $x;
 			$this->y = $y;
 		}
-
 		/**
 		 * Gets the x coordinate (label).
 		 *
@@ -46,7 +45,6 @@
 		public function getX() {
 			return $this->x;
 		}
-
 		/**
 		 * Gets the y coordinate (value).
 		 *

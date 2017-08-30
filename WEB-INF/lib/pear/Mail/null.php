@@ -42,7 +42,6 @@
  * @version     CVS: $Id: null.php 294747 2010-02-08 08:18:33Z clockwerx $
  * @link        http://pear.php.net/package/Mail/
  */
-
 /**
  * Null implementation of the PEAR Mail:: interface.
  * @access public
@@ -50,7 +49,6 @@
  * @version $Revision: 294747 $
  */
 class Mail_null extends Mail {
-
     /**
      * Implements Mail_null::send() function. Silently discards all
      * mail.
@@ -80,5 +78,4 @@ class Mail_null extends Mail {
     {
         return true;
     }
-
 }
