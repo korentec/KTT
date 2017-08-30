@@ -169,15 +169,15 @@
 			}
 			
 			return $pointList;
-		}
-		
-		/**
-		 * Retourns the bound.
-		 *
-		 * @return bound Bound
-		 */
-		public function getBound() {
-			return $this->bound;
-		}
+		}
+		
+		/**
+		 * Retourns the bound.
+		 *
+		 * @return bound Bound
+		 */
+		public function getBound() {
+			return $this->bound;
+		}
 	}
 ?>

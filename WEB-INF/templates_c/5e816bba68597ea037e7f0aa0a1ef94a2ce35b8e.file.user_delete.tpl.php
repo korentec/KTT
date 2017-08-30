@@ -19,26 +19,26 @@ $_smarty_tpl->decodeProperties(array (
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php if (!is_callable('smarty_modifier_escape')) include '/home/korentecco/public_html/ktt/WEB-INF/lib/smarty/plugins/modifier.escape.php';
 ?><?php echo $_smarty_tpl->getVariable('forms')->value['userDeleteForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-  <tr>
-    <td>
-      <table cellspacing="0" cellpadding="0" border="0">
-        <tr>
+
+<table cellspacing="4" cellpadding="7" border="0">
+  <tr>
+    <td>
+      <table cellspacing="0" cellpadding="0" border="0">
+        <tr>
           <td colspan="2" align="center"><b><?php echo smarty_modifier_escape($_smarty_tpl->getVariable('user_to_delete')->value,'html');?>
-</b></td>
-        </tr>
-        <tr>
-          <td colspan="2" align="center">&nbsp;</td>
-        </tr>
-        <tr>
+</b></td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center">&nbsp;</td>
+        </tr>
+        <tr>
           <td align="right"><?php echo $_smarty_tpl->getVariable('forms')->value['userDeleteForm']['btn_delete']['control'];?>
-&nbsp;</td>
+&nbsp;</td>
           <td align="left">&nbsp;<?php echo $_smarty_tpl->getVariable('forms')->value['userDeleteForm']['btn_cancel']['control'];?>
-</td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['userDeleteForm']['close'];?>

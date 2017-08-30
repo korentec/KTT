@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
-        <file>
-            <url>login.php</url>
-            <bookmark id="1">
-                <name/>
-                <line>46</line>
-                <key/>
-            </bookmark>
-        </file>
-    </editor-bookmarks>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/initialize.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/resources/he.lang.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/admin_team_add.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/login.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/index.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/config.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/users.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/access_denied.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/ttTeamHelper.class.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/Auth.class.php</file>
-            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/form/Calendar.class.php</file>
-        </group>
-    </open-files>
-</project-private>
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>login.php</url>
+            <bookmark id="1">
+                <name/>
+                <line>46</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/initialize.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/resources/he.lang.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/admin_team_add.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/login.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/index.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/config.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/users.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/access_denied.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/ttTeamHelper.class.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/Auth.class.php</file>
+            <file>file:/C:/Program%20Files%20(x86)/Apache%20Software%20Foundation/Apache2.2/htdocs/WEB-INF/lib/form/Calendar.class.php</file>
+        </group>
+    </open-files>
+</project-private>

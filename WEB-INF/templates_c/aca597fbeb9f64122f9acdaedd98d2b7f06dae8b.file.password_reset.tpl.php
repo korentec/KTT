@@ -18,34 +18,34 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['resetPasswordForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-  <tr>
-    <td>
-      <?php if ($_smarty_tpl->getVariable('result_message')->value){?>
-      <table cellspacing="4" cellpadding="7" border="0" width="100%">
+
+<table cellspacing="4" cellpadding="7" border="0">
+  <tr>
+    <td>
+      <?php if ($_smarty_tpl->getVariable('result_message')->value){?>
+      <table cellspacing="4" cellpadding="7" border="0" width="100%">
         <tr><td align="center"><font color="red"><b><?php echo $_smarty_tpl->getVariable('result_message')->value;?>
-</b></font></td></tr>
-      </table>
-	  <?php }else{ ?>
-      <table>
-        <tr>
+</b></font></td></tr>
+      </table>
+	  <?php }else{ ?>
+      <table>
+        <tr>
           <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['login'];?>
-:</td>
+:</td>
           <td colspan="3"><?php echo $_smarty_tpl->getVariable('forms')->value['resetPasswordForm']['login']['control'];?>
-</td>
-        </tr>
-        <tr>
-          <td colspan="4">&nbsp;</td>
-        </tr>
-        <tr>
-          <td>&nbsp;</td>
+</td>
+        </tr>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
           <td colspan="3" align="center"><?php echo $_smarty_tpl->getVariable('forms')->value['resetPasswordForm']['btn_submit']['control'];?>
-</td>
-        </tr>
-      </table>
-      <?php }?>
-    </td>
-  </tr>
-</table>
+</td>
+        </tr>
+      </table>
+      <?php }?>
+    </td>
+  </tr>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['resetPasswordForm']['close'];?>

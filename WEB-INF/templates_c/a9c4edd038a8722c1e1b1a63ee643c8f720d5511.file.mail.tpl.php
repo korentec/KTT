@@ -18,58 +18,58 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-<tr>
-  <td>
-    <table cellspacing="4" cellpadding="7" border="0">
-    <tr>
-      <td valign="top" colspan="2">
-        <table>
-        <tr>
+
+<table cellspacing="4" cellpadding="7" border="0">
+<tr>
+  <td>
+    <table cellspacing="4" cellpadding="7" border="0">
+    <tr>
+      <td valign="top" colspan="2">
+        <table>
+        <tr>
           <td align='right'><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['mail']['from'];?>
- (*):</td>
+ (*):</td>
           <td><?php echo @SENDER;?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align='right'><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['mail']['to'];?>
- (*):</td>
+ (*):</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['receiver']['control'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align='right'><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['mail']['cc'];?>
-:</td>
+:</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['cc']['control'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align='right'><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['mail']['subject'];?>
- (*):</td>
+ (*):</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['subject']['control'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align='right'><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['comment'];?>
-:</td>
+:</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['comment']['control'];?>
-</td>
-        </tr>
-        <tr>
-          <td></td>
+</td>
+        </tr>
+        <tr>
+          <td></td>
           <td><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['required_fields'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td colspan="2" align="center" height="70"><?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['btn_send']['control'];?>
-</td>
-        </tr>
-        </table>
-      </td>
-    </tr>
-    </table>
-  </td>
-</tr>
-</table>
+</td>
+        </tr>
+        </table>
+      </td>
+    </tr>
+    </table>
+  </td>
+</tr>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['mailForm']['close'];?>

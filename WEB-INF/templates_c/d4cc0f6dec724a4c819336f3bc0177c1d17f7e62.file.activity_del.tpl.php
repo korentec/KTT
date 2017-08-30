@@ -18,30 +18,30 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-  <tbody>
-    <tr>
-      <td>
-
-          <table id="table1" cellspacing="0" cellpadding="0" border="0">
-            <tr>
+
+<table cellspacing="4" cellpadding="7" border="0">
+  <tbody>
+    <tr>
+      <td>
+
+          <table id="table1" cellspacing="0" cellpadding="0" border="0">
+            <tr>
               <td colspan="2" align="center"><b><?php echo $_smarty_tpl->getVariable('delstr_activity')->value;?>
-</b></td>
-            </tr>
-            <tr>
-              <td colspan="2" align="center">&nbsp;</td>
-            </tr>
-            <tr>
+</b></td>
+            </tr>
+            <tr>
+              <td colspan="2" align="center">&nbsp;</td>
+            </tr>
+            <tr>
               <td align="right"><?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['confirmation']['control'];?>
-&nbsp;</td>
+&nbsp;</td>
               <td align="left">&nbsp;<?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['rejecting']['control'];?>
-</td>
-            </tr>
-          </table>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
+</td>
+            </tr>
+          </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['close'];?>

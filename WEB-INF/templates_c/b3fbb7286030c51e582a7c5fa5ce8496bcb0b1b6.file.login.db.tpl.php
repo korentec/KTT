@@ -17,15 +17,15 @@ $_smarty_tpl->decodeProperties(array (
   ),
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
-<table border="0">
+<table border="0">
   <tr><td><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['login'];?>
-:</td></tr>
+:</td></tr>
   <tr><td><?php echo $_smarty_tpl->getVariable('forms')->value['loginForm']['login']['control'];?>
-</td></tr>
+</td></tr>
   <tr><td><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['password'];?>
-:</td></tr>
+:</td></tr>
   <tr><td><?php echo $_smarty_tpl->getVariable('forms')->value['loginForm']['password']['control'];?>
-</td></tr>
+</td></tr>
   <tr><td align="center" height="50"><?php echo $_smarty_tpl->getVariable('forms')->value['loginForm']['btn_login']['control'];?>
-</td></tr>
+</td></tr>
 </table>

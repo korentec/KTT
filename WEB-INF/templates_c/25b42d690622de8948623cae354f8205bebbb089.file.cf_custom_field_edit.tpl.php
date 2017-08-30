@@ -18,41 +18,41 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-  <tr>
-    <td>
-      <?php if ($_smarty_tpl->getVariable('user')->value->canManageTeam()){?>
-      <table cellspacing="1" cellpadding="2" border="0">
-        <tr>
+
+<table cellspacing="4" cellpadding="7" border="0">
+  <tr>
+    <td>
+      <?php if ($_smarty_tpl->getVariable('user')->value->canManageTeam()){?>
+      <table cellspacing="1" cellpadding="2" border="0">
+        <tr>
           <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['thing_name'];?>
- (*):</td>
+ (*):</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['name']['control'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['type'];?>
-:</td>
+:</td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['type']['control'];?>
-</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
           <td align="right"><label for="required"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['required'];?>
-:</label></td>
+:</label></td>
           <td><?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['required']['control'];?>
-</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
+</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
           <td colspan="2" align="center" height="50"><?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['btn_save']['control'];?>
-</td>
-        </tr>
-      </table>
-      <?php }?>
-    </td>
-  </tr>
-</table>
+</td>
+        </tr>
+      </table>
+      <?php }?>
+    </td>
+  </tr>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['fieldForm']['close'];?>

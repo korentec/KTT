@@ -159,10 +159,10 @@
 
 					// Vertical bar
 					imagefilledrectangle($img, $x1, $ymin, $x2, $graphArea->y2 - 1, $shadowColor->getColor($img));
-
-					// Prevents drawing a small box when y = 0
-					if ($ymin != $graphArea->y2) {
-						imagefilledrectangle($img, $x1 + 1, $ymin + 1, $x2 - 4, $graphArea->y2 - 1, $color->getColor($img));
+
+					// Prevents drawing a small box when y = 0
+					if ($ymin != $graphArea->y2) {
+						imagefilledrectangle($img, $x1 + 1, $ymin + 1, $x2 - 4, $graphArea->y2 - 1, $color->getColor($img));
 					}
 				}
 			}

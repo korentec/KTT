@@ -18,10 +18,10 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php $_template = new Smarty_Internal_Template("header.tpl", $_smarty_tpl->smarty, $_smarty_tpl, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null);
- echo $_template->getRenderedTemplate();?><?php unset($_template);?>
-
+ echo $_template->getRenderedTemplate();?><?php unset($_template);?>
+
 <?php if ($_smarty_tpl->getVariable('content_page_name')->value){?><?php $_template = new Smarty_Internal_Template(($_smarty_tpl->getVariable('content_page_name')->value), $_smarty_tpl->smarty, $_smarty_tpl, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null);
- echo $_template->getRenderedTemplate();?><?php unset($_template);?><?php }?>
-
+ echo $_template->getRenderedTemplate();?><?php unset($_template);?><?php }?>
+
 <?php $_template = new Smarty_Internal_Template("footer.tpl", $_smarty_tpl->smarty, $_smarty_tpl, $_smarty_tpl->cache_id, $_smarty_tpl->compile_id, null, null);
  echo $_template->getRenderedTemplate();?><?php unset($_template);?>

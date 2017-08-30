@@ -19,68 +19,68 @@ $_smarty_tpl->decodeProperties(array (
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php if (!is_callable('smarty_function_cycle')) include 'C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\WEB-INF\lib\smarty\plugins\function.cycle.php';
 if (!is_callable('smarty_modifier_escape')) include 'C:\Program Files (x86)\Apache Software Foundation\Apache2.2\htdocs\WEB-INF\lib\smarty\plugins\modifier.escape.php';
-?><script>
-  function chLocation(newLocation) { document.location = newLocation; }
-</script>
-
-<table cellspacing="0" cellpadding="7" border="0" width="720">
+?><script>
+  function chLocation(newLocation) { document.location = newLocation; }
+</script>
+
+<table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr><td valign="top"><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['teams']['hint'];?>
-</td></tr>
-</table>
-
-<table cellspacing="1" cellpadding="3" border="0" width="720">
-  <tr>
+</td></tr>
+</table>
+
+<table cellspacing="1" cellpadding="3" border="0" width="720">
+  <tr>
     <td width="3%" class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['id'];?>
-</td>
+</td>
     <td width="70%" class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['thing_name'];?>
-</td>
+</td>
     <td class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['date'];?>
-</td>
+</td>
     <td class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['language'];?>
-</td>
+</td>
     <td class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['edit'];?>
-</td>
+</td>
     <td class="tableHeader"><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['delete'];?>
-</td>
-  </tr>
-  <?php if ($_smarty_tpl->getVariable('teams')->value){?>
+</td>
+  </tr>
+  <?php if ($_smarty_tpl->getVariable('teams')->value){?>
     <?php  $_smarty_tpl->tpl_vars['team'] = new Smarty_Variable;
  $_from = $_smarty_tpl->getVariable('teams')->value; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array');}
 if ($_smarty_tpl->_count($_from) > 0){
     foreach ($_from as $_smarty_tpl->tpl_vars['team']->key => $_smarty_tpl->tpl_vars['team']->value){
-?>
+?>
   <tr bgcolor="<?php echo smarty_function_cycle(array('values'=>"#f5f5f5,#dedee5"),$_smarty_tpl);?>
-">
+">
     <td><?php echo $_smarty_tpl->tpl_vars['team']->value['id'];?>
-</td>
+</td>
     <td><?php echo smarty_modifier_escape($_smarty_tpl->tpl_vars['team']->value['name'],'html');?>
-</td>
+</td>
     <td nowrap><?php echo $_smarty_tpl->tpl_vars['team']->value['date'];?>
-</td>
+</td>
     <td align="center"><?php echo $_smarty_tpl->tpl_vars['team']->value['lang'];?>
-</td>
+</td>
     <td><a href="admin_team_edit.php?id=<?php echo $_smarty_tpl->tpl_vars['team']->value['id'];?>
 "><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['edit'];?>
-</a></td>
+</a></td>
     <td><a href="admin_team_delete.php?id=<?php echo $_smarty_tpl->tpl_vars['team']->value['id'];?>
 "><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['delete'];?>
-</a></td>
-  </tr>
-    <?php }} ?>
-  <?php }?>
-</table>
-    
-<table width="100%">
-  <tr>
-    <td align="center">
-      <br>
-      <form>
+</a></td>
+  </tr>
+    <?php }} ?>
+  <?php }?>
+</table>
+    
+<table width="100%">
+  <tr>
+    <td align="center">
+      <br>
+      <form>
         <input type="button" onclick="chLocation('admin_team_add.php');" value="<?php echo $_smarty_tpl->getVariable('i18n')->value['button']['create_team'];?>
 ">&nbsp;<?php echo $_smarty_tpl->getVariable('i18n')->value['label']['or'];?>
-&nbsp;
+&nbsp;
         <input type="button" onclick="chLocation('import.php');" value="<?php echo $_smarty_tpl->getVariable('i18n')->value['button']['import'];?>
-">
-      </form>
-    </td>
-  </tr>
+">
+      </form>
+    </td>
+  </tr>
 </table>

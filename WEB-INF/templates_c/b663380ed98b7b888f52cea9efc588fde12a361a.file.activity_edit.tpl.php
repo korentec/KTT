@@ -18,47 +18,47 @@ $_smarty_tpl->decodeProperties(array (
   'has_nocache_code' => false,
 )); /*/%%SmartyHeaderCode%%*/?>
 <?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['open'];?>
-
-<table cellspacing="4" cellpadding="7" border="0">
-  <tbody>
-    <tr>
-      <td>
-
-          <table id="table1" cellspacing="1" cellpadding="2" border="0">
-            <tr>
+
+<table cellspacing="4" cellpadding="7" border="0">
+  <tbody>
+    <tr>
+      <td>
+
+          <table id="table1" cellspacing="1" cellpadding="2" border="0">
+            <tr>
               <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['activity']['name'];?>
- (*):</td>
+ (*):</td>
               <td><?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['name']['control'];?>
-</td>
-            </tr>
-			<tr>
+</td>
+            </tr>
+			<tr>
               <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['activity']['code'];?>
-:</td>
+:</td>
               <td><?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['code']['control'];?>
-</td>
-            </tr>
-            <tr valign="top">
+</td>
+            </tr>
+            <tr valign="top">
               <td align="right"><?php echo $_smarty_tpl->getVariable('i18n')->value['form']['people']['projects'];?>
-:</td>
+:</td>
               <td><?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['projects']['control'];?>
-</td>
-            </tr>
-            <tr>
-              <td></td>
+</td>
+            </tr>
+            <tr>
+              <td></td>
               <td><?php echo $_smarty_tpl->getVariable('i18n')->value['label']['req_fields'];?>
-</td>
-            </tr>
-            <tr>
-              <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr>
+</td>
+            </tr>
+            <tr>
+              <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
               <td colspan="2" align="center" height="50"><?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['btsubmit']['control'];?>
-</td>
-            </tr>
-          </table>
-
-      </td>
-    </tr>
-  </tbody>
-</table>
+</td>
+            </tr>
+          </table>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
 <?php echo $_smarty_tpl->getVariable('forms')->value['activityForm']['close'];?>
