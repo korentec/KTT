@@ -383,7 +383,8 @@ function get_time() {
         <td width="5%" class="tableHeaderCentered" align='right'>{$i18n.label.finish}</td>
 {/if}
         <td width="5%" class="tableHeaderCentered">{$i18n.label.duration}</td>
-        <td class="tableHeaderCentered">{$i18n.label.note}</td>        <td class="tableHeaderCentered" width="5%">{$i18n.label.approved}</td>
+        <td class="tableHeaderCentered">{$i18n.label.note}</td>
+        <td class="tableHeaderCentered" width="5%">{$i18n.label.approved}</td>
         <td width="5%" class="tableHeaderCentered">{$i18n.label.edit}</td>
       </tr>
       {foreach $time_records as $record}
@@ -404,7 +405,14 @@ function get_time() {
         <td nowrap align='right' valign='top'>{if $record.finish}{$record.finish}{else}&nbsp;{/if}</td>
 {/if}
         <td align='right' valign='top'>{if $record.duration <> '0:00'}{$record.duration}{else}<font color="#ff0000">{$i18n.form.time.uncompleted}</font>{/if}</td>
-        <td valign='top'>{if $record.comment}{$record.comment|escape:'html'}{else}&nbsp;{/if}</td>        <td style="text-align:center;">            {if $record.approved}                <span style="font-family:webdings;font-size:18pt;">a</span>                                     {/if}         </td>        <td valign='top' align='center'>
+        <td valign='top'>{if $record.comment}{$record.comment|escape:'html'}{else}&nbsp;{/if}</td>
+        <td style="text-align:center;">
+            {if $record.approved}
+                <span style="font-family:webdings;font-size:18pt;">a</span>         
+                
+            {/if} 
+        </td>
+        <td valign='top' align='center'>
         {if $record.invoice_id}
           &nbsp;
         {else}

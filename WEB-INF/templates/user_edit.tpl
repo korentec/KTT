@@ -75,6 +75,10 @@ function handleClientControl() {
     </tr>
 {/if}
     <tr>
+      <td align="right">{$i18n.label.att_id}:</td>
+      <td>{$forms.userForm.att_id.control}</td>
+    </tr>
+    <tr>
       <td align="right" nowrap>{$i18n.label.email}:</td>
       <td>{$forms.userForm.email.control}</td>
     </tr>

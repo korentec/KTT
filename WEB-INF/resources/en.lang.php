@@ -120,6 +120,7 @@ $i18n_key_words = array(
 'label.login' => 'Login',
 'label.password' => 'Password',
 'label.confirm_password' => 'Confirm password',
+'label.att_id' => 'ATT user id',
 'label.email' => 'Email',
 'label.date' => 'Date',
 'label.start_date' => 'Start date',
@@ -182,8 +183,10 @@ $i18n_key_words = array(
 'label.required' => 'Required',
 'label.fav_report' => 'Favorite report',
 'label.cron_schedule' => 'Cron schedule',
-'label.what_is_it' => 'What is it?','label.approved' => 'Approved',
-// Form titles.
+'label.what_is_it' => 'What is it?',
+'label.approved' => 'Approved',
+
+// Form titles.
 'title.login' => 'Login',
 'title.teams' => 'Teams',
 'title.create_team' => 'Creating Team',

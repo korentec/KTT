@@ -178,9 +178,19 @@ function fillActivityDir() {
         var activity_list = document.timeRecordForm.activity;
         var activity_list_item = activity_list.options[activity_list.selectedIndex].value;
         
-         var x = eval("document.timeRecordForm.subactivity");         if(x){        //activity no. 7 is markting, at this moment only markting as sub activity      
-            if(activity_list_item==7)            {              x.disabled = false;            }            else           {                x.disabled = true;                x.value=null;	
-           }       }
+         var x = eval("document.timeRecordForm.subactivity");
+         if(x){
+        //activity no. 7 is markting, at this moment only markting as sub activity      
+            if(activity_list_item==7)
+            {
+              x.disabled = false;
+            }
+            else
+           {
+                x.disabled = true;
+                x.value=null;	
+           }
+       }
     }
 	
 	

@@ -125,9 +125,9 @@ class ttUserHelper {
       $status_v = ', '.$mdb2->quote($fields['status']);
     }
 
-    $sql = "insert into tt_users (name, login, password, team_id, role, client_id, rate, email $status_f) values (".
+    $sql = "insert into tt_users (name, login, password, team_id, role, client_id,att_id, rate, email $status_f) values (".
       $mdb2->quote($fields['name']).", ".$mdb2->quote($fields['login']).
-      ", $password, $team_id, $role, ".$mdb2->quote($fields['client_id']).", $rate, ".$mdb2->quote($email)." $status_v)";
+      ", $password, $team_id, $role, ".$mdb2->quote($fields['client_id']).",".$mdb2->quote($fields['att_id']).", $rate, ".$mdb2->quote($email)." $status_v)";
     $affected = $mdb2->exec($sql);
     
     // Now deal with project assignment.
@@ -175,7 +175,9 @@ class ttUserHelper {
       if (array_key_exists('client_id', $fields)) // Could be NULL.
         $client_part = ", client_id = ".$mdb2->quote($fields['client_id']);
     }
-      
+    if (array_key_exists('att_id', $fields)) // Could be NULL.
+        $att_part = ", att_id = ".$mdb2->quote($fields['att_id']);
+    
     if (array_key_exists('rate', $fields)) {
       $rate = str_replace(',', '.', isset($fields['rate']) ? $fields['rate'] : 0);
       if($rate == '') $rate = 0;
@@ -189,7 +191,7 @@ class ttUserHelper {
     
     $sql = "update tt_users set login = ".$mdb2->quote($fields['login']).
       "$pass_part, name = ".$mdb2->quote($fields['name']).
-      "$role_part $client_part $rate_part $status_part, email = ".$mdb2->quote($fields['email']).
+      "$role_part $client_part $att_part $rate_part $status_part, email = ".$mdb2->quote($fields['email']).
       " where id = $user_id";
     $affected = $mdb2->exec($sql);
     if (is_a($affected, 'PEAR_Error')) return false;

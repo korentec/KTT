@@ -221,6 +221,7 @@ $i18n_key_words = array(
 'label.login' => 'שם משתמש',
 'label.password' => 'סיסמה',
 'label.confirm_password' => 'בדיקת סיסמה',
+'label.att_id' => 'קוד משתמש ב-ATT',
 'label.email' => 'דואר אלקטרוני',
 'label.date' => 'תאריך',
 'label.start_date' => 'תאריך התחלה',

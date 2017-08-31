@@ -127,7 +127,9 @@ function fillTaskDropdown(id) {
 function formDisable(formField) {
   var formFieldValue = eval("document.timeRecordForm." + formField + ".value");
   var formFieldName = eval("document.timeRecordForm." + formField + ".name");
-  if (((formFieldValue != "") && (formFieldName == "start")) || ((formFieldValue != "") && (formFieldName == "finish"))) {      var x = eval("document.timeRecordForm.duration");
+  if (((formFieldValue != "") && (formFieldName == "start")) || ((formFieldValue != "") && (formFieldName == "finish"))) {
+  
+    var x = eval("document.timeRecordForm.duration");
     x.value = "";
     x.disabled = true;
     x.style.background = "#e9e9e9";

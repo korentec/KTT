@@ -24,6 +24,7 @@ function setDefaultRate(element) {
 // We need to show it only when the "Client" user role is selected.
 function handleClientControl() {
   var clientControl = document.getElementById("client");
+  
   if ("16" == document.getElementById("role").value)
     clientControl.style.visibility = "visible";
   else
@@ -52,6 +53,10 @@ function handleClientControl() {
       <td>{$forms.userForm.pas2.control}</td>
     </tr>
 {/if}
+    <tr>
+      <td align="right">{$i18n.label.att_id}:</td>
+      <td>{$forms.userForm.att_id.control}</td>
+    </tr>
     <tr>
       <td align="right" nowrap>{$i18n.label.email}:</td>
       <td>{$forms.userForm.email.control}</td>

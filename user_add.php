@@ -58,6 +58,7 @@ if ($request->getMethod() == 'POST') {
   $cl_role = $request->getParameter('role');
   if (!$cl_role) $cl_role = ROLE_USER;
   $cl_client_id = $request->getParameter('client');
+  $cl_att_id = $request->getParameter('att_id');
   $cl_rate = $request->getParameter('rate');
   $cl_projects = $request->getParameter('projects');
   if (is_array($cl_projects)) {
@@ -80,6 +81,7 @@ if (!$auth->isPasswordExternal()) {
   $form->addInput(array('type'=>'text','maxlength'=>'30','name'=>'pas1','aspassword'=>true,'value'=>$cl_password1));
   $form->addInput(array('type'=>'text','maxlength'=>'30','name'=>'pas2','aspassword'=>true,'value'=>$cl_password2));
 }
+$form->addInput(array('type'=>'text','maxlength'=>'30','name'=>'att_id','value'=>$cl_att_id));
 $form->addInput(array('type'=>'text','maxlength'=>'100','name'=>'email','value'=>$cl_email));
 
 $roles[ROLE_USER] = $i18n->getKey('label.user');
@@ -154,6 +156,7 @@ if ($request->getMethod() == 'POST') {
         'team_id' => $user->team_id,
         'role' => $cl_role,
         'client_id' => $cl_client_id,
+        'att_id' => $cl_att_id,
         'projects' => $assigned_projects,
         'email' => $cl_email);
       if (ttUserHelper::insert($fields)) {

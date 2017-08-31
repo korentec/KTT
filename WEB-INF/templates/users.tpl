@@ -11,26 +11,32 @@
         <tr><td class="sectionHeaderNoBorder">{$i18n.form.users.active_users}</td></tr>
   {/if}
         <tr>
-          <td width="35%" class="tableHeader">{$i18n.label.person_name}</td>
-          <td width="35%" class="tableHeader">{$i18n.label.login}</td>
-          <td width="10%" class="tableHeader">{$i18n.form.users.role}</td>
-          <td width="10%" class="tableHeader">{$i18n.label.edit}</td>
-          <td width="10%" class="tableHeader">{$i18n.label.delete}</td>
+          <td width="30%" class="tableHeaderCentered">{$i18n.label.person_name}</td>
+          <td width="30%" class="tableHeaderCentered">{$i18n.label.login}</td>
+          <td width="15%" class="tableHeaderCentered">{$i18n.form.users.role}</td>
+          <td width="10%" class="tableHeaderCentered">{$i18n.label.edit}</td>
+          <td width="10%" class="tableHeaderCentered">{$i18n.label.delete}</td>
         </tr>
   {if $active_users}
     {foreach $active_users as $u}
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-      {if $smarty.const.ROLE_MANAGER == $u.role}
-            <td>{$i18n.form.users.manager}</td>
-      {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-            <td>{$i18n.form.users.comanager}</td>
-      {elseif $smarty.const.ROLE_CLIENT == $u.role}
-            <td>{$i18n.label.client}</td>
-      {elseif $smarty.const.ROLE_USER == $u.role}
-            <td>{$i18n.label.user}</td>
-      {/if}
+          <td>
+            {if $smarty.const.ROLE_MANAGER == $u.role}
+                  {$i18n.form.users.manager}
+            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
+                  {$i18n.form.users.comanager}
+            {elseif $smarty.const.ROLE_CLIENT == $u.role}
+                  {$i18n.label.client}
+            {elseif $smarty.const.ROLE_USER == $u.role}
+                  {$i18n.label.user}                 
+            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
+                  {$i18n.label.role_admin}                        
+            {else}
+                &nbsp;
+            {/if}
+          </td>
       {if $user->isManager()}
           <!-- Manager can edit everybody. -->
           <td><a href="user_edit.php?id={$u.id}">{$i18n.label.edit}</a></td>
@@ -57,25 +63,31 @@
       <table cellspacing="1" cellpadding="3" border="0" width="100%">
         <tr><td class="sectionHeaderNoBorder">{$i18n.form.users.inactive_users}</td></tr>
         <tr>
-          <td width="35%" class="tableHeader">{$i18n.label.person_name}</td>
-          <td width="35%" class="tableHeader">{$i18n.label.login}</td>
-          <td width="10%" class="tableHeader">{$i18n.form.users.role}</td>
-          <td width="10%" class="tableHeader">{$i18n.label.edit}</td>
-          <td width="10%" class="tableHeader">{$i18n.label.delete}</td>
+          <td width="35%" class="tableHeaderCentered">{$i18n.label.person_name}</td>
+          <td width="35%" class="tableHeaderCentered">{$i18n.label.login}</td>
+          <td width="10%" class="tableHeaderCentered">{$i18n.form.users.role}</td>
+          <td width="10%" class="tableHeaderCentered">{$i18n.label.edit}</td>
+          <td width="10%" class="tableHeaderCentered">{$i18n.label.delete}</td>
         </tr>
     {foreach $inactive_users as $u}
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-      {if $smarty.const.ROLE_MANAGER == $u.role}
-            <td>{$i18n.form.users.manager}</td>
-      {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-            <td>{$i18n.form.users.comanager}</td>
-      {elseif $smarty.const.ROLE_CLIENT == $u.role}
-            <td>{$i18n.label.client}</td>
-      {elseif $smarty.const.ROLE_USER == $u.role}
-            <td>{$i18n.label.user}</td>
-      {/if}
+      <td>
+            {if $smarty.const.ROLE_MANAGER == $u.role}
+                  {$i18n.form.users.manager}
+            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
+                  {$i18n.form.users.comanager}
+            {elseif $smarty.const.ROLE_CLIENT == $u.role}
+                  {$i18n.label.client}
+            {elseif $smarty.const.ROLE_USER == $u.role}
+                  {$i18n.label.user}                 
+            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
+                  {$i18n.label.role_admin}                        
+            {else}
+                &nbsp;
+            {/if}
+          </td>
       {if $user->isManager()}
           <!-- Manager can edit everybody. -->
           <td><a href="user_edit.php?id={$u.id}">{$i18n.label.edit}</a></td>
@@ -101,25 +113,29 @@
 {else}
       <table cellspacing="1" cellpadding="3" border="0" width="100%">
         <tr>
-          <td width="35%" class="tableHeader">{$i18n.label.person_name}</td>
-          <td width="35%" class="tableHeader">{$i18n.label.login}</td>
-          <td class="tableHeader">{$i18n.form.users.role}</td>
+          <td width="35%" class="tableHeaderCentered">{$i18n.label.person_name}</td>
+          <td width="35%" class="tableHeaderCentered">{$i18n.label.login}</td>
+          <td class="tableHeaderCentered">{$i18n.form.users.role}</td>
         </tr>
   {foreach $active_users as $u}
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-    {if $smarty.const.ROLE_MANAGER == $u.role}
-            <td>{$i18n.form.users.manager}</td>
-    {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-            <td>{$i18n.form.users.manager}</td>
-    {elseif $smarty.const.ROLE_CLIENT == $u.role}
-            <td>{$i18n.label.client}</td>
-			{elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
-            <td>{$i18n.label.role_admin}</td>
-    {elseif $smarty.const.ROLE_USER == $u.role}
-            <td>{$i18n.label.user}</td>
-    {/if}
+          <td>
+            {if $smarty.const.ROLE_MANAGER == $u.role}
+                    {$i18n.form.users.manager}
+            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
+                    {$i18n.form.users.manager}
+            {elseif $smarty.const.ROLE_CLIENT == $u.role}
+                    {$i18n.label.client}
+            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
+                    {$i18n.label.role_admin}
+            {elseif $smarty.const.ROLE_USER == $u.role}
+                    {$i18n.label.user}
+            {else}
+                &nbsp;
+            {/if}
+            </td>
         </tr>
   {/foreach}
       </table>

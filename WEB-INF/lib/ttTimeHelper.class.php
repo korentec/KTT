@@ -415,12 +415,16 @@ class ttTimeHelper {
       $uncompleted = ttTimeHelper::getUncompleted($user_id);
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
-      $sql = "UPDATE tt_log SET approved=0 where (start <> '$start' or duration <> '$duration') and id = $id";      $affected = $mdb2->exec($sql);
+      $sql = "UPDATE tt_log SET approved=0 where (start <> '$start' or duration <> '$duration') and id = $id";
+      $affected = $mdb2->exec($sql);
       $sql = "UPDATE tt_log SET start = '$start', duration = '$duration', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
         "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
       $affected = $mdb2->exec($sql);
-      if (is_a($affected, 'PEAR_Error'))        return false;          }
+      if (is_a($affected, 'PEAR_Error'))
+        return false;
+      
+    }
     return true;
   }
   
@@ -544,7 +548,11 @@ class ttTimeHelper {
       from tt_log l
       left join tt_projects p on (p.id = l.project_id)
       left join tt_tasks t on (t.id = l.task_id) left join activities   on (l.al_activity_id = activities.a_id) left join locations   on (l.al_location_id = locations.l_id)
-      where l.id = $id and l.user_id = $user_id and l.status = 1";       $res = $mdb2->query($sql);       if (!is_a($res, 'PEAR_Error')) {
+      where l.id = $id and l.user_id = $user_id and l.status = 1";
+   
+    $res = $mdb2->query($sql);
+   
+    if (!is_a($res, 'PEAR_Error')) {
       if (!$res->numRows()) {
         return false;
       }

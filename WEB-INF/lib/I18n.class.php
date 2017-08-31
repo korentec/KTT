@@ -149,7 +149,8 @@ class I18n {
   }
    
   static function getLangFromFilename($filename)
-  {      return substr($filename, 0, strpos($filename, '.'));
+  {
+      return substr($filename, 0, strpos($filename, '.'));
   }
 }
 ?>
