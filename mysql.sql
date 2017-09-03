@@ -282,6 +282,8 @@ CREATE TABLE `tt_log` (
 
   `status` tinyint(4) default '1',     # time record status
 
+  `approved` tinyint(1) unsigned DEFAULT 0,
+
   PRIMARY KEY (`id`)
 
 );
