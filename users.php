@@ -53,7 +53,7 @@ $smarty->assign('role_name',
           ROLE_COMANAGER => $i18n->getKey('form.users.comanager'),
           ROLE_CLIENT => $i18n->getKey('label.client'),
           ROLE_USER => $i18n->getKey('label.user'),
-          ROLE_SITE_ADMIN => $i18n->getKey('label.role_admin'))
+          ROLE_SITE_ADMIN => $i18n->getKey('form.users.role_admin'))
          );  
 
 $smarty->assign('content_page_name', 'users.tpl');
