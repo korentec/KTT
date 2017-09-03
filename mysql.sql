@@ -92,6 +92,8 @@ CREATE TABLE `tt_users` (
 
   `client_id` int(11) default NULL,              # client id for "client" user role
 
+  `att_id` int(11) default NULL,              # client id for "client" user role
+
   `rate` float(6,2) NOT NULL default '0.00',     # default hourly rate
 
   `email` varchar(100) default NULL,             # user email
