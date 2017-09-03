@@ -54,7 +54,7 @@ function handleClientControl() {
     </tr>
 {/if}
     <tr>
-      <td align="right">{$i18n.label.att_id}:</td>
+      <td align="right">{$i18n.label.att_id}(*):</td>
       <td>{$forms.userForm.att_id.control}</td>
     </tr>
     <tr>

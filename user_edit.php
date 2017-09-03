@@ -177,7 +177,8 @@ if ($request->getMethod() == 'POST') {
   }	
   if (!ttValidEmail($cl_email, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.email'));
   if (!ttValidFloat($cl_rate, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('form.users.default_rate'));
-
+  if (!ttValidInteger($cl_att_id)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.att_id'));
+  
   if ($errors->isEmpty()) {
     $existing_user = ttUserHelper::getUserByLogin($cl_login);
     if (!$existing_user || ($user_id == $existing_user['id'])) {
