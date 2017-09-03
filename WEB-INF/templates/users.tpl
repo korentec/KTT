@@ -4,7 +4,7 @@
 
 <table cellspacing="0" cellpadding="7" border="0" width="720">
   <tr>
-    <td valign="top">
+    <td valign="top" >
 {if $user->canManageTeam()}
       <table cellspacing="1" cellpadding="3" border="0" width="100%">
   {if $inactive_users}
@@ -22,21 +22,7 @@
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-          <td>
-            {if $smarty.const.ROLE_MANAGER == $u.role}
-                  {$i18n.form.users.manager}
-            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-                  {$i18n.form.users.comanager}
-            {elseif $smarty.const.ROLE_CLIENT == $u.role}
-                  {$i18n.label.client}
-            {elseif $smarty.const.ROLE_USER == $u.role}
-                  {$i18n.label.user}                 
-            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
-                  {$i18n.label.role_admin}                        
-            {else}
-                &nbsp;
-            {/if}
-          </td>
+          <td>{$role_name[$u.role]}</td>
       {if $user->isManager()}
           <!-- Manager can edit everybody. -->
           <td><a href="user_edit.php?id={$u.id}">{$i18n.label.edit}</a></td>
@@ -73,21 +59,7 @@
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-      <td>
-            {if $smarty.const.ROLE_MANAGER == $u.role}
-                  {$i18n.form.users.manager}
-            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-                  {$i18n.form.users.comanager}
-            {elseif $smarty.const.ROLE_CLIENT == $u.role}
-                  {$i18n.label.client}
-            {elseif $smarty.const.ROLE_USER == $u.role}
-                  {$i18n.label.user}                 
-            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
-                  {$i18n.label.role_admin}                        
-            {else}
-                &nbsp;
-            {/if}
-          </td>
+        <td>{$role_name[$u.role]}</td>
       {if $user->isManager()}
           <!-- Manager can edit everybody. -->
           <td><a href="user_edit.php?id={$u.id}">{$i18n.label.edit}</a></td>
@@ -121,21 +93,7 @@
         <tr bgcolor="{cycle values="#f5f5f5,#dedee5"}">
           <td>{$u.name|escape:'html'}</td>
           <td>{$u.login|escape:'html'}</td>
-          <td>
-            {if $smarty.const.ROLE_MANAGER == $u.role}
-                    {$i18n.form.users.manager}
-            {elseif $smarty.const.ROLE_COMANAGER == $u.role}
-                    {$i18n.form.users.manager}
-            {elseif $smarty.const.ROLE_CLIENT == $u.role}
-                    {$i18n.label.client}
-            {elseif $smarty.const.ROLE_SITE_ADMIN == $u.role}
-                    {$i18n.label.role_admin}
-            {elseif $smarty.const.ROLE_USER == $u.role}
-                    {$i18n.label.user}
-            {else}
-                &nbsp;
-            {/if}
-            </td>
+          <td>{$role_name[$u.role]}</td>
         </tr>
   {/foreach}
       </table>

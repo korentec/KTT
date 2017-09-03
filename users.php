@@ -47,6 +47,15 @@ $smarty->assign('active_users', $active_users);
 $smarty->assign('inactive_users', $inactive_users);
 $smarty->assign('can_delete_manager', $can_delete_manager);
 $smarty->assign('title', $i18n->getKey('title.users'));
+
+$smarty->assign('role_name',
+    array(ROLE_MANAGER => $i18n->getKey('form.users.manager'),
+          ROLE_COMANAGER => $i18n->getKey('form.users.comanager'),
+          ROLE_CLIENT => $i18n->getKey('label.client'),
+          ROLE_USER => $i18n->getKey('label.user'),
+          ROLE_SITE_ADMIN => $i18n->getKey('label.role_admin'))
+         );  
+
 $smarty->assign('content_page_name', 'users.tpl');
 $smarty->display('index.tpl');
 ?>
