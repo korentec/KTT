@@ -411,7 +411,10 @@ function handleCheckboxes() {
           <td>{$forms.reportForm.start_date.control}</td>
         </tr>
         <tr>
-          <td></td>
+           <td>
+                <b>{$i18n.form.reports.approved}</b>
+                {$forms.reportForm.not_approved.control}
+          </td>
           <td align="right">{$i18n.label.end_date}:</td>
           <td>{$forms.reportForm.end_date.control}</td>
         </tr>

@@ -401,6 +401,7 @@ $i18n_key_words = array(
 // 'form.reports.include_invoiced' => 'invoiced',
 // 'form.reports.include_not_invoiced' => 'not invoiced',
 'form.reports.select_period' => 'בחר תקופת זמן',
+'form.reports.approved' => 'הצג רק לא מאושרים',
 'form.reports.set_period' => 'או הגדר תאריכים',
 'form.reports.show_fields' => 'הראה שדות',
 'form.reports.group_by' => 'סדר לפי',

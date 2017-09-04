@@ -64,8 +64,7 @@ $form->addInput(array('type'=>'combobox',
 $form->addInput(array('type'=>'hidden','name'=>'fav_report_changed'));
 
 
-
-	 $form->addInput(array("type"=>"text","name"=>"subactivity","value"=>$cl_sub_activity));
+$form->addInput(array("type"=>"text","name"=>"subactivity","value"=>$cl_sub_activity));
   
          
 // Generate and Delete buttons.
@@ -201,6 +200,7 @@ $form->addInput(array('type'=>'combobox',
 $form->addInput(array('type'=>'datefield','maxlength'=>'20','name'=>'start_date'));
 $form->addInput(array('type'=>'datefield','maxlength'=>'20','name'=>'end_date'));
  
+$form->addInput(array('type'=>'checkbox','name'=>'not_approved','data'=>1));
 
 // Add checkboxes for fields.
 if (in_array('cl', explode(',', $user->plugins)))

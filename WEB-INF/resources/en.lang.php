@@ -291,6 +291,7 @@ $i18n_key_words = array(
 'form.reports.include_invoiced' => 'invoiced',
 'form.reports.include_not_invoiced' => 'not invoiced',
 'form.reports.select_period' => 'Select time period',
+'form.reports.approved' => 'Not approved only',
 'form.reports.set_period' => 'or set dates',
 'form.reports.show_fields' => 'Show fields',
 'form.reports.group_by' => 'Group by',

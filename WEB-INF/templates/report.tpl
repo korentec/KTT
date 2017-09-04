@@ -1,5 +1,11 @@
 <script>
   function chLocation(newLocation) { document.location = newLocation; }
+  function checkAllApproved(){
+      var all=event.srcElement;
+      var approved=document.getElementsByName('approved[]');
+      for(var a=0;a<approved.length;a++)
+          approved[a].checked=all.checked;
+  }
 </script>
 
 {$forms.reportForm.open}
@@ -35,22 +41,26 @@
 {else}
 <!-- normal report -->    
       <tr>
-        <td class="tableHeader">{$i18n.label.date}</td>
-  {if $user->canManageTeam() || $user->isClient()}<td class="tableHeader">{$i18n.label.user}</td>{/if}
-  {if $bean->getAttribute('chclient')}<td class="tableHeader">{$i18n.label.client}</td>{/if}
-  {if $bean->getAttribute('chproject')}<td class="tableHeader">{$i18n.label.project}</td>{/if}
-   {if $bean->getAttribute('chactivity')}<td class="tableHeader">פעילות</td>{/if}
-  {if $bean->getAttribute('chtask')}<td class="tableHeader">{$i18n.label.task}</td>{/if}
-  {if $bean->getAttribute('chcf_1')}<td class="tableHeader">{$custom_fields->fields[0]['label']|escape:'html'}</td>{/if}
+       <td class="tableHeaderCentered">{$i18n.label.date}</td>
+  {if $user->canManageTeam() || $user->isClient()}<td class="tableHeaderCentered">{$i18n.label.user}</td>{/if}
+  {if $bean->getAttribute('chclient')}<td class="tableHeaderCentered">{$i18n.label.client}</td>{/if}
+  {if $bean->getAttribute('chproject')}<td class="tableHeaderCentered">{$i18n.label.project}</td>{/if}
+  {if $bean->getAttribute('chactivity')}<td class="tableHeaderCentered">פעילות</td>{/if}
+  {if $bean->getAttribute('chtask')}<td class="tableHeaderCentered">{$i18n.label.task}</td>{/if}
+  {if $bean->getAttribute('chcf_1')}<td class="tableHeaderCentered">{$custom_fields->fields[0]['label']|escape:'html'}</td>{/if}
   {if $bean->getAttribute('chstart')}<td class="tableHeaderCentered" width="5%">{$i18n.label.start}</td>{/if}
   {if $bean->getAttribute('chfinish')}<td class="tableHeaderCentered" width="5%">{$i18n.label.finish}</td>{/if}
   {if $bean->getAttribute('chduration')}<td class="tableHeaderCentered" width="5%">{$i18n.label.duration}</td>{/if}
-      <td class="tableHeaderCentered">{$i18n.label.location}</td>
+  <td class="tableHeaderCentered" width="10%">{$i18n.label.location}</td>
  
   {if $bean->getAttribute('chnote')}<td class="tableHeader">{$i18n.label.note}</td>{/if}
   {if $bean->getAttribute('chcost')}<td class="tableHeaderCentered" width="5%">{$i18n.label.cost}</td>{/if}
-  {if $bean->getAttribute('chinvoice')}<td class="tableHeader">{$i18n.label.invoice}</td>{/if}    
-      </tr>
+  {if $bean->getAttribute('chinvoice')}<td class="tableHeader">{$i18n.label.invoice}</td>{/if}  
+  <td class="tableHeaderCentered">
+      {$i18n.label.approved}
+      {if $user->isCoManager() || $user->isManager()}<input type="checkbox" name="allApproved" onclick="checkAllApproved();">{/if}
+  </td>
+  </tr>
   {foreach $report_items as $item}
     <!-- print subtotal for a block of grouped values -->
     {$cur_date = $item.date}      
@@ -62,7 +72,7 @@
         {if $user->canManageTeam() || $user->isClient()}<td class="cellLeftAlignedSubtotal">{if $group_by == 'user'}{$subtotals[$prev_grouped_by]['name']|escape:'html'}</td>{/if}{/if}
         {if $bean->getAttribute('chclient')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'client'}{$subtotals[$prev_grouped_by]['name']|escape:'html'}</td>{/if}{/if}
         {if $bean->getAttribute('chproject')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'project'}{$subtotals[$prev_grouped_by]['name']|escape:'html'}</td>{/if}{/if}
-           {if $bean->getAttribute('chactivity')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'a_name'}{$subtotals[$prev_grouped_by]['name']}</td>{/if}{/if}
+        {if $bean->getAttribute('chactivity')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'a_name'}{$subtotals[$prev_grouped_by]['name']}</td>{/if}{/if}
         {if $bean->getAttribute('chtask')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'task'}{$subtotals[$prev_grouped_by]['name']|escape:'html'}</td>{/if}{/if}
         {if $bean->getAttribute('chcf_1')}<td class="cellLeftAlignedSubtotal">{if $group_by == 'cf_1'}{$subtotals[$prev_grouped_by]['name']|escape:'html'}</td>{/if}{/if}
         {if $bean->getAttribute('chstart')}<td></td>{/if}
@@ -87,8 +97,9 @@
     {if $user->canManageTeam() || $user->isClient()}<td class="cellLeftAligned">{$item.user|escape:'html'}</td>{/if}
     {if $bean->getAttribute('chclient')}<td class="cellLeftAligned">{$item.client|escape:'html'}</td>{/if}
     {if $bean->getAttribute('chproject')}<td class="cellRightAligned">{$item.project|escape:'html'}</td>{/if}
+    {if $bean->getAttribute('chactivity')}<td class="cellRightAligned">{$item.a_name}</td>{/if}
     {if $bean->getAttribute('chtask')}<td class="cellLeftAligned">{$item.task|escape:'html'}</td>{/if}
-     {if $bean->getAttribute('chactivity')}<td class="cellRightAligned"> {$item.a_name}</td>{/if}
+     
     {if $bean->getAttribute('chcf_1')}<td class="cellLeftAligned">{$item.cf_1|escape:'html'}</td>{/if}
     {if $bean->getAttribute('chstart')}<td nowrap class="cellRightAligned">{$item.start}</td>{/if}
     {if $bean->getAttribute('chfinish')}<td nowrap class="cellRightAligned">{$item.finish}</td>{/if}
@@ -104,7 +115,15 @@
         {if 2 == $item.type}<td bgcolor="white"><input type="checkbox" name="item_id_{$item.id}"></td>{/if}
       {/if}
     {/if}
-      </tr>
+    <td>
+    {if $user->isCoManager() || $user->isManager()}    
+        <input type="checkbox" name="approved[]" value="{$item.id}" {if 1==$item.approved}checked{/if}>
+        <input type="hidden" name="hdn_log_id_{$item.id}">    
+    {elseif 1==$item.approved}
+        <span style="font-family:webdings;font-size:18pt;">a</span>
+    {/if}
+    </td>
+    </tr>
     {$prev_date = $item.date}
     {if $print_subtotals} {$prev_grouped_by = $item.grouped_by} {/if}
   {/foreach}
@@ -133,6 +152,7 @@
     {if $user->canManageTeam() || $user->isClient()}<td></td>{/if}
     {if $bean->getAttribute('chclient')}<td></td>{/if}
     {if $bean->getAttribute('chproject')}<td></td>{/if}
+    {if $bean->getAttribute('chactivity')}<td></td>{/if}
     {if $bean->getAttribute('chtask')}<td></td>{/if}
     {if $bean->getAttribute('chcf_1')}<td></td>{/if}
     {if $bean->getAttribute('chstart')}<td></td>{/if}
@@ -142,6 +162,7 @@
     {if $bean->getAttribute('chnote')}<td></td>{/if}
     {if $bean->getAttribute('chcost')}<td nowrap class="cellRightAlignedSubtotal">{$user->currency|escape:'html'} {if $user->canManageTeam() || $user->isClient()}{$totals['cost']}{else}{$totals['expenses']}{/if}</td>{/if}
     {if $bean->getAttribute('chinvoice')}<td></td>{/if}
+    <td></td>
       </tr>
 {/if}
     </table>
@@ -159,7 +180,7 @@
   </tr>
 </table>
 {/if}
-{$forms.reportForm.close}
+
 
 <table width="720" cellspacing="4" cellpadding="4" border="0">
 <tr>
@@ -167,8 +188,10 @@
   <table>
   <tr>
     <td><input type="button" onclick="chLocation('report_send.php');" value="{$i18n.button.send_by_email}"></td>
+    {if $user->isCoManager() || $user->isManager()}<td><input type="submit" name="btnSave" value="{$i18n.button.save}"></td>{/if}
   </tr>
   </table>
   </td>
 </tr>
 </table>
+{$forms.reportForm.close}

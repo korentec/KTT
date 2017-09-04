@@ -65,18 +65,24 @@ if ($client_id && $bean->getAttribute('chinvoice') && ('no_grouping' == $bean->g
 }
 
 if ($request->getMethod() == 'POST') {
+  $all_log_ids=array();
   foreach($_POST as $key => $val) {
+        if('hdn_log_id_' == substr($key, 0, 11))
+          array_push($all_log_ids,substr($key, 11));
   	if ('log_id_' == substr($key, 0, 7))
   	  $time_log_ids[] = substr($key, 7);
-    if ('item_id_' == substr($key, 0, 8))
+        if ('item_id_' == substr($key, 0, 8))
   	  $expense_item_ids[] = substr($key, 8);
   	if ('recent_invoice' == $key)
   	  $invoice_id = $val;
+        if ('approved' == $key)
+            $approved_items=$val;
   }
   if ($time_log_ids || $expense_item_ids) {
   	// Some records are checked for invoice editing... Adjust their invoice accordingly.
   	ttReportHelper::assignToInvoice($invoice_id, $time_log_ids, $expense_item_ids);
   }
+  ttReportHelper::setApproved($all_log_ids,$approved_items);
   // Re-display this form.
   header('Location: report.php');
   exit();

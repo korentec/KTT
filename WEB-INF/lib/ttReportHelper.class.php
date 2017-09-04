@@ -36,6 +36,26 @@ require_once(dirname(__FILE__).'/../../plugins/CustomFields.class.php');
 // Class ttReportHelper is used for help with reports.
 class ttReportHelper {
 
+  static function setApproved($all_log_ids,$approved_items){
+      if(sizeof($all_log_ids)>0){
+        $mdb2 = getConnection();
+        if(sizeof($approved_items)>0){
+            $sql="update tt_log set approved=1 where id in(".join(',',$approved_items).')';
+            $res = $mdb2->exec($sql);
+        }
+        $not_approved=array();
+        foreach ($all_log_ids as $i)
+        {
+            if(!in_array($i, $approved_items))
+                array_push($not_approved,$i);
+        }
+        if(sizeof($not_approved)>0){
+            $sql="update tt_log set approved=0 where id in(".join(',',$not_approved).')';
+            $res = $mdb2->exec($sql);
+        }
+        closeConnection();
+      }
+  }  
   // getWhere prepares a WHERE clause for a report query.
   static function getWhere($bean) {
     global $user;
@@ -55,7 +75,11 @@ class ttReportHelper {
     if ($bean->getAttribute('include_records')=='2') $dropdown_parts .= ' and l.billable = 0';
     if ($bean->getAttribute('invoice')=='1') $dropdown_parts .= ' and l.invoice_id is not NULL';
     if ($bean->getAttribute('invoice')=='2') $dropdown_parts .= ' and l.invoice_id is NULL';
-        
+  
+    if($bean->getAttribute('not_approved')=='1'){
+        $dropdown_parts .= ' and approved<>1 ';
+    }
+    
     // Prepare user list part.
     $userlist = -1;
     if (($user->canManageTeam() || $user->isClient()) && is_array($bean->getAttribute('users')))
@@ -142,6 +166,10 @@ class ttReportHelper {
       $dropdown_parts .= ' and ei.client_id = '.$bean->getAttribute('client');
     else if ($user->isClient() && $user->client_id)
       $dropdown_parts .= ' and ei.client_id = '.$user->client_id;
+    
+    if($bean->getAttribute('not_approved')=='1')
+      $dropdown_parts .= " and l.approved <>'1' ";
+    
     if ($bean->getAttribute('project')) $dropdown_parts .= ' and ei.project_id = '.$bean->getAttribute('project');
     if ($bean->getAttribute('invoice')=='1') $dropdown_parts .= ' and ei.invoice_id is not NULL';
     if ($bean->getAttribute('invoice')=='2') $dropdown_parts .= ' and ei.invoice_id is NULL';
@@ -312,7 +340,7 @@ class ttReportHelper {
     
       $left_joins .= " left join locations on locations.l_id=l.al_location_id   ";
      array_push($fields, "locations.l_name"); 
-    
+     array_push($fields, "l.approved");
     
     $where = ttReportHelper::getWhere($bean);
     
@@ -393,7 +421,7 @@ class ttReportHelper {
     // By now we are ready with sql.
 
     // Obtain items for report.
-    $res = $mdb2->query($sql);
+   $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
       while ($val = $res->fetchRow()) {
           if ($convertTo12Hour) {
