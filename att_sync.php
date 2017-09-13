@@ -12,30 +12,30 @@
 require_once('initialize.php');
 import('ttTimeHelper');
 
-$errors = array();  // array to hold validation errors
+$errors = '';  // string to hold validation errors
 $data = array();        // array to pass back data
 
 // validate from variable ========
 if(($from_str = trim($_POST['from'])) == '')
-    $errors['from'] = 'from date is required.';
+    $errors = 'from date is required.';
 else if(($from = (new DateAndTime(DB_DATEFORMAT, $from_str))) == null)
-    $errors['from'] = 'invalid from date. ' . $from_str;
+    $errors = 'invalid from date. ' . $from_str;
 else if(($lastFrom = ttTimeHelper::getLastSyncDate()) !=null && $lastFrom >= $from)
-    $errors['from'] = 'data was already imported from this date. data last syncronized on '.$lastFrom->toString(DB_DATEFORMAT);
+    $errors = 'data was already imported from this date. data last syncronized on '.$lastFrom->toString(DB_DATEFORMAT);
 
 
 // validate data variable ========
 if (($data_str = trim($_POST['data'])) == '')
-  $errors['data'] = 'data is required.';
+  $errors = 'data is required.';
 else{
     // Convert JSON string to Array
     $res_arr = json_decode($data_str, true);
     if(count($res_arr) ==0)
-        $errors['data'] = 'empty data.';
+        $errors = 'empty data.';
 }
 
 //if no errors, perform sync ==============
-if (count($errors) == 0)
+if (strlen($errors) == 0)
 {
     if(ttTimeHelper::insertAtt($from, $res_arr) != count($res_arr))
         $errors['data'] = 'writing to DB failed.';
@@ -44,14 +44,13 @@ if (count($errors) == 0)
 // return a response ==============
 
 // response if there are errors
-if ( count($errors) > 0 ) {
+if ( strlen($errors) > 0 ) {
   // if there are items in our errors array, return those errors
   $data['success'] = false;
   $data['errors']  = $errors;
 } else {
   // if there are no errors, return a message
   $data['success'] = true;
-  $data['message'] = 'Success!';
 }
 
 // return all our data to an AJAX call
