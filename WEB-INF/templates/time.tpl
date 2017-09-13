@@ -135,21 +135,24 @@ function fillProjectDropdown(id) {
     }
 	
 	
-	  function fillSubActivityDir() {
+    function fillSubActivityDir() {
         var activity_list = document.timeRecordForm.activity;
         var activity_list_item = activity_list.options[activity_list.selectedIndex].value;
         
          var x = eval("document.timeRecordForm.subactivity");
+        if(x != null)
+        {
 			//activity no. 7 is markting, at this moment only markting as sub activity      
-         if(activity_list_item==7)
-         {
-  	   		x.disabled = false;
-  	   	}
-  	   	else
-  	   	{
-  	   		x.disabled = true;
-  	   		x.value=null;	
-  	   	}
+            if(activity_list_item==7)
+            {
+                x.disabled = false;
+            }
+            else
+            {
+                x.disabled = true;
+                x.value=null;	
+            }
+        }
     }
 	
 	

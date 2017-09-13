@@ -45,11 +45,13 @@ function setRate(element) {
 // handleClientControl - controls visibility of the client dropdown depending on the selected user role.
 // We need to show it only when the "Client" user role is selected.
 function handleClientControl() {
-  var clientControl = document.getElementById("client");
+            //tbd revital: check what is "client" element. couldnt find it in code... trmporarily commented out. also check what is a ROLE_CLIENT (16)
+  /*var clientControl = document.getElementById("client");
   if ("16" == document.getElementById("role").value)
 	clientControl.style.visibility = "visible";
   else
 	clientControl.style.visibility = "hidden";
+        */
 }
 </script>
 
@@ -75,7 +77,7 @@ function handleClientControl() {
     </tr>
 {/if}
     <tr>
-      <td align="right">{$i18n.label.att_id}(*):</td>
+      <td align="right">{$i18n.label.att_id}:</td>
       <td>{$forms.userForm.att_id.control}</td>
     </tr>
     <tr>

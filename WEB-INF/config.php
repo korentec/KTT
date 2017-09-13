@@ -39,7 +39,7 @@ set_include_path(realpath(dirname(__FILE__).'/lib/pear') . PATH_SEPARATOR . get_
 //
 //define('DSN', 'mysqli://root:no@localhost/dbname?charset=utf8');
 //define('DSN', 'mysqli://korentec_kcc:KorenTec159@localhost/korentec_kcc?charset=utf8');
-define('DSN', 'mysqli://korentec:12345678@localhost/ktt?charset=utf8');
+define('DSN', 'mysqli://root:password@localhost/ktt_livedata?charset=utf8');
 // Do NOT change charset unless you upgraded from an older Time Tracker where charset was NOT specified
 // and now you see some corrupted characters. See http://dev.mysql.com/doc/refman/5.0/en/charset-mysql.html
 

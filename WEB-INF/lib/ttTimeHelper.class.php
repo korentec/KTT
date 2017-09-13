@@ -174,6 +174,12 @@ class ttTimeHelper {
   	
   	// Algorithm: use regular expressions to find a matching pattern, starting with most popular patterns first.
   	$tmp_val = trim($value);
+        
+        //remove seconds - tbd revital: remove for all reg expressions and add also to isvalidtime()
+//        if (preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/', $tmp_val)) { // 00:00:00 - 23:59:59
+//            $tmp_val = substr($tmp_val,0, strlen($tmp_val)-3);
+//        }
+
   	// 24 hour patterns.
   	if (preg_match('/^([01][0-9]|2[0-3]):[0-5][0-9]$/', $tmp_val)) { // 00:00 - 23:59
   	  // We already have a 24-hour format. Just return it. 
@@ -618,5 +624,93 @@ class ttTimeHelper {
     } else return false;
     return $result;
   }
+
+  static function getLastSyncDate()
+  {
+      $mdb2 = getConnection();
+      try {
+
+        $sql = "SELECT last_att_sync FROM `tt_general` FIRST;";
+        $res = $mdb2->query($sql);
+        $val = $res->fetchRow()[last_att_sync];
+        
+        if(!$val)
+            return null;
+            
+        $val = new DateAndTime(DB_DATEFORMAT, $val);
+        return $val;
+
+    } catch (Exception $ex) {
+        return null;
+    }
+  }
+// insertAtt - inserts a time record into att log table. Does not deal with custom fields.
+  static function insertAtt($from, $recordsArr)
+  {
+    if(count($recordsArr) == 0 )
+        return 0;
+    
+    $mdb2 = getConnection();
+    
+    //build sql statement
+    try {
+
+        $sql = "INSERT INTO att_log (timestamp, att_id, date, time, in_out) ".
+                "VALUES ";
+
+        foreach ($recordsArr as $record) {
+            $timestamp = (new DateAndTime(DB_DATEFORMAT, $record['timestamp']))->toString(DB_DATEFORMAT);
+            if (!$timestamp) {
+              $timestamp = date('YmdHis');//yyyymmddhhmmss
+            }
+            $date = (new DateAndTime(DB_DATEFORMAT, $record[date]))->toString(DB_DATEFORMAT);
+            $att_id = $record['att_id'];
+            $time = ttTimeHelper::to24HourFormat($record['time']);
+            if ('00:00' == $time) $time = '24:00';
+            $in_out = $record['in_out'];    
+            $sql .= "('$timestamp', $att_id, ".$mdb2->quote($date).", '$time', '$in_out'), ";
+        }
+
+        $sql = rtrim($sql,", ");
+        $sql.=";";
+    
+    } catch (Exception $exc) {
+        return 0;
+    }
+    
+    //execute transaction insert query & update last sync query
+    try{
+        $mdb2->beginTransaction();
+        
+        //update att_log table ================
+//        echo '</br>';
+//        print_r($sql);
+//        echo '</br>';
+        $affected = $mdb2->exec($sql);
+        if (is_a($affected, 'PEAR_Error'))
+            throw new Exception ();
+        
+        //update tt_general table ================
+        if($affected>0)
+        {
+            $tmp = $from->toString(DB_DATEFORMAT);
+            $sql1 = "UPDATE `tt_general` SET `last_att_sync`='$tmp' WHERE id=1;";
+    //        echo '</br>';
+    //        print_r($sql1);
+    //        echo '</br>';
+            $affected1 = $mdb2->exec($sql1);
+            if (is_a($affected1, 'PEAR_Error'))
+                throw new Exception ();
+        }
+        $mdb2->commit();
+
+    } catch (Exception $ex) {
+        $db->rollback();
+        return 0;
+    }
+
+    return $affected;
+  }
+    
 }
 ?>
