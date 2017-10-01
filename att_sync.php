@@ -42,6 +42,7 @@ if (strlen($errors) == 0)
 }
 
 // return a response ==============
+$data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(DB_DATEFORMAT);
 
 // response if there are errors
 if ( strlen($errors) > 0 ) {

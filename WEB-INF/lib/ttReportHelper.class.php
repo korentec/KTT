@@ -287,10 +287,14 @@ class ttReportHelper {
     if ($bean->getAttribute('chstart')) {
       array_push($fields, "l.start as unformatted_start");
       array_push($fields, "TIME_FORMAT(l.start, '%k:%i') as start");
+      array_push($fields, "l.start_dirty");
     }
     // Add finish time.
     if ($bean->getAttribute('chfinish'))
+    {
       array_push($fields, "TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), '%k:%i') as finish");
+        array_push($fields, "l.duration_dirty");
+    }
     // Add duration.
     if ($bean->getAttribute('chduration'))
       array_push($fields, "TIME_FORMAT(l.duration, '%k:%i') as duration");

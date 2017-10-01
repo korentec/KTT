@@ -101,8 +101,8 @@
     {if $bean->getAttribute('chtask')}<td class="cellLeftAligned">{$item.task|escape:'html'}</td>{/if}
      
     {if $bean->getAttribute('chcf_1')}<td class="cellLeftAligned">{$item.cf_1|escape:'html'}</td>{/if}
-    {if $bean->getAttribute('chstart')}<td nowrap class="cellRightAligned">{$item.start}</td>{/if}
-    {if $bean->getAttribute('chfinish')}<td nowrap class="cellRightAligned">{$item.finish}</td>{/if}
+    {if $bean->getAttribute('chstart')}<td nowrap class="cellRightAligned">{$item.start} {if 1==$item.start_dirty}(*){/if}</td>{/if}
+    {if $bean->getAttribute('chfinish')}<td nowrap class="cellRightAligned">{$item.finish}{if 1==$item.duration_dirty}(*){/if}</td>{/if}
     {if $bean->getAttribute('chduration')}<td class="cellRightAligned">{$item.duration}</td>{/if}
     <td class="cellRightAligned">{$item.l_name}</td>
    

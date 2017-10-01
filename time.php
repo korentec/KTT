@@ -34,6 +34,7 @@ import('ttTimeHelper');
 import('DateAndTime');
 import('ttSysConfig');
 import('ChartHelper');
+
 	
 // This is a now removed check whether user browser supports cookies.
 // if (!isset($_COOKIE['tt_PHPSESSID'])) {
@@ -136,6 +137,36 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
 	
 	
+    //att reports for user
+    $att_start_list = $user->getAttInReports($cl_date);   
+    $att_finish_list = $user->getAttOutReports($cl_date);
+    if(empty($cl_start) && empty($cl_finish))
+    {
+        if(count($att_start_list) == 1)
+        {
+            $cl_start = $att_start_list[0];
+        }
+        else if(count($att_start_list) >1)
+        {
+            //handle more than 1
+            $cl_start = ttTimeHelper::$multiple;
+        }
+        if(count($att_finish_list) == 1)
+        {
+            $cl_finish = $att_finish_list[0];
+        }
+        else if(count($att_finish_list) >1)
+        {
+            //handle more than 1
+            $cl_finish = ttTimeHelper::$multiple;
+        }
+   
+        if(count($att_start_list) + count($att_finish_list) >0)
+        {
+            $cl_location = 6;//משרד צפון
+        }
+    }
+
 	
   // Dropdown for projects assigned to user.
   $project_list = $user->getAssignedProjects();
@@ -300,13 +331,14 @@ if ($request->getMethod() == 'POST') {
       if ('0' == $cl_duration)
         $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.duration'));
       else if ($cl_start || $cl_finish) {
-        if (!ttTimeHelper::isValidTime($cl_start))
-          $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.start'));
+        if (!ttTimeHelper::isValidTime($cl_start) && !($cl_start == ttTimeHelper::$multiple && ttTimeHelper::isValidTimeArray($att_start_list)))
+            $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.start'));
+        
         if ($cl_finish) {
-          if (!ttTimeHelper::isValidTime($cl_finish))
-            $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.finish'));
-          if (!ttTimeHelper::isValidInterval($cl_start, $cl_finish))
-            $errors->add($i18n->getKey('error.interval'), $i18n->getKey('label.finish'), $i18n->getKey('label.start'));
+            if (!ttTimeHelper::isValidTime($cl_finish) && !($cl_finish == ttTimeHelper::$multiple && ttTimeHelper::isValidTimeArray($att_finish_list)))
+                $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.finish'));
+          if (!ttTimeHelper::isValidInterval($cl_start, $cl_finish) && !(($cl_start == ttTimeHelper::$multiple || $cl_finish == ttTimeHelper::$multiple) && ttTimeHelper::isValidIntervalArray($att_start_list, $att_finish_list)))
+                $errors->add($i18n->getKey('error.interval'), $i18n->getKey('label.finish'), $i18n->getKey('label.start'));
         }
       } else {
       	if ((TYPE_START_FINISH == $user->record_type) || (TYPE_ALL == $user->record_type)) {
@@ -347,18 +379,22 @@ if ($request->getMethod() == 'POST') {
     // Insert record.
     if ($errors->isEmpty()) {
       $id = ttTimeHelper::insert(array(
-        'date' => $cl_date,
-        'user_id' => $user->getActiveUser(),
-        'client' => $cl_client,
-        'project' => $cl_project,
-		 'activity' => $cl_activity,
-		  'location' => $cl_location,
-        'task' => $cl_task,
-        'start' => $cl_start,
-        'finish' => $cl_finish,
-        'duration' => $cl_duration,
-        'note' => $cl_note,
-        'billable' => $cl_billable));
+            'date' => $cl_date,
+            'user_id' => $user->getActiveUser(),
+            'att_id' => $user->getUserAttId(),
+            'client' => $cl_client,
+            'project' => $cl_project,
+            'activity' => $cl_activity,
+            'location' => $cl_location,
+            'task' => $cl_task,
+            'start' => $cl_start,
+            'att_start' => $att_start_list,
+            'finish' => $cl_finish,
+            'att_finish' => $att_finish_list,
+            'att_end' => $att_finish_list,
+            'note' => $cl_note,
+            'billable' => $cl_billable
+        ));
         	
       // Insert a custom field if we have it.
       $result = true;

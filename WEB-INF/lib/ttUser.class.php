@@ -32,6 +32,7 @@ class ttUser {
   var $id = null;           // User id.
   var $team_id = null;      // Team id.
   var $ManagerId = null;      // Team id.
+  var $att_id = null;       //User id in ATT clock
   
   var $mBehalfName;
   
@@ -67,7 +68,7 @@ class ttUser {
   	
     $mdb2 = getConnection();
     
-    $sql = "SELECT u.id, u.login, u.name, u.team_id, u.role, u.client_id, u.email, t.name as team_name, 
+    $sql = "SELECT u.id, u.login, u.name, u.team_id, u.role, u.client_id, u.email, u.att_id, t.name as team_name, 
       t.address, t.currency, t.locktime, t.lang, t.decimal_mark, t.date_format, t.time_format, t.week_start, t.tracking_mode, t.record_type, t.plugins, t.custom_logo
       FROM tt_users u LEFT JOIN tt_teams t ON (u.team_id = t.id) WHERE ";
   	if ($id)
@@ -108,6 +109,7 @@ class ttUser {
       $this->plugins = $val['plugins'];
       $this->custom_logo = $val['custom_logo'];
       $this->lock_interval = $val['locktime'];
+      $this->att_id = $val['att_id'];
       
       // Set "on behalf" id and name.
       if (isset($_SESSION['behalf_id'])) {
@@ -137,7 +139,7 @@ class ttUser {
 	  
 	  $mdb2 = getConnection();
     
-    $sql = "SELECT u.id, u.login, u.name, u.team_id, u.role, u.client_id, u.email, t.name as team_name, 
+    $sql = "SELECT u.id, u.login, u.name, u.team_id, u.role, u.client_id, u.email, u.att_id, t.name as team_name, 
       t.address, t.currency, t.locktime, t.lang, t.decimal_mark, t.date_format, t.time_format, t.week_start, t.tracking_mode, t.record_type, t.plugins, t.custom_logo
       FROM tt_users u LEFT JOIN tt_teams t ON (u.team_id = t.id) WHERE ";
   	if ($id)
@@ -158,6 +160,7 @@ class ttUser {
       $this->login = $val['login'];
       $this->name = $val['name'];
       $this->id = $val['id'];
+      $this->att_id = $val['átt_id'];
 	  //echo $val['team_id'];
 	  $this->team_id = $val['team_id'];
 	  
@@ -204,6 +207,11 @@ class ttUser {
   // The getActiveUser returns user id on behalf of whom current user is operating.
   function getActiveUser() {
     return ($this->behalf_id ? $this->behalf_id : $this->id);
+  }
+  
+  function getUserAttId()
+  {
+      return $this->att_id;
   }
   
     function getBehalfName() { return $this->behalf_name; }
@@ -264,6 +272,41 @@ class ttUser {
     if (!is_a($res, 'PEAR_Error')) {
       while ($val = $res->fetchRow()) {
         $result[] = $val;
+      }
+    }
+    return $result;
+  }
+  
+  // getAttInReports - returns an array of start time reports from att.
+  function getAttInReports($date)
+  {
+      $in_out = 0;
+      return $this->getAttReports($date, $in_out); 
+  }
+  // getAttInReports - returns an array of start time reports from att.
+  function getAttOutReports($date)
+  {
+      $in_out = 1;
+      return $this->getAttReports($date, $in_out); 
+  }
+  
+  private function getAttReports($date, $in_out)
+  {
+      $result = array();
+    $mdb2 = getConnection();
+    
+    // Do a query with inner join to get assigned projects.
+    $sql = "SELECT TIME_FORMAT(time, '%k:%i') as time".
+            " FROM att_log".
+            " WHERE att_id=".$this->att_id.
+            " AND in_out=".$in_out.
+            " AND date=".$mdb2->quote($date).
+            "AND archived=0".
+            " ORDER BY date";
+    $res = $mdb2->query($sql);
+    if (!is_a($res, 'PEAR_Error')) {
+      while ($val = $res->fetchRow()) {
+        $result[] = $val[time];
       }
     }
     return $result;

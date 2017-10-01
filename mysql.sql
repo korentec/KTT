@@ -687,6 +687,8 @@ CREATE TABLE `att_log` (
 
   `in_out` tinyint(1) unsigned DEFAULT 0,   # in - 0, out - 1
 
+  `archived` tinyint(1) unsigned NOT NULL DEFAULT 0, # archived flag
+
   PRIMARY KEY (`id`)
 
 );

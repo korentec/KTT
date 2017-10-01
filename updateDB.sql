@@ -1,6 +1,8 @@
 ALTER TABLE tt_users ADD COLUMN IF NOT EXISTS `att_id` int(10) unsigned after client_id;
 
-ALTER TABLE tt_log ADD COLUMN IF NOT EXISTS `approved` tinyint(1) unsigned DEFAULT 0;
+ALTER TABLE tt_log ADD COLUMN IF NOT EXISTS `approved` TINYINT(1) unsigned DEFAULT 0;
+ALTER TABLE tt_log ADD COLUMN IF NOT EXISTS  `duration_dirty` TINYINT(1) NULL ;
+ALTER TABLE tt_log ADD COLUMN IF NOT EXISTS  `start_dirty` TINYINT(1) NULL ;
 
 CREATE TABLE IF NOT EXISTS `att_log` (
 
@@ -16,6 +18,8 @@ CREATE TABLE IF NOT EXISTS `att_log` (
 
   `in_out` tinyint(1) unsigned DEFAULT 0,   # in - 0, out - 1
 
+   `archived` tinyint(1) unsigned NOT NULL DEFAULT 0, # archived flag
+
   PRIMARY KEY (`id`)
 
 );
@@ -30,4 +34,3 @@ CREATE TABLE IF NOT EXISTS `tt_general` (
 
 );
 INSERT IGNORE INTO tt_general(`id`,`last_att_sync`) VALUES (1, null)
-

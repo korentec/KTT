@@ -28,6 +28,8 @@
 import('DateAndTime');
 // The ttTimeHelper is a class to help with time-related values.
 class ttTimeHelper {
+    static $multiple = "(multiple)";
+
 	
   /* // isWeekend determines if $date falls on weekend.
   static function isWeekend($date) {
@@ -62,6 +64,19 @@ class ttTimeHelper {
       return true;	
     }
     return false;
+  }
+  
+  static function isValidTimeArray($valuesArr) {
+
+    if(!isset($valuesArr) || !is_array($valuesArr))
+        return false;
+    
+    foreach ($valuesArr as $value)
+    {
+       if(!ttTimeHelper::isValidTime($value))
+           return false;
+    }
+    return true;
   }
   
   // isValidDuration validates a value as a time duration string (in hours and minutes).
@@ -328,60 +343,285 @@ class ttTimeHelper {
     return false;
   }
   
+  static function isValidIntervalArray($startArr, $finishArr) {
+
+    if(!isset($startArr) || !is_array($startArr) || !isset($finishArr) || !is_array($finishArr))
+        return false;
+    
+    if(count($startArr) < count($finishArr))
+        return false;
+    
+    for ($i = 0; $i < count($finishArr); $i++)
+    {
+       if(!ttTimeHelper::isValidInterval($startArr[$i], $finishArr[$i]))
+           return false;
+    }
+    return true;
+  }
+  
   // insert - inserts a time record into log table. Does not deal with custom fields.
   static function insert($fields)
   {
-    $mdb2 = getConnection();
-    $timestamp = isset($fields['timestamp']) ? $fields['timestamp'] : '';
-    $user_id = $fields['user_id'];
-    $date = $fields['date'];
-    $start = $fields['start'];
-    $finish = $fields['finish'];
-	 $location = $fields['location'];
-    $duration = $fields['duration'];    
-    $client = $fields['client'];
-    $project = $fields['project'];
-	$activity = $fields['activity'];
-	$task = $fields['task'];
-    $invoice = $fields['invoice'];
-    $note = $fields['note'];
-    $billable = $fields['billable'];
-    if (array_key_exists('status', $fields)) { // Key exists and may be NULL during migration of data.
-      $status_f = ', status';
-      $status_v = ', '.$mdb2->quote($fields['status']);
+    $user_start = $fields['start'];
+    $user_finish = $fields['finish'];
+    $att_start = $fields['att_start'];
+    $att_finish = $fields['att_finish'];
+
+    $att_start_count = isset($att_start) ? count($att_start) : 0;
+    $att_finish_count = isset($att_finish) ? count($att_finish) : 0;
+
+    //single or no att reports (up to 1 for start and 1 for finish) - insert 1 record with start dirty flag according to user and att values
+    if($att_start_count <=1 && $att_finish_count <=1)
+    {
+        $fields['start_dirty'] = ($att_start_count == 0) ? true : ($att_start[0] != $user_start);
+        $fields['duration_dirty'] = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+        return ttTimeHelper::insertSingle($fields);
     }
-    $start = ttTimeHelper::to24HourFormat($start);
-    if ($finish) {
-      $finish = ttTimeHelper::to24HourFormat($finish);
-      if ('00:00' == $finish) $finish = '24:00';
+
+    //multiple att records for start, finish or both
+    //check dirty state (compare user values with att values)
+    $start_dirty = true;
+    if(   ($att_start_count>1 && $user_start == ttTimeHelper::$multiple) ||
+          ($att_start_count==1 && $att_start[0] == $user_start))
+    {
+        //more than 1 att start . if user value is multiple, dirty flag is false
+        $start_dirty = false;
     }
-    $duration = ttTimeHelper::normalizeDuration($duration);
-    if (!$timestamp) {
-      $timestamp = date('YmdHis');//yyyymmddhhmmss
+
+    $finish_dirty = true;
+    if(   ($att_finish_count>1 && $user_finish == ttTimeHelper::$multiple) ||
+          ($att_finish_count==1 && $att_finish[0] == $user_finish))
+    {
+        //in case more than 1 att finish . if user value is multiple, dirty flag is false
+        //in case 1 att finish . if user value equals att value, dirty flag is false
+        $finish_dirty = false;
     }
-        
-    if (!$billable) $billable = 0;
+    
+    //more than 1 att record but start is missing for finish report - ERROR
+    if(!$start_dirty && !$finish_dirty && $att_start_count < $att_finish_count)
+    {
+        return false; //tbd revital check condition
+    }
+    
+    //user overrides att reports - insert 1 record with user values
+    if($start_dirty && $finish_dirty)
+    {
+        $fields['start_dirty'] = true;
+        $fields['duration_dirty'] = true;
+        return ttTimeHelper::insertSingle($fields);
+    }
+    //user overides only start att report
+    if($start_dirty && !$finish_dirty)
+    {
+        //more than 1 att finish report for overriten start report - ERROR
+        if($att_finish_count>1)
+            return false; 
+
+        //overriten att start, 1 att finish report  - insert 1 record with dirty flags accordingly
+        $fields['start_dirty'] = true;
+        $fields['duration_dirty'] = false;
+        $fields['finish'] = $att_finish[0];
+        return ttTimeHelper::insertSingle($fields);  
+    }
+
+    //user hasnt overriten start att report
+    $fields['start_arr'] = $att_start;
+    $fields['finish_arr'] = ($finish_dirty) ? array($user_finish) : $att_finish;
+    $fields['start_dirty'] = $start_dirty;
+    $fields['duration_dirty'] = $finish_dirty;
+    return ttTimeHelper::insertMultiple($fields);  
+
+    
       
-    if ($duration) {
-      $sql = "insert into tt_log (timestamp, user_id, date, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
-        "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
-      $affected = $mdb2->exec($sql);
-      if (is_a($affected, 'PEAR_Error'))
-        return false;
-    } else {
-      $duration = ttTimeHelper::toDuration($start, $finish);
-      if ($duration === false) $duration = 0;
-      if (!$duration && ttTimeHelper::getUncompleted($user_id)) return false;
-      $sql = "insert into tt_log (timestamp, user_id, date, start, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
-        "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
-      $affected = $mdb2->exec($sql);
-      if (is_a($affected, 'PEAR_Error'))
+  }
+      
+private static function insertSingle($fields)    
+{
+        
+    //execute transaction tt_log insert query & att_log update archived flag
+
+    $mdb2 = getConnection();
+    try
+    {
+        $mdb2->beginTransaction();
+        $timestamp = isset($fields['timestamp']) ? $fields['timestamp'] : '';
+        $user_id = $fields['user_id'];
+        $user_att_id = $fields['att_id'];
+        $date = $fields['date'];
+        $start = $fields['start'];
+        $finish = $fields['finish'];
+        $location = $fields['location'];
+        $duration = $fields['duration'];    
+        $client = $fields['client'];
+        $project = $fields['project'];
+        $activity = $fields['activity'];
+        $task = $fields['task'];
+        $invoice = $fields['invoice'];
+        $note = $fields['note'];
+        $billable = $fields['billable'];
+        $start_dirty = $fields['start_dirty'];
+        $duration_dirty = $fields['duration_dirty'];
+        $approved = !boolval($start_dirty) && !boolval($duration_dirty);
+        if (array_key_exists('status', $fields)) { // Key exists and may be NULL during migration of data.
+          $status_f = ', status';
+          $status_v = ', '.$mdb2->quote($fields['status']);
+        }
+        $start = ttTimeHelper::to24HourFormat($start);
+        if ($finish) {
+          $finish = ttTimeHelper::to24HourFormat($finish);
+          if ('00:00' == $finish) $finish = '24:00';
+        }
+        $duration = ttTimeHelper::normalizeDuration($duration);
+        if (!$timestamp) {
+          $timestamp = date('YmdHis');//yyyymmddhhmmss
+        }
+
+        if (!$billable) $billable = 0;
+
+        if ($duration) {
+            $sql = "insert into tt_log (timestamp, user_id, date, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
+                    "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
+            $affected = $mdb2->exec($sql);
+            if (is_a($affected, 'PEAR_Error'))
+                throw new Exception ();
+        } else {
+            $duration = ttTimeHelper::toDuration($start, $finish);
+            if ($duration === false) $duration = 0;
+            if (!$duration && ttTimeHelper::getUncompleted($user_id)) throw new Exception ();
+            $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
+              "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$duration_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
+            $affected = $mdb2->exec($sql);
+            if (is_a($affected, 'PEAR_Error'))
+              throw new Exception ();
+        }
+        $id = $mdb2->lastInsertID('tt_log', 'id');
+
+        $sql1 = "UPDATE `att_log` SET `archived`=1 WHERE date=".$mdb2->quote($date)." AND att_id=".$user_att_id.";";
+        //        echo '</br>';
+        //        print_r($sql1);
+        //        echo '</br>';
+        $affected1 = $mdb2->exec($sql1);
+        if (is_a($affected1, 'PEAR_Error'))
+            throw new Exception ();
+
+        $mdb2->commit();
+
+        return $id;
+    
+    } catch (Exception $ex) {
+        $mdb2->rollback();
         return false;
     }
-    $id = $mdb2->lastInsertID('tt_log', 'id');
-    return $id;
   }
   
+private static function insertMultiple($fields)    
+{
+    //execute transaction tt_log insert query & att_log update archived flag
+    $mdb2 = getConnection();
+    
+    try
+    {
+        $mdb2->beginTransaction();
+        
+        //tbd revital: transaction for mark att_reords as obsolete
+        $timestamp = isset($fields['timestamp']) ? $fields['timestamp'] : '';
+        $user_id = $fields['user_id'];
+        $user_att_id = $fields['att_id'];
+        $date = $fields['date'];
+        $start_arr = $fields['start_arr'];
+        $finish_arr = $fields['finish_arr'];
+        $location = $fields['location'];
+        //$duration = $fields['duration'];  //tbd revital: check if insert multi can support data with duration instead of start and finish???  
+        $client = $fields['client'];
+        $project = $fields['project'];
+        $activity = $fields['activity'];
+        $task = $fields['task'];
+        $invoice = $fields['invoice'];
+        $note = $fields['note'];
+        $billable = $fields['billable'];
+        $start_dirty = $fields['start_dirty'];
+        $duration_dirty = $fields['duration_dirty'];
+        if (array_key_exists('status', $fields)) { // Key exists and may be NULL during migration of data.
+          $status_f = ', status';
+          $status_v = ', '.$mdb2->quote($fields['status']);
+        }
+
+        if(count($start_arr) < count($finish_arr))
+            throw new Exception ();
+
+
+        if (!$billable) $billable = 0;
+
+        $sql = '';
+//        if ($duration) 
+//        {
+//          $sql = "insert into tt_log (timestamp, user_id, date, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
+//            "values ";
+//        } 
+//        else 
+        {
+          $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
+            "values ";  
+        }
+        for($i=0; $i<count($start_arr) ; $i++)
+        {
+            $start = $start_arr[$i];
+            $start = ttTimeHelper::to24HourFormat($start);
+
+            $finish = count($finish_arr)>$i ? $finish_arr[$i] : NULL;
+            $finish_dirty = true;
+            if ($finish) {
+                $finish_dirty = $duration_dirty;
+              $finish = ttTimeHelper::to24HourFormat($finish);
+              if ('00:00' == $finish) $finish = '24:00';
+            }
+            $approved = !boolval($start_dirty) && !boolval($finish_dirty);
+            //$duration = ttTimeHelper::normalizeDuration($duration);
+            if (!$timestamp) {
+              $timestamp = date('YmdHis');//yyyymmddhhmmss
+            }
+//            if ($duration) 
+//            {
+//                $sql .= "('$timestamp', $user_id, ".$mdb2->quote($date).", '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v), ";
+//            }
+            //else
+            {
+                $duration = ttTimeHelper::toDuration($start, $finish);
+                if ($duration === false) $duration = 0;
+                if (!$duration && ttTimeHelper::getUncompleted($user_id)) 
+                    throw new Exception ();
+                $sql .= "('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$finish_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v), ";
+            }
+        }        
+
+        $sql = rtrim($sql,", ");
+        $sql.=";";
+
+        $affected = $mdb2->exec($sql);
+          if (is_a($affected, 'PEAR_Error'))
+            throw new Exception ();
+        $id = $mdb2->lastInsertID('tt_log', 'id');
+        
+        
+        $sql1 = "UPDATE `att_log` SET `archived`=1 WHERE date=".$mdb2->quote($date)." AND att_id=".$user_att_id.";";
+    //        echo '</br>';
+    //        print_r($sql1);
+    //        echo '</br>';
+        $affected1 = $mdb2->exec($sql1);
+        if (is_a($affected1, 'PEAR_Error'))
+            throw new Exception ();
+        
+        $mdb2->commit();
+
+        return $id;
+    
+    } catch (Exception $ex) {
+        $mdb2->rollback();
+        return false;
+    }
+  }
+  
+
   // update - updates a record in log table. Does not update its custom fields.
   static function update($fields)
   {
@@ -395,25 +635,29 @@ class ttTimeHelper {
     $location 		= $fields['location'];
     $project = $fields['project'];
     $task = $fields['task'];
-    $start = $fields['start'];
-    $finish = $fields['finish'];
-    $duration = $fields['duration'];
+    $start = ttTimeHelper::to24HourFormat($fields['start']);
+    $finish = ttTimeHelper::to24HourFormat($fields['finish']);
+    $duration = ttTimeHelper::normalizeDuration($fields['duration']);
     $note = $fields['note'];
     $billable = $fields['billable'];
-    $start = ttTimeHelper::to24HourFormat($start);
-    $finish = ttTimeHelper::to24HourFormat($finish);
     if ('00:00' == $finish) $finish = '24:00';
-    $duration = ttTimeHelper::normalizeDuration($duration);
     if (!$billable) $billable = 0;
     if ($start) $duration = '';
   
-    if ($duration) {
-      $sql = "UPDATE tt_log set start = NULL, duration = '$duration', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).",  al_activity_id = ".$mdb2->quote($activity).",
-	   al_location_id = ".$mdb2->quote($location).",task_id = ".$mdb2->quote($task).", ".
-        "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
-      $affected = $mdb2->exec($sql);
-      if (is_a($affected, 'PEAR_Error'))
+    //get current record from DB
+    $curr = ttTimeHelper::getRecord($id, $user_id);
+    if(!$curr)
         return false;
+
+    if ($duration) {
+        $duration_dirty = boolval($curr['duration_dirty']) || ($curr['duration'] != $duration);
+        $approved = boolval($curr['approved']) && !boolval($duration_dirty);
+        $sql = "UPDATE tt_log set start = NULL, duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).",  al_activity_id = ".$mdb2->quote($activity).",
+	   al_location_id = ".$mdb2->quote($location).",task_id = ".$mdb2->quote($task).", ".
+            "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
+        $affected = $mdb2->exec($sql);
+        if (is_a($affected, 'PEAR_Error'))
+            return false;
     } else {
       $duration = ttTimeHelper::toDuration($start, $finish);
       if ($duration === false)
@@ -421,9 +665,12 @@ class ttTimeHelper {
       $uncompleted = ttTimeHelper::getUncompleted($user_id);
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
-      $sql = "UPDATE tt_log SET approved=0 where (start <> '$start' or duration <> '$duration') and id = $id";
-      $affected = $mdb2->exec($sql);
-      $sql = "UPDATE tt_log SET start = '$start', duration = '$duration', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
+      
+      $start_dirty = boolval($curr['start_dirty']) || ($curr['start'] != $start);
+      $duration_dirty = boolval($curr['duration_dirty']) || ($curr['finish'] != $finish);
+      $approved = boolval($curr['approved']) && !boolval($start_dirty) && !boolval($duration_dirty);
+    
+      $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
         "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
       $affected = $mdb2->exec($sql);
@@ -435,19 +682,44 @@ class ttTimeHelper {
   }
   
   // delete - deletes a record from tt_log table and its associated custom field values.
-  static function delete($id, $user_id) {
+  static function delete($id, $user_id, $att_id) {
     $mdb2 = getConnection();
-    $sql = "update tt_log set status = NULL where id = $id and user_id = $user_id";
-    $affected = $mdb2->exec($sql);
-    if (is_a($affected, 'PEAR_Error'))
-      return false;
-      
-    $sql = "update tt_custom_field_log set status = NULL where log_id = $id";
-    $affected = $mdb2->exec($sql);
-    if (is_a($affected, 'PEAR_Error'))
-      return false;
-    	
-    return true;
+    
+    try{
+        
+        $mdb2->beginTransaction();
+
+        $curr = ttTimeHelper::getRecord($id, $user_id);
+        if(!$curr)
+            throw new Exception ();  
+        
+        $sql = "update tt_log set status = NULL where id = $id and user_id = $user_id";
+        $affected = $mdb2->exec($sql);
+        if (is_a($affected, 'PEAR_Error'))
+          throw new Exception ();
+
+        $sql = "update tt_custom_field_log set status = NULL where log_id = $id";
+        $affected = $mdb2->exec($sql);
+        if (is_a($affected, 'PEAR_Error'))
+          throw new Exception ();
+        
+        
+        //if no other records from same day, restore records from att_log
+        $tmp = ttTimeHelper::getRecords($id, $curr['date']);
+        if(count($tmp) == 0)
+        {
+            $sql1 = "UPDATE `att_log` SET `archived`=0 WHERE date=".$mdb2->quote($curr['date'])." AND att_id=".$att_id.";";
+            $affected1 = $mdb2->exec($sql1);
+            if (is_a($affected1, 'PEAR_Error'))
+                throw new Exception ();
+        }
+        $mdb2->commit();
+        return true;
+    
+    } catch (Exception $ex) {
+        $mdb2->rollback();
+        return false;
+    }
   }
   
   // getTimeForDay - gets total time for a user for a specific date.
@@ -550,7 +822,7 @@ class ttTimeHelper {
       TIME_FORMAT(l.duration, '%k:%i') as duration,
       p.name as project_name, t.name as task_name, l.comment, l.client_id, l.project_id, l.task_id, l.invoice_id, l.billable, l.date
 	  , l.al_activity_id, 
-	  l.al_location_id,activities.a_name,locations.l_name,l.approved
+	  l.al_location_id,activities.a_name,locations.l_name,l.start_dirty, l.duration_dirty, l.approved
       from tt_log l
       left join tt_projects p on (p.id = l.project_id)
       left join tt_tasks t on (t.id = l.task_id) left join activities   on (l.al_activity_id = activities.a_id) left join locations   on (l.al_location_id = locations.l_id)
@@ -658,8 +930,9 @@ class ttTimeHelper {
         $sql = "INSERT INTO att_log (timestamp, att_id, date, time, in_out) ".
                 "VALUES ";
 
+        //tbd revital: validate date and time format
         foreach ($recordsArr as $record) {
-            $timestamp = (new DateAndTime(DB_DATEFORMAT, $record['timestamp']))->toString(DB_DATEFORMAT);
+            $timestamp = (new DateAndTime(DB_DATEFORMAT, $record['timestamp']))->toString(DB_DATEFORMAT);//tbd revital - convert from any format
             if (!$timestamp) {
               $timestamp = date('YmdHis');//yyyymmddhhmmss
             }
@@ -705,7 +978,7 @@ class ttTimeHelper {
         $mdb2->commit();
 
     } catch (Exception $ex) {
-        $db->rollback();
+        $mdb2->rollback();
         return 0;
     }
 

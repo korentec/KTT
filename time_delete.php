@@ -75,7 +75,7 @@ if ($request->getMethod() == 'POST') {
     if ($errors->isEmpty()) {
       	
       // Delete the record.
-      $result = ttTimeHelper::delete($cl_id, $user->getActiveUser());
+      $result = ttTimeHelper::delete($cl_id, $user->getActiveUser(), $user->getUserAttId());
 
       if ($result) {
         header('Location: time.php');
