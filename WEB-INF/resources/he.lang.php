@@ -90,7 +90,7 @@ $i18n_key_words = array(
 'error.empty' => 'השדה "{0}" ריק',
 'error.not_equal' => 'השדה "{1}" אינו שווה לשדה "{0}"',
 // TODO: add quotes around field names in error.interval.
-'error.interval' => 'השדדה {0} צריך להיות גדול יותר מהשדה {1}',
+'error.interval' => 'השדה {0} צריך להיות גדול יותר מהשדה {1}',
 // TO TEST: change the string on a local Time Tracker and then try to enter a time with
 // end time less than start time. For example: Start time: 09:00, End time: 08:00.
 // Then you should see the error on screen and the problems will be clearly visible.
