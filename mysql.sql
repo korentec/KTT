@@ -278,6 +278,8 @@ CREATE TABLE `tt_log` (
 
   `comment` blob,                      # user provided comment for time record
 
+  `comment_attendance` blob,           # user provided comment for time record manual values insertion
+
   `billable` tinyint(4) default '0',   # whether the record is billable or not
 
   `status` tinyint(4) default '1',     # time record status

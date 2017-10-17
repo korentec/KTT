@@ -350,6 +350,10 @@ function setNow(formField) {
       <td>{$forms.timeRecordForm.note.control}</td>
     </tr>
     <tr>
+      <td align="right">{$i18n.label.attendanceNote}:</td>
+      <td>{$forms.timeRecordForm.attendance_note.control}</td>
+    </tr>
+    <tr>
       <td colspan="2">&nbsp;</td>
     </tr>
     <tr>

@@ -66,6 +66,8 @@ $cl_start = trim($request->getParameter('start'));
 $cl_finish = trim($request->getParameter('finish'));
 $cl_duration = trim($request->getParameter('duration'));
 $cl_note = trim($request->getParameter('note'));
+$cl_attendance_note = trim($request->getParameter('attendance_note'));
+
 // Custom field.
 $cl_cf_1 = trim($request->getParameter(('cf_1'), ($request->getMethod()=='POST'? null : @$_SESSION['cf_1'])));
 $_SESSION['cf_1'] = $cl_cf_1;
@@ -282,6 +284,8 @@ if (!$user->canManageTeam() && defined('READONLY_START_FINISH') && isTrue(READON
 if ((TYPE_DURATION == $user->record_type) || (TYPE_ALL == $user->record_type))
   $form->addInput(array('type'=>'text','name'=>'duration','value'=>$cl_duration,'onchange'=>"formDisable('duration');"));
 $form->addInput(array('type'=>'textarea','name'=>'note','style'=>'width: 600px; height: 40px;','value'=>$cl_note));
+$form->addInput(array('type'=>'textarea','name'=>'attendance_note','style'=>'width: 600px; height: 40px;','value'=>$cl_attendance_note));
+
 $form->addInput(array('type'=>'calendar','name'=>'date','value'=>$cl_date, "sysdateformat"=>SYS_DATEFORMAT)); // calendar
 if (in_array('iv', explode(',', $user->plugins)))
   $form->addInput(array('type'=>'checkbox','name'=>'billable','data'=>1,'value'=>$cl_billable));
@@ -355,6 +359,8 @@ if ($request->getMethod() == 'POST') {
         $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.duration'));
     }
     if (!ttValidString($cl_note, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.note'));
+    if (!ttValidString($cl_attendance_note, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.attendanceNote'));
+
     // Finished validating user input.
     // Prohibit creating entries in future.
     if (defined('FUTURE_ENTRIES') && !isTrue(FUTURE_ENTRIES)) {
@@ -395,6 +401,7 @@ if ($request->getMethod() == 'POST') {
             'att_finish' => $att_finish_list,
             'att_end' => $att_finish_list,
             'note' => $cl_note,
+            'attendance_note' => $cl_attendance_note,
             'billable' => $cl_billable
         ));
         	

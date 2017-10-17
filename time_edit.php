@@ -51,13 +51,15 @@ if ($time_rec['invoice_id']) die($i18n->getKey('error.sys'));
 $item_date = new DateAndTime(DB_DATEFORMAT, $time_rec['date']);
   
 // Initialize variables.
-$cl_start = $cl_finish = $cl_duration = $cl_date = $cl_note = $cl_project = $cl_task = $cl_billable = null;
+$cl_start = $cl_finish = $cl_duration = $cl_date = $cl_note = $cl_attendance_note = $cl_project = $cl_task = $cl_billable = null;
 if ($request->getMethod() == 'POST') {
   $cl_start = trim($request->getParameter('start'));
   $cl_finish = trim($request->getParameter('finish'));
   $cl_duration = trim($request->getParameter('duration'));
   $cl_date = $request->getParameter('date');
   $cl_note = trim($request->getParameter('note'));
+  $cl_attendance_note = trim($request->getParameter('attendance_note'));
+  
    $cl_activity	= $request->getParameter('activity');
     $cl_location	= $request->getParameter('location');
   $cl_cf_1 = trim($request->getParameter('cf_1'));
@@ -79,6 +81,7 @@ if ($request->getMethod() == 'POST') {
   $cl_duration = $time_rec['duration'];
   $cl_date	= $item_date->toString($user->date_format);
   $cl_note = $time_rec['comment'];
+  $cl_attendance_note = $time_rec['comment_attendance'];
     
   // If we have custom fields - obtain values for them.
   if ($custom_fields) {
@@ -211,6 +214,7 @@ if ((TYPE_DURATION == $user->record_type) || (TYPE_ALL == $user->record_type))
   $form->addInput(array('type'=>'text','name'=>'duration','value'=>$cl_duration,'onchange'=>"formDisable('duration');"));
 $form->addInput(array('type'=>'datefield','name'=>'date','maxlength'=>'20','value'=>$cl_date));
 $form->addInput(array('type'=>'textarea','name'=>'note','style'=>'width: 250px; height: 200px;','value'=>$cl_note));
+$form->addInput(array('type'=>'textarea','name'=>'attendance_note','style'=>'width: 250px; height: 200px;','value'=>$cl_attendance_note));
 // If we have custom fields - add controls for them.
 if ($custom_fields && $custom_fields->fields[0]) {
   // Only one custom field is supported at this time.
@@ -273,6 +277,7 @@ if ($request->getMethod() == 'POST') {
   }
   if (!ttValidDate($cl_date)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.date'));
   if (!ttValidString($cl_note, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.note'));
+  if (!ttValidString($cl_attendance_note, true)) $errors->add($i18n->getKey('error.field'), $i18n->getKey('label.attendanceNote'));
   // Finished validating user input.
       
   // Determine lock date.
@@ -337,6 +342,7 @@ if ($request->getMethod() == 'POST') {
           'finish'=>$cl_finish,
           'duration'=>$cl_duration,
           'note'=>$cl_note,
+          'attendance_note'=>$cl_attendance_note,
           'billable'=>$cl_billable));
       	
       // If we have custom fields - update values.
@@ -394,6 +400,7 @@ if ($request->getMethod() == 'POST') {
         'finish'=>$cl_finish,
         'duration'=>$cl_duration,
         'note'=>$cl_note,
+        'attendance_note'=>$cl_attendance_note,
         'billable'=>$cl_billable));
       // Insert a custom field if we have it.
       $res = true;

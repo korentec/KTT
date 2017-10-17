@@ -458,6 +458,7 @@ private static function insertSingle($fields)
         $task = $fields['task'];
         $invoice = $fields['invoice'];
         $note = $fields['note'];
+        $attendance_note = $fields['attendance_note'];
         $billable = $fields['billable'];
         $start_dirty = $fields['start_dirty'];
         $duration_dirty = $fields['duration_dirty'];
@@ -479,8 +480,8 @@ private static function insertSingle($fields)
         if (!$billable) $billable = 0;
 
         if ($duration) {
-            $sql = "insert into tt_log (timestamp, user_id, date, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
-                    "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
+            $sql = "insert into tt_log (timestamp, user_id, date, duration, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, comment_attendance, billable $status_f) ".
+                    "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$duration', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", ".$mdb2->quote($attendance_note).", $billable $status_v)";
             $affected = $mdb2->exec($sql);
             if (is_a($affected, 'PEAR_Error'))
                 throw new Exception ();
@@ -488,8 +489,8 @@ private static function insertSingle($fields)
             $duration = ttTimeHelper::toDuration($start, $finish);
             if ($duration === false) $duration = 0;
             if (!$duration && ttTimeHelper::getUncompleted($user_id)) throw new Exception ();
-            $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
-              "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$duration_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v)";
+            $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, comment_attendance, billable $status_f) ".
+              "values ('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$duration_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", ".$mdb2->quote($attendance_note).", $billable $status_v)";
             $affected = $mdb2->exec($sql);
             if (is_a($affected, 'PEAR_Error'))
               throw new Exception ();
@@ -538,6 +539,7 @@ private static function insertMultiple($fields)
         $task = $fields['task'];
         $invoice = $fields['invoice'];
         $note = $fields['note'];
+        $attendance_note = $fields['attendance_note'];
         $billable = $fields['billable'];
         $start_dirty = $fields['start_dirty'];
         $duration_dirty = $fields['duration_dirty'];
@@ -560,7 +562,7 @@ private static function insertMultiple($fields)
 //        } 
 //        else 
         {
-          $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, billable $status_f) ".
+          $sql = "insert into tt_log (timestamp, user_id, date, start, start_dirty, duration, duration_dirty, approved, client_id, project_id, al_activity_id,al_location_id,task_id, invoice_id, comment, comment_attendance, billable $status_f) ".
             "values ";  
         }
         for($i=0; $i<count($start_arr) ; $i++)
@@ -590,7 +592,7 @@ private static function insertMultiple($fields)
                 if ($duration === false) $duration = 0;
                 if (!$duration && ttTimeHelper::getUncompleted($user_id)) 
                     throw new Exception ();
-                $sql .= "('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$finish_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", $billable $status_v), ";
+                $sql .= "('$timestamp', $user_id, ".$mdb2->quote($date).", '$start', '$start_dirty', '$duration', '$finish_dirty', '$approved', ".$mdb2->quote($client).", ".$mdb2->quote($project).",".$mdb2->quote($activity).",".$mdb2->quote($location).", ".$mdb2->quote($task).", ".$mdb2->quote($invoice).", ".$mdb2->quote($note).", ".$mdb2->quote($attendance_note).", $billable $status_v), ";
             }
         }        
 
@@ -639,6 +641,7 @@ private static function insertMultiple($fields)
     $finish = ttTimeHelper::to24HourFormat($fields['finish']);
     $duration = ttTimeHelper::normalizeDuration($fields['duration']);
     $note = $fields['note'];
+    $attendance_note = $fields['attendance_note'];
     $billable = $fields['billable'];
     if ('00:00' == $finish) $finish = '24:00';
     if (!$billable) $billable = 0;
@@ -648,13 +651,12 @@ private static function insertMultiple($fields)
     $curr = ttTimeHelper::getRecord($id, $user_id);
     if(!$curr)
         return false;
-
     if ($duration) {
         $duration_dirty = boolval($curr['duration_dirty']) || ($curr['duration'] != $duration);
         $approved = boolval($curr['approved']) && !boolval($duration_dirty);
         $sql = "UPDATE tt_log set start = NULL, duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).",  al_activity_id = ".$mdb2->quote($activity).",
 	   al_location_id = ".$mdb2->quote($location).",task_id = ".$mdb2->quote($task).", ".
-            "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
+            "comment = ".$mdb2->quote($note).", comment_attendance = ".$mdb2->quote($attendance_note).", billable = $billable, date = '$date' WHERE id = $id";
         $affected = $mdb2->exec($sql);
         if (is_a($affected, 'PEAR_Error'))
             return false;
@@ -669,10 +671,9 @@ private static function insertMultiple($fields)
       $start_dirty = boolval($curr['start_dirty']) || ($curr['start'] != $start);
       $duration_dirty = boolval($curr['duration_dirty']) || ($curr['finish'] != $finish);
       $approved = boolval($curr['approved']) && !boolval($start_dirty) && !boolval($duration_dirty);
-    
       $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
-        "comment = ".$mdb2->quote($note).", billable = $billable, date = '$date' WHERE id = $id";
+        "comment = ".$mdb2->quote($note).", comment_attendance = ".$mdb2->quote($attendance_note).", billable = $billable, date = '$date' WHERE id = $id";
       $affected = $mdb2->exec($sql);
       if (is_a($affected, 'PEAR_Error'))
         return false;
@@ -815,12 +816,12 @@ private static function insertMultiple($fields)
   	$sql_time_format = "'%k:%i'"; //  24 hour format.
   	if ('%I:%M %p' == $user->time_format)
   	  $sql_time_format = "'%h:%i %p'"; // 12 hour format for MySQL TIME_FORMAT function.
-  	
+
     $mdb2 = getConnection();
     $sql = "select l.id as id, l.timestamp as timestamp, TIME_FORMAT(l.start, $sql_time_format) as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish,
       TIME_FORMAT(l.duration, '%k:%i') as duration,
-      p.name as project_name, t.name as task_name, l.comment, l.client_id, l.project_id, l.task_id, l.invoice_id, l.billable, l.date
+      p.name as project_name, t.name as task_name, l.comment, l.comment_attendance, l.client_id, l.project_id, l.task_id, l.invoice_id, l.billable, l.date
 	  , l.al_activity_id, 
 	  l.al_location_id,activities.a_name,locations.l_name,l.start_dirty, l.duration_dirty, l.approved
       from tt_log l
@@ -848,7 +849,7 @@ private static function insertMultiple($fields)
     $sql = "select l.id, l.timestamp, l.user_id, l.date, TIME_FORMAT(l.start, '%k:%i') as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), '%k:%i') as finish,
       TIME_FORMAT(l.duration, '%k:%i') as duration,
-      l.client_id, l.project_id, l.task_id, l.invoice_id, l.comment, l.billable, l.status,l.approved
+      l.client_id, l.project_id, l.task_id, l.invoice_id, l.comment, l.comment_attendance, l.billable, l.status,l.approved
       from tt_log l where l.user_id = $user_id order by l.id";
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
@@ -878,7 +879,7 @@ private static function insertMultiple($fields)
       $left_joins .= " left join tt_clients c on (l.client_id = c.id)";
     $sql = "select l.id as id, TIME_FORMAT(l.start, $sql_time_format) as start,
       TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish,
-      TIME_FORMAT(l.duration, '%k:%i') as duration, p.name as project, t.name as task, l.comment, l.billable, l.invoice_id $client_field, l.al_activity_id, 
+      TIME_FORMAT(l.duration, '%k:%i') as duration, p.name as project, t.name as task, l.comment, l.comment_attendance, l.billable, l.invoice_id $client_field, l.al_activity_id, 
 	  l.al_location_id,activities.a_name,locations.l_name,l.approved
       from tt_log l
       $left_joins

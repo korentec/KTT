@@ -18,6 +18,7 @@
     <td class="tableHeader" align="center">{$i18n.label.duration}</td>
 {/if}
 	<td class="tableHeader" align="center">{$i18n.label.note}</td>
+        <td class="tableHeader" align="center">{$i18n.label.attendanceNote}</td>
   </tr>
   <tr bgcolor="{cycle values="#f5f5f5,#ccccce"}">
 {if ($smarty.const.MODE_PROJECTS == $user->tracking_mode || $smarty.const.MODE_PROJECTS_AND_TASKS == $user->tracking_mode)}
@@ -34,7 +35,8 @@
     <td align="right">{if $time_rec.duration<>'0:00'}{$time_rec.duration}{else}<font color="#ff0000">{$i18n.form.time.uncompleted}</font>{/if}</td>
 {/if}
     <td>{if $time_rec.comment}{$time_rec.comment|escape:'html'}{else}&nbsp;{/if}</td>
-  </tr>
+    <td>{if $time_rec.comment_attendance}{$time_rec.comment_attendance|escape:'html'}{else}&nbsp;{/if}</td>
+</tr>
   </table>
   <table width="100%">
   <tr>

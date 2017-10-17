@@ -361,6 +361,10 @@ function get_time() {
     <td align="left">{$forms.timeRecordForm.note.control}</td>
   </tr>
   <tr>
+    <td align="right">{$i18n.label.attendanceNote}:</td>
+    <td align="left">{$forms.timeRecordForm.attendance_note.control}</td>
+  </tr>
+  <tr>
     <td align="center" colspan="2">{$forms.timeRecordForm.btn_submit.control}</td>
   </tr>
 </table>
@@ -387,6 +391,7 @@ function get_time() {
 {/if}
         <td width="5%" class="tableHeaderCentered">{$i18n.label.duration}</td>
         <td class="tableHeaderCentered">{$i18n.label.note}</td>
+        <td class="tableHeaderCentered">{$i18n.label.attendanceNote}</td>
         <td class="tableHeaderCentered" width="5%">{$i18n.label.approved}</td>
         <td width="5%" class="tableHeaderCentered">{$i18n.label.edit}</td>
       </tr>
@@ -409,6 +414,7 @@ function get_time() {
 {/if}
         <td align='right' valign='top'>{if $record.duration <> '0:00'}{$record.duration}{else}<font color="#ff0000">{$i18n.form.time.uncompleted}</font>{/if}</td>
         <td valign='top'>{if $record.comment}{$record.comment|escape:'html'}{else}&nbsp;{/if}</td>
+        <td valign='top'>{if $record.comment_attendance}{$record.comment_attendance|escape:'html'}{else}&nbsp;{/if}</td>
         <td style="text-align:center;">
             {if $record.approved}
                 <span style="font-family:webdings;font-size:18pt;">a</span>         
