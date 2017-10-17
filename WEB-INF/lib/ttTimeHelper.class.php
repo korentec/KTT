@@ -703,10 +703,9 @@ private static function insertMultiple($fields)
         $affected = $mdb2->exec($sql);
         if (is_a($affected, 'PEAR_Error'))
           throw new Exception ();
-        
-        
+
         //if no other records from same day, restore records from att_log
-        $tmp = ttTimeHelper::getRecords($id, $curr['date']);
+        $tmp = ttTimeHelper::getRecords($user_id, $curr['date']);
         if(count($tmp) == 0)
         {
             $sql1 = "UPDATE `att_log` SET `archived`=0 WHERE date=".$mdb2->quote($curr['date'])." AND att_id=".$att_id.";";
