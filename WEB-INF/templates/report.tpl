@@ -1,6 +1,8 @@
 <script>
   function chLocation(newLocation) { document.location = newLocation; }
   function checkAllApproved(){
+                          console.log("checkAllApproved");
+
       var all=event.srcElement;
       var approved=document.getElementsByName('approved[]');
       for(var a=0;a<approved.length;a++)
@@ -58,7 +60,7 @@
   {if $bean->getAttribute('chinvoice')}<td class="tableHeader">{$i18n.label.invoice}</td>{/if}  
   <td class="tableHeaderCentered">
       {$i18n.label.approved}
-      {if $user->isCoManager() || $user->isManager()}<input type="checkbox" name="allApproved" onclick="checkAllApproved();">{/if}
+      {if $user->isCoManager() || $user->isManager()}<input type="checkbox" name="allApproved" onclick="checkAllApproved();" {if $is_all_items_approved}checked{/if}>{/if}
   </td>
   </tr>
   {foreach $report_items as $item}

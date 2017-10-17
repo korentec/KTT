@@ -97,12 +97,13 @@ $totals = ttReportHelper::getTotals($bean);
 
 // Assign variables that are used to print subtotals.
 if ($report_items && 'no_grouping' != $group_by) {
-  $smarty->assign('print_subtotals', true);
-  $smarty->assign('first_pass', true);
-  $smarty->assign('group_by', $group_by);
-  $smarty->assign('prev_grouped_by', '');
-  $smarty->assign('cur_grouped_by', '');
+    $smarty->assign('print_subtotals', true);
+    $smarty->assign('first_pass', true);
+    $smarty->assign('group_by', $group_by);
+    $smarty->assign('prev_grouped_by', '');
+    $smarty->assign('cur_grouped_by', '');
 }
+
 // Determine group by header.
 if ('no_grouping' != $group_by) {
   if ('cf_1' == $group_by)
@@ -125,5 +126,6 @@ $smarty->assign('totals', $totals);
 $smarty->assign('bean', $bean);
 $smarty->assign('title', $i18n->getKey('title.report').": ".date("d/m/Y", strtotime($totals['start_date'])) ." - ". date("d/m/Y", strtotime($totals['end_date'])) ) ;
 $smarty->assign('content_page_name', 'report.tpl');
+$smarty->assign('is_all_items_approved', ttReportHelper::isAllApproved($report_items));
 $smarty->display('index.tpl');
 ?>

@@ -36,6 +36,17 @@ require_once(dirname(__FILE__).'/../../plugins/CustomFields.class.php');
 // Class ttReportHelper is used for help with reports.
 class ttReportHelper {
 
+    static function isAllApproved($report_items){
+        if(count($report_items) == 0)
+            return false;
+        foreach ($report_items as $i)
+        {
+          if(!boolval($i[approved]))
+            return false;
+        }
+        return true;
+    }
+    
   static function setApproved($all_log_ids,$approved_items){
       if(sizeof($all_log_ids)>0){
         $mdb2 = getConnection();
