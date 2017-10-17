@@ -134,13 +134,15 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
     ));
   // Note: in other modes the client list is filtered to relevant clients only. See below.
 }
+$tt_records = ttTimeHelper::getRecords($user->getActiveUser(), $cl_date);
+
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
 	
 	
     //att reports for user
     $att_start_list = $user->getAttInReports($cl_date);   
     $att_finish_list = $user->getAttOutReports($cl_date);
-    if(empty($cl_start) && empty($cl_finish))
+    if(empty($cl_start) && empty($cl_finish) && empty($tt_records))
     {
         if(count($att_start_list) == 1)
         {
@@ -458,7 +460,7 @@ if ($request->getMethod() == 'POST') {
 $week_total = ttTimeHelper::getTimeForWeek($user->getActiveUser(), $selected_date);
 $smarty->assign('week_total', $week_total);
 $smarty->assign('day_total', ttTimeHelper::getTimeForDay($user->getActiveUser(), $cl_date));
-$smarty->assign('time_records', ttTimeHelper::getRecords($user->getActiveUser(), $cl_date));
+$smarty->assign('time_records', $tt_records);
 $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign('activity_list', $activity_list);
