@@ -243,7 +243,7 @@ $i18n_key_words = array(
 'label.finish' => 'סיום',
 'label.duration' => 'משך זמן',
 'label.note' => 'הערה',
-'label.attendanceNote' => 'הערה לנוכחות',
+'label.attendanceNote' => 'סיבת דיווח',
     'label.location' => 'מיקום',
 // TODO: translate label.item
 // 'label.item' => 'Item',
