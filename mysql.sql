@@ -15,709 +15,456 @@
 # use timetracker;
 
 
+-- phpMyAdmin SQL Dump
+-- version 4.7.0
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jan 15, 2018 at 10:08 AM
+-- Server version: 10.1.25-MariaDB
+-- PHP Version: 7.1.7
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-#
 
-# Structure for table tt_teams. A team is a group of users for whom we are tracking work time.
+-- --------------------------------------------------------
 
-# This table stores settings common to all team members such as language, week start day, etc.
+--
+-- Table structure for table `activities`
+--
 
-#
+CREATE TABLE IF NOT EXISTS `activities` (
+  `a_id` int(11) NOT NULL AUTO_INCREMENT,
+  `a_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `a_name` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
+  `a_manager_id` int(11) NOT NULL DEFAULT '0',
+  `a_status` smallint(6) NOT NULL DEFAULT '1',
+  `a_project_id` int(11) NOT NULL DEFAULT '0',
+  `a_code` int(11) DEFAULT NULL,
+  PRIMARY KEY (`a_id`),
+  KEY `a_manager_idx` (`a_manager_id`,`a_status`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-CREATE TABLE `tt_teams` (
+-- --------------------------------------------------------
 
-  `id` int(11) NOT NULL auto_increment,                  # team id
+--
+-- Table structure for table `activity_bind`
+--
 
-  `timestamp` timestamp NOT NULL,                        # modification timestamp
+CREATE TABLE IF NOT EXISTS `activity_bind` (
+  `ab_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ab_id_a` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `ab_id_p` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ab_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-  `name` varchar(80) default NULL,                       # team name
+-- --------------------------------------------------------
 
-  `address` varchar(255) default NULL,                   # team address, used in invoices
+--
+-- Table structure for table `activity_status_list`
+--
 
-  `currency` varchar(7) default NULL,                    # team currency symbol
+CREATE TABLE IF NOT EXISTS `activity_status_list` (
+  `asl_id` smallint(6) NOT NULL DEFAULT '0',
+  `asl_hidden` tinyint(4) NOT NULL DEFAULT '0',
+  `asl_name` varchar(40) NOT NULL DEFAULT '',
+  PRIMARY KEY (`asl_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-  `decimal_mark` char(1) NOT NULL default '.',           # separator in decimals
+-- --------------------------------------------------------
 
-  `locktime` int(4) default '0',                         # lock interval in days
+--
+-- Table structure for table `att_log`
+--
 
-  `lang` varchar(10) NOT NULL default 'en',              # language
-
-  `date_format` varchar(20) NOT NULL default '%Y-%m-%d', # date format
-
-  `time_format` varchar(20) NOT NULL default '%H:%M',    # time format
-
-  `week_start` smallint(2) NOT NULL DEFAULT '0',         # Week start day, 0 == Sunday.
-
-  `tracking_mode` smallint(2) NOT NULL DEFAULT '1',      # tracking mode ("projects" or "projects and tasks")
-
-  `record_type` smallint(2) NOT NULL DEFAULT '0',        # time record type ("start and finish", "duration", or both)
-
-  `plugins` varchar(255) default NULL,                   # a list of enabled plugins for team
-
-  `custom_logo` tinyint(4) default '0',                  # whether to use a custom logo or not
-
-  `status` tinyint(4) default '1',                       # team status
-
+CREATE TABLE IF NOT EXISTS `att_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `att_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `time` time DEFAULT NULL,
+  `in_out` tinyint(1) UNSIGNED DEFAULT '0',
+  `archived` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `locations`
+--
 
+CREATE TABLE IF NOT EXISTS `locations` (
+  `l_id` int(11) NOT NULL AUTO_INCREMENT,
+  `l_name` varchar(25) CHARACTER SET utf8 NOT NULL,
+  PRIMARY KEY (`l_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COMMENT='Working location';
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_clients`
+--
 
-#
+CREATE TABLE IF NOT EXISTS `tt_clients` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `tax` float(6,2) DEFAULT '0.00',
+  `projects` text,
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `client_name_idx` (`team_id`,`name`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Structure for table tt_users. This table is used to store user properties.
+-- --------------------------------------------------------
 
-#
+--
+-- Table structure for table `tt_client_project_binds`
+--
 
-CREATE TABLE `tt_users` (
+CREATE TABLE IF NOT EXISTS `tt_client_project_binds` (
+  `client_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  KEY `client_idx` (`client_id`),
+  KEY `project_idx` (`project_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-  `id` int(11) NOT NULL auto_increment,          # user id
+-- --------------------------------------------------------
 
-  `timestamp` timestamp NOT NULL,                # modification timestamp
+--
+-- Table structure for table `tt_config`
+--
 
-  `login` varchar(50) COLLATE utf8_bin NOT NULL, # user login
+CREATE TABLE IF NOT EXISTS `tt_config` (
+  `user_id` int(11) NOT NULL,
+  `param_name` varchar(32) NOT NULL,
+  `param_value` varchar(80) DEFAULT NULL,
+  UNIQUE KEY `param_idx` (`user_id`,`param_name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-  `password` varchar(50) default NULL,           # password hash
+-- --------------------------------------------------------
 
-  `name` varchar(100) default NULL,              # user name
+--
+-- Table structure for table `tt_cron`
+--
 
-  `team_id` int(11) NOT NULL,                    # team id
-
-  `role` int(11) default '4',                    # user role ("manager", "co-manager", "client", or "user")
-
-  `client_id` int(11) default NULL,              # client id for "client" user role
-
-  `att_id` int(11) default NULL,              # client id for "client" user role
-
-  `rate` float(6,2) NOT NULL default '0.00',     # default hourly rate
-
-  `email` varchar(100) default NULL,             # user email
-
-  `status` tinyint(4) default '1',               # user status
-
+CREATE TABLE IF NOT EXISTS `tt_cron` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `cron_spec` varchar(255) NOT NULL,
+  `last` int(11) DEFAULT NULL,
+  `next` int(11) DEFAULT NULL,
+  `report_id` int(11) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_custom_fields`
+--
 
-
-# Create an index that guarantees unique active and inactive logins.
-
-create unique index login_idx on tt_users(login, status);
-
-
-
-# Create admin account with password 'secret'. Admin is a superuser, who can create teams.
-
-DELETE from `tt_users` WHERE login = 'admin';
-
-INSERT INTO `tt_users` (`login`, `password`, `name`, `team_id`, `role`) VALUES ('admin', md5('secret'), 'Admin', '0', '1024');
-
-
-
-
-
-#
-
-# Structure for table tt_projects.
-
-#
-
-CREATE TABLE `tt_projects` (
-
-  `id` int(11) NOT NULL auto_increment,         # project id
-
-  `team_id` int(11) NOT NULL,                   # team id
-
-  `name` varchar(80) COLLATE utf8_bin NOT NULL, # project name
-
-  `description` varchar(255) default NULL,      # project description
-
-  `tasks` text default NULL,                    # comma-separated list of task ids associated with this project
-
-  `status` tinyint(4) default '1',				# project status
-
+CREATE TABLE IF NOT EXISTS `tt_custom_fields` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `type` tinyint(4) NOT NULL DEFAULT '0',
+  `label` varchar(32) NOT NULL DEFAULT '',
+  `required` tinyint(4) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_custom_field_log`
+--
 
-
-# Create an index that guarantees unique active and inactive projects per team.
-
-create unique index project_idx on tt_projects(team_id, name, status);
-
-
-
-
-
-#
-
-# Structure for table tt_tasks.
-
-#
-
-CREATE TABLE `tt_tasks` (
-
-  `id` int(11) NOT NULL auto_increment,         # task id
-
-  `team_id` int(11) NOT NULL,                   # team id
-
-  `name` varchar(80) COLLATE utf8_bin NOT NULL, # task name
-
-  `description` varchar(255) default NULL,      # task description
-
-  `status` tinyint(4) default '1',              # task status
-
+CREATE TABLE IF NOT EXISTS `tt_custom_field_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `log_id` bigint(20) NOT NULL,
+  `field_id` int(11) NOT NULL,
+  `option_id` int(11) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_custom_field_options`
+--
 
-
-# Create an index that guarantees unique active and inactive tasks per team.
-
-create unique index task_idx on tt_tasks(team_id, name, status);
-
-
-
-
-
-#
-
-# Structure for table tt_user_project_binds. This table maps users to assigned projects.
-
-#
-
-CREATE TABLE `tt_user_project_binds` (
-
-  `id` int(11) NOT NULL auto_increment, # bind id
-
-  `user_id` int(11) NOT NULL,           # user id
-
-  `project_id` int(11) NOT NULL,        # project id
-
-  `rate` float(6,2) default '0.00',     # rate for this user when working on this project
-
-  `status` tinyint(4) default '1',      # bind status
-
+CREATE TABLE IF NOT EXISTS `tt_custom_field_options` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `field_id` int(11) NOT NULL,
+  `value` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_expense_items`
+--
 
+CREATE TABLE IF NOT EXISTS `tt_expense_items` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `cost` decimal(10,2) DEFAULT '0.00',
+  `invoice_id` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `date_idx` (`date`),
+  KEY `user_idx` (`user_id`),
+  KEY `client_idx` (`client_id`),
+  KEY `project_idx` (`project_id`),
+  KEY `invoice_idx` (`invoice_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Create an index that guarantees unique user to project binds.
+-- --------------------------------------------------------
 
-create unique index bind_idx on tt_user_project_binds(user_id, project_id);
+--
+-- Table structure for table `tt_fav_reports`
+--
 
-
-
-
-
-#
-
-# Structure for table tt_project_task_binds. This table maps projects to assigned tasks.
-
-#
-
-CREATE TABLE `tt_project_task_binds` (
-
-  `project_id` int(11) NOT NULL, # project id    
-
-  `task_id` int(11) NOT NULL     # task id
-
-);
-
-
-
-# Indexes for tt_project_task_binds.
-
-create index project_idx on tt_project_task_binds(project_id);
-
-create index task_idx on tt_project_task_binds(task_id);
-
-
-
-
-
-#
-
-# Structure for table tt_log. This is the table where time entries for users are stored.
-
-# If you use custom fields, additional info for each record may exist in tt_custom_field_log.
-
-#
-
-CREATE TABLE `tt_log` (
-
-  `id` bigint NOT NULL auto_increment, # time record id
-
-  `timestamp` timestamp NOT NULL,      # modification timestamp
-
-  `user_id` int(11) NOT NULL,          # user id
-
-  `date` date NOT NULL,                # date the record is for
-
-  `start` time default NULL,           # record start time (for example, 09:00)
-
-  `duration` time default NULL,        # record duration (for example, 1 hour)
-
-  `client_id` int(11) default NULL,    # client id
-
-  `project_id` int(11) default NULL,   # project id
-
-  `task_id` int(11) default NULL,      # task id
-
-  `invoice_id` int(11) default NULL,   # invoice id
-
-  `comment` blob,                      # user provided comment for time record
-
-  `comment_attendance` blob,           # user provided comment for time record manual values insertion
-
-  `billable` tinyint(4) default '0',   # whether the record is billable or not
-
-  `status` tinyint(4) default '1',     # time record status
-
-  `approved` tinyint(1) unsigned DEFAULT 0,
-
+CREATE TABLE IF NOT EXISTS `tt_fav_reports` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `cf_1_option_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `billable` tinyint(4) DEFAULT NULL,
+  `invoice` tinyint(4) DEFAULT NULL,
+  `users` text,
+  `period` tinyint(4) DEFAULT NULL,
+  `period_start` date DEFAULT NULL,
+  `period_end` date DEFAULT NULL,
+  `show_client` tinyint(4) NOT NULL DEFAULT '0',
+  `show_invoice` tinyint(4) NOT NULL DEFAULT '0',
+  `show_project` tinyint(4) NOT NULL DEFAULT '0',
+  `show_start` tinyint(4) NOT NULL DEFAULT '0',
+  `show_duration` tinyint(4) NOT NULL DEFAULT '0',
+  `show_cost` tinyint(4) NOT NULL DEFAULT '0',
+  `show_task` tinyint(4) NOT NULL DEFAULT '0',
+  `show_end` tinyint(4) NOT NULL DEFAULT '0',
+  `show_note` tinyint(4) NOT NULL DEFAULT '0',
+  `show_custom_field_1` tinyint(4) NOT NULL DEFAULT '0',
+  `show_totals_only` tinyint(4) NOT NULL DEFAULT '0',
+  `group_by` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_general`
+--
 
-
-# Create indexes on tt_log for performance.
-
-create index date_idx on tt_log(date);
-
-create index user_idx on tt_log(user_id);
-
-create index client_idx on tt_log(client_id);
-
-create index invoice_idx on tt_log(invoice_id);
-
-create index project_idx on tt_log(project_id);
-
-create index task_idx on tt_log(task_id);
-
-
-
-
-
-#
-
-# Structure for table tt_invoices. Invoices are issued to clients for billable work.
-
-#
-
-CREATE TABLE `tt_invoices` (
-
-  `id` int(11) NOT NULL auto_increment,         # invoice id
-
-  `team_id` int(11) NOT NULL,                   # team id
-
-  `name` varchar(80) COLLATE utf8_bin NOT NULL, # invoice name
-
-  `date` date NOT NULL,                         # invoice date
-
-  `client_id` int(11) NOT NULL,                 # client id
-
-  `status` tinyint(4) default '1',              # invoice status
-
+CREATE TABLE IF NOT EXISTS `tt_general` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `last_att_sync` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-);
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_invoices`
+--
 
+CREATE TABLE IF NOT EXISTS `tt_invoices` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `date` date NOT NULL,
+  `client_id` int(11) NOT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_idx` (`team_id`,`name`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-# Create an index that guarantees unique invoice names per team.
+-- --------------------------------------------------------
 
-create unique index name_idx on tt_invoices(team_id, name, status);
+--
+-- Table structure for table `tt_log`
+--
 
+CREATE TABLE IF NOT EXISTS `tt_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `user_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `start` time DEFAULT NULL,
+  `duration` time DEFAULT NULL,
+  `client_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `task_id` int(11) DEFAULT NULL,
+  `invoice_id` int(11) DEFAULT NULL,
+  `comment` blob,
+  `billable` tinyint(4) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '1',
+  `al_activity_id` int(11) DEFAULT NULL,
+  `al_location_id` int(11) DEFAULT NULL,
+  `approved` tinyint(1) UNSIGNED DEFAULT '0',
+  `start_dirty` tinyint(1) DEFAULT NULL,
+  `duration_dirty` tinyint(1) DEFAULT NULL,
+  `comment_attendance` blob,
+  PRIMARY KEY (`id`),
+  KEY `date_idx` (`date`),
+  KEY `user_idx` (`user_id`),
+  KEY `client_idx` (`client_id`),
+  KEY `invoice_idx` (`invoice_id`),
+  KEY `project_idx` (`project_id`),
+  KEY `task_idx` (`task_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
 
+--
+-- Table structure for table `tt_projects`
+--
 
+CREATE TABLE IF NOT EXISTS `tt_projects` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `name` varchar(80) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `tasks` text,
+  `status` smallint(6) DEFAULT '1',
+  `p_manager_id` int(11) DEFAULT NULL,
+  `p_code` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_idx` (`team_id`,`name`,`status`,`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-#
+-- --------------------------------------------------------
 
-# Structure for table tt_tmp_refs. Used for reset password mechanism.
+--
+-- Table structure for table `tt_project_task_binds`
+--
 
-#
+CREATE TABLE IF NOT EXISTS `tt_project_task_binds` (
+  `project_id` int(11) NOT NULL,
+  `task_id` int(11) NOT NULL,
+  KEY `project_idx` (`project_id`),
+  KEY `task_idx` (`task_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-CREATE TABLE `tt_tmp_refs` (
+-- --------------------------------------------------------
 
-  `timestamp` timestamp NOT NULL,     # creation timestamp
+--
+-- Table structure for table `tt_tasks`
+--
 
-  `ref` char(32) NOT NULL default '', # unique reference for user, used in urls
+CREATE TABLE IF NOT EXISTS `tt_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `team_id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `status` int(11) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `task_idx` (`team_id`,`name`,`status`,`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-  `user_id` int(11) NOT NULL          # user id
+-- --------------------------------------------------------
 
-);
+--
+-- Table structure for table `tt_teams`
+--
 
-
-
-
-
-#
-
-# Structure for table tt_fav_reports. Favorite reports are pre-configured report configurations.
-
-#
-
-CREATE TABLE `tt_fav_reports` (
-
-  `id` int(11) NOT NULL auto_increment,                  # favorite report id
-
-  `name` varchar(200) NOT NULL,                          # favorite report name
-
-  `user_id` int(11) NOT NULL,                            # user id favorite report belongs to
-
-  `client_id` int(11) default NULL,                      # client id (if selected)
-
-  `cf_1_option_id` int(11) default NULL,                 # custom field 1 option id (if selected)
-
-  `project_id` int(11) default NULL,                     # project id (if selected)
-
-  `task_id` int(11) default NULL,                        # task id (if selected)
-
-  `billable` tinyint(4) default NULL,                    # whether to include billable, not billable, or all records
-
-  `invoice` tinyint(4) default NULL,                     # whether to include invoiced, not invoiced, or all records
-
-  `users` text default NULL,                             # Comma-separated list of user ids. Nothing here means "all" users. 
-
-  `period` tinyint(4) default NULL,                      # selected period type for report
-
-  `period_start` date default NULL,                      # period start
-
-  `period_end` date default NULL,                        # period end
-
-  `show_client` tinyint(4) NOT NULL default '0',         # whether to show client column
-
-  `show_invoice` tinyint(4) NOT NULL default '0',        # whether to show invoice column  
-
-  `show_project` tinyint(4) NOT NULL default '0',        # whether to show project column
-
-  `show_start` tinyint(4) NOT NULL default '0',          # whether to show start field
-
-  `show_duration` tinyint(4) NOT NULL default '0',       # whether to show duration field
-
-  `show_cost` tinyint(4) NOT NULL default '0',           # whether to show cost field  
-
-  `show_task` tinyint(4) NOT NULL default '0',           # whether to show task column
-
-  `show_end` tinyint(4) NOT NULL default '0',            # whether to show end field
-
-  `show_note` tinyint(4) NOT NULL default '0',           # whether to show note column
-
-  `show_custom_field_1` tinyint(4) NOT NULL default '0', # whether to show custom field 1
-
-  `show_totals_only` tinyint(4) NOT NULL default '0',    # whether to show totals only
-
-  `group_by` varchar(20) default NULL,                   # group by field
-
+CREATE TABLE IF NOT EXISTS `tt_teams` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `name` varchar(80) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `currency` varchar(7) DEFAULT NULL,
+  `decimal_mark` char(1) NOT NULL DEFAULT '.',
+  `locktime` int(4) DEFAULT '0',
+  `lang` varchar(10) NOT NULL DEFAULT 'en',
+  `date_format` varchar(20) NOT NULL DEFAULT '%Y-%m-%d',
+  `time_format` varchar(20) NOT NULL DEFAULT '%H:%M',
+  `week_start` smallint(2) NOT NULL DEFAULT '0',
+  `tracking_mode` smallint(2) NOT NULL DEFAULT '1',
+  `record_type` smallint(2) NOT NULL DEFAULT '0',
+  `plugins` varchar(255) DEFAULT NULL,
+  `custom_logo` tinyint(4) DEFAULT '0',
+  `status` tinyint(4) DEFAULT '1',
   PRIMARY KEY (`id`)
-
-);
-
-
-
-
-
-#
-
-# Structure for table tt_cron. It is used to email favorite reports on schedule.
-
-#
-
-CREATE TABLE `tt_cron` (
-
-  `id` int(11) NOT NULL auto_increment,         # entry id
-
-  `team_id` int(11) NOT NULL,                   # team id
-
-  `cron_spec` varchar(255) NOT NULL,            # cron specification, "0 1 * * *" for "daily at 01:00"
-
-  `last` int(11) default NULL,                  # UNIX timestamp of when job was last run
-
-  `next` int(11) default NULL,                  # UNIX timestamp of when to run next job
-
-  `report_id` int(11) default NULL,             # report id from tt_fav_reports, a report to mail on schedule
-
-  `email` varchar(100) default NULL,            # email to send results to
-
-  `status` tinyint(4) default '1',              # entry status
-
-  PRIMARY KEY (`id`)
-
-);
-
-
-
-
-
-#
-
-# Structure for table tt_clients. A client is an entity for whom work is performed and who may be invoiced.
-
-#
-
-CREATE TABLE `tt_clients` (
-
-  `id` int(11) NOT NULL AUTO_INCREMENT,         # client id
-
-  `team_id` int(11) NOT NULL,                   # team id
-
-  `name` varchar(80) COLLATE utf8_bin NOT NULL, # client name
-
-  `address` varchar(255) default NULL,          # client address
-
-  `tax` float(6,2) default '0.00',              # applicable tax for this client
-
-  `projects` text default NULL,                 # comma-separated list of project ids assigned to this client
-
-  `status` tinyint(4) default '1',              # client status
-
-  PRIMARY KEY (`id`)
-
-);
-
-
-
-# Create an index that guarantees unique active and inactive clients per team.
-
-create unique index client_name_idx on tt_clients(team_id, name, status);
-
-
-
-
-
-#
-
-# Structure for table tt_client_project_binds. This table maps clients to assigned projects.
-
-#
-
-CREATE TABLE `tt_client_project_binds` (
-
-  `client_id` int(11) NOT NULL, # client id
-
-  `project_id` int(11) NOT NULL # project id
-
-);
-
-
-
-# Indexes for tt_client_project_binds.
-
-create index client_idx on tt_client_project_binds(client_id);
-
-create index project_idx on tt_client_project_binds(project_id);
-
-
-
-
-
-#
-
-# Structure for table tt_config. This table is used to store configuration info for users.
-
-# For example, last_report_email parameter stores an email for user last report was emailed to.
-
-#
-
-CREATE TABLE `tt_config` (
-
-  `user_id` int(11) NOT NULL,            # user id
-
-  `param_name` varchar(32) NOT NULL,     # parameter name
-
-  `param_value` varchar(80) default NULL # parameter value
-
-);
-
-
-
-# Create an index that guarantees unique parameter names per user.
-
-create unique index param_idx on tt_config(user_id, param_name);
-
-
-
-
-
-# Below are the tables used by CustomFields plugin.
-
-
-
-#
-
-# Structure for table tt_custom_fields. This table contains definitions of custom fields.
-
-#
-
-CREATE TABLE `tt_custom_fields` (
-
-  `id` int(11) NOT NULL auto_increment,    # custom field id
-
-  `team_id` int(11) NOT NULL,              # team id
-
-  `type` tinyint(4) NOT NULL default '0',  # custom field type (text or dropdown)
-
-  `label` varchar(32) NOT NULL default '', # custom field label
-
-  `required` tinyint(4) default '0',       # whether this custom field is mandatory for time records
-
-  `status` tinyint(4) default '1',         # custom field status
-
-  PRIMARY KEY  (`id`)
-
-);
-
-
-
-
-
-#
-
-# Structure for table tt_custom_field_options. This table defines options for dropdown custom fields.
-
-#
-
-CREATE TABLE `tt_custom_field_options` (
-
-  `id` int(11) NOT NULL auto_increment,    # option id
-
-  `field_id` int(11) NOT NULL,             # custom field id              
-
-  `value` varchar(32) NOT NULL default '', # option value
-
-  PRIMARY KEY  (`id`)
-
-);
-
-
-
-
-
-#
-
-# Structure for table tt_custom_field_log.
-
-# This table supplements tt_log and contains custom field values for records.
-
-#
-
-CREATE TABLE `tt_custom_field_log` (
-
-  `id` bigint NOT NULL auto_increment, # cutom field log id
-
-  `log_id` bigint NOT NULL,            # id of a record in tt_log this record corresponds to
-
-  `field_id` int(11) NOT NULL,         # custom field id
-
-  `option_id` int(11) default NULL,    # Option id. Used for dropdown custom fields.
-
-  `value` varchar(255) default NULL,   # Text value. Used for text custom fields.
-
-  `status` tinyint(4) default '1',     # custom field log entry status
-
-  PRIMARY KEY  (`id`)
-
-);
-
-
-
-
-
-#
-
-# Structure for table tt_expense_items.
-
-# This table lists expense items.
-
-#
-
-CREATE TABLE `tt_expense_items` (
-
-  `id` bigint NOT NULL auto_increment, # expense item id
-
-  `date` date NOT NULL,                # date the record is for
-
-  `user_id` int(11) NOT NULL,          # user id the expense item is reported by
-
-  `client_id` int(11) default NULL,    # client id
-
-  `project_id` int(11) default NULL,   # project id
-
-  `name` varchar(255) NOT NULL,        # expense item name (what is an expense for)
-
-  `cost` decimal(10,2) default '0.00', # item cost (including taxes, etc.)
-
-  `invoice_id` int(11) default NULL,   # invoice id
-
-  `status` tinyint(4) default '1',     # item status
-
-  PRIMARY KEY  (`id`)
-
-);
-
-
-#
-
-# Structure for table att_log. This is the table where time entries migrated from att system are stored.
-
-#
-
-CREATE TABLE `att_log` (
-
-  `id` bigint NOT NULL auto_increment, # time record id
-
-  `timestamp` timestamp NOT NULL,      # modification timestamp
-
-  `att_id` int(11) NOT NULL,          # att user id
-
-  `date` date NOT NULL,                # date the record is for
-
-  `time` time default NULL,           # record time (for example, 09:00)
-
-  `in_out` tinyint(1) unsigned DEFAULT 0,   # in - 0, out - 1
-
-  `archived` tinyint(1) unsigned NOT NULL DEFAULT 0, # archived flag
-
-  PRIMARY KEY (`id`)
-
-);
-
-CREATE TABLE `tt_general` (
-
-  `id` bigint NOT NULL auto_increment, # record id
-
-  `last_att_sync` timestamp NULL,      # modification timestamp
-
-  PRIMARY KEY (`id`)
-
-);
-INSERT IGNORE INTO tt_general(`id`,`last_att_sync`) VALUES (1, null)
-
-
-
-
-# Create indexes on tt_expense_items for performance.
-
-create index date_idx on tt_expense_items(date);
-
-create index user_idx on tt_expense_items(user_id);
-
-create index client_idx on tt_expense_items(client_id);
-
-create index project_idx on tt_expense_items(project_id);
-
-create index invoice_idx on tt_expense_items(invoice_id);
-
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tt_tmp_refs`
+--
+
+CREATE TABLE IF NOT EXISTS `tt_tmp_refs` (
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ref` char(32) NOT NULL DEFAULT '',
+  `user_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tt_users`
+--
+
+CREATE TABLE IF NOT EXISTS `tt_users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `login` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `team_id` int(11) DEFAULT NULL,
+  `role` int(11) DEFAULT '4',
+  `client_id` int(11) DEFAULT NULL,
+  `att_id` int(10) UNSIGNED DEFAULT NULL,
+  `rate` float(6,2) NOT NULL DEFAULT '0.00',
+  `email` varchar(100) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `login_idx` (`login`,`status`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tt_user_project_binds`
+--
+
+CREATE TABLE IF NOT EXISTS `tt_user_project_binds` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL,
+  `rate` float(6,2) DEFAULT '0.00',
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `bind_idx` (`user_id`,`project_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
