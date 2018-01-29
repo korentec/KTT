@@ -1,8 +1,5 @@
-Anuko Time Tracker.
+Korentec Time Tracker (based on Anuko Time Tracker)
 Copyright (c) Anuko (https://www.anuko.com).
-
-Project home page: https://www.anuko.com/time_tracker/index.htm
-Free hosting of Time Tracker for individuals and small teams is available at https://timetracker.anuko.com
 
 Each file in this archive is protected by the LIBERAL FREEWARE LICENSE. 
 Read the file license.txt for details.
@@ -21,7 +18,9 @@ The general installation procedure looks like this:
 - Install, configure, and test Anuko Time Tracker like so: 
 
 1) Unpack distribution files into a selected directory for Apache web server.
-2) Create a database using the mysql.sql file in the distribution.
+2) Create a database using the the following files in the distribution:
+   mysql.sql
+   upgradedb.sql.
 3) If you are upgrading from earlier versions run dbinstall.php from your browser and do the required "Update database structure" steps.
 4) Create user name and password to access the time tracker database. 
 5) Change $dsn value in /WEB-INF/config.php file to reflect your database connection parameters (user name and password).
