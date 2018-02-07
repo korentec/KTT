@@ -917,7 +917,7 @@ private static function insertMultiple($fields)
     }
   }
 // insertAtt - inserts a time record into att log table. Does not deal with custom fields.
-  static function insertAtt($from, $recordsArr)
+  static function insertAtt($from, $to, $recordsArr)
   {
     if(count($recordsArr) == 0 )
         return 0;
@@ -966,11 +966,11 @@ private static function insertMultiple($fields)
         //update tt_general table ================
         if($affected>0)
         {
-            $tmp = $from->toString(DB_DATEFORMAT);
+            $tmp = $to->toString(DB_DATEFORMAT);
             $sql1 = "UPDATE `tt_general` SET `last_att_sync`='$tmp' WHERE id=1;";
-    //        echo '</br>';
-    //        print_r($sql1);
-    //        echo '</br>';
+            //echo '</br>';
+            //print_r($sql1);
+            //echo '</br>';
             $affected1 = $mdb2->exec($sql1);
             if (is_a($affected1, 'PEAR_Error'))
                 throw new Exception ();

@@ -11,19 +11,26 @@
 
 require_once('initialize.php');
 import('ttTimeHelper');
+import('DateAndTime');
 
 $errors = '';  // string to hold validation errors
 $data = array();        // array to pass back data
 
-// validate from variable ========
-if(($from_str = trim($_POST['from'])) == '')
+// validate from variable =======
+
+if(($from_str = trim($_POST['from'])) == ''){
     $errors = 'from date is required.';
-else if(($from = (new DateAndTime(DB_DATEFORMAT, $from_str))) == null)
+}else if(($to_str = trim($_POST['to'])) == ''){
+    $errors = 'to date is required.';
+}else if(($from = (new DateAndTime(DB_DATEFORMAT, $from_str))) == null){
     $errors = 'invalid from date. ' . $from_str;
-else if(($lastFrom = ttTimeHelper::getLastSyncDate()) !=null && $lastFrom >= $from)
-    $errors = 'data was already imported from this date. data last syncronized on '.$lastFrom->toString(DB_DATEFORMAT);
-
-
+}else if(($to = (new DateAndTime(DB_DATEFORMAT, $to_str))) == null){
+    $errors = 'invalid to date. ' . $to_str;
+}else if(($lastSync = ttTimeHelper::getLastSyncDate()) !=null && $from->compare($lastSync)<=0){
+    $errors = 'data was already imported from this date. data last syncronized on '.$lastSync->toString(DB_DATEFORMAT);
+}else if($from->compare($to)>0){
+    $errors = 'invalid from date ' . $from_str . ' or to date ' . $to_str;
+}
 // validate data variable ========
 if (($data_str = trim($_POST['data'])) == '')
   $errors = 'data is required.';
@@ -37,13 +44,12 @@ else{
 //if no errors, perform sync ==============
 if (strlen($errors) == 0)
 {
-    if(ttTimeHelper::insertAtt($from, $res_arr) != count($res_arr))
+    if(ttTimeHelper::insertAtt($from, $to, $res_arr) != count($res_arr))
         $errors['data'] = 'writing to DB failed.';
 }
 
 // return a response ==============
 $data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(DB_DATEFORMAT);
-
 // response if there are errors
 if ( strlen($errors) > 0 ) {
   // if there are items in our errors array, return those errors
