@@ -26,7 +26,7 @@ if(($from_str = trim($_POST['from'])) == ''){
     $errors = 'invalid from date. ' . $from_str;
 }else if(($to = (new DateAndTime(DB_DATEFORMAT, $to_str))) == null){
     $errors = 'invalid to date. ' . $to_str;
-}else if(($lastSync = ttTimeHelper::getLastSyncDate()) !=null && $from->compare($lastSync)<=0){
+}else if(($lastSync = ttTimeHelper::getLastSyncDate()) !=null && $from->compare($lastSync)<0){
     $errors = 'data was already imported from this date. data last syncronized on '.$lastSync->toString(DB_DATEFORMAT);
 }else if($from->compare($to)>0){
     $errors = 'invalid from date ' . $from_str . ' or to date ' . $to_str;
