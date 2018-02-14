@@ -22,12 +22,12 @@ if(($from_str = trim($_POST['from'])) == ''){
     $errors = 'from date is required.';
 }else if(($to_str = trim($_POST['to'])) == ''){
     $errors = 'to date is required.';
-}else if(($from = (new DateAndTime(DB_DATEFORMAT, $from_str))) == null){
+}else if(($from = (new DateAndTime(API_DATEFORMAT, $from_str))) == null){
     $errors = 'invalid from date. ' . $from_str;
-}else if(($to = (new DateAndTime(DB_DATEFORMAT, $to_str))) == null){
+}else if(($to = (new DateAndTime(API_DATEFORMAT, $to_str))) == null){
     $errors = 'invalid to date. ' . $to_str;
 }else if(($lastSync = ttTimeHelper::getLastSyncDate()) !=null && $from->compare($lastSync)<0){
-    $errors = 'data was already imported from this date. data last syncronized on '.$lastSync->toString(DB_DATEFORMAT);
+    $errors = 'data was already imported from this date. data last syncronized on '.$lastSync->toString(API_DATEFORMAT);
 }else if($from->compare($to)>0){
     $errors = 'invalid from date ' . $from_str . ' or to date ' . $to_str;
 }
@@ -49,7 +49,7 @@ if (strlen($errors) == 0)
 }
 
 // return a response ==============
-$data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(DB_DATEFORMAT);
+$data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(API_DATEFORMAT);
 // response if there are errors
 if ( strlen($errors) > 0 ) {
   // if there are items in our errors array, return those errors

@@ -897,7 +897,7 @@ private static function insertMultiple($fields)
     return $result;
   }
 
-  static function getLastSyncDate()
+  static function getLastSyncDate($format=API_DATEFORMAT)
   {
       $mdb2 = getConnection();
       try {
@@ -909,7 +909,7 @@ private static function insertMultiple($fields)
         if(!$val)
             return null;
             
-        $val = new DateAndTime(DB_DATEFORMAT, $val);
+        $val = new DateAndTime($format, $val);
         return $val;
 
     } catch (Exception $ex) {
@@ -966,7 +966,7 @@ private static function insertMultiple($fields)
         //update tt_general table ================
         if($affected>0)
         {
-            $tmp = $to->toString(DB_DATEFORMAT);
+            $tmp = $to->toString(API_DATEFORMAT);
             $sql1 = "UPDATE `tt_general` SET `last_att_sync`='$tmp' WHERE id=1;";
             //echo '</br>';
             //print_r($sql1);

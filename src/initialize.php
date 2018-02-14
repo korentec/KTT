@@ -39,6 +39,7 @@ define("LIBRARY_DIR", APP_DIR."/WEB-INF/lib");
 define("TEMPLATE_DIR", APP_DIR."/WEB-INF/templates");
 // Date format for database and URI parameters.
 define('DB_DATEFORMAT', '%Y-%m-%d');
+define('API_DATEFORMAT', '%Y-%m-%d %H:%M:%S');
 require_once(LIBRARY_DIR.'/common.lib.php');
 // Require the configuration file with application settings.
 if (!file_exists(APP_DIR."/WEB-INF/config.php")) die ("WEB-INF/config.php file does not exist.");
