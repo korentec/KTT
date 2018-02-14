@@ -409,8 +409,8 @@ function get_time() {
         <td valign='top'>{$record.task|escape:'html'}</td>
 {/if}
 {if (($smarty.const.TYPE_START_FINISH == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
-        <td nowrap align='right' valign='top'>{if $record.start}{$record.start}{else}&nbsp;{/if}</td>
-        <td nowrap align='right' valign='top'>{if $record.finish}{$record.finish}{else}&nbsp;{/if}</td>
+        <td nowrap align='right' valign='top'>{if $record.start}{$record.start}{else}&nbsp;{/if}{if 1==$record.start_dirty}(*){/if}</td>
+        <td nowrap align='right' valign='top'>{if $record.finish}{$record.finish}{else}&nbsp;{/if}{if 1==$record.duration_dirty}(*){/if}</td>
 {/if}
         <td align='right' valign='top'>{if $record.duration <> '0:00'}{$record.duration}{else}<font color="#ff0000">{$i18n.form.time.uncompleted}</font>{/if}</td>
         <td valign='top'>{if $record.comment}{$record.comment|escape:'html'}{else}&nbsp;{/if}</td>

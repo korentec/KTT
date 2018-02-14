@@ -876,8 +876,8 @@ private static function insertMultiple($fields)
       " left join tt_tasks t on (l.task_id = t.id)     left join activities   on (l.al_activity_id = activities.a_id) left join locations   on (l.al_location_id = locations.l_id)";
     if (in_array('cl', explode(',', $user->plugins)))
       $left_joins .= " left join tt_clients c on (l.client_id = c.id)";
-    $sql = "select l.id as id, TIME_FORMAT(l.start, $sql_time_format) as start,
-      TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish,
+    $sql = "select l.id as id, TIME_FORMAT(l.start, $sql_time_format) as start, l.start_dirty as start_dirty,
+      TIME_FORMAT(sec_to_time(time_to_sec(l.start) + time_to_sec(l.duration)), $sql_time_format) as finish, l.duration_dirty as duration_dirty,
       TIME_FORMAT(l.duration, '%k:%i') as duration, p.name as project, t.name as task, l.comment, l.comment_attendance, l.billable, l.invoice_id $client_field, l.al_activity_id, 
 	  l.al_location_id,activities.a_name,locations.l_name,l.approved
       from tt_log l
