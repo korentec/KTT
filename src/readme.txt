@@ -19,8 +19,9 @@ The general installation procedure looks like this:
 
 1) Unpack distribution files into a selected directory for Apache web server.
 2) Create a database using the the following files in the distribution:
-   mysql.sql
-   upgradedb.sql.
+   sql/createDB.sql,
+   sql/updateDB.sql,
+   sql/insertData.sql
 3) If you are upgrading from earlier versions run dbinstall.php from your browser and do the required "Update database structure" steps.
 4) Create user name and password to access the time tracker database. 
 5) Change $dsn value in /WEB-INF/config.php file to reflect your database connection parameters (user name and password).
