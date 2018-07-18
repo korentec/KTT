@@ -22,6 +22,7 @@ The general installation procedure looks like this:
    sql/createDB.sql,
    sql/updateDB.sql,
    sql/insertData.sql
+   sql/insertDevData.sql (optional)
 3) If you are upgrading from earlier versions run dbinstall.php from your browser and do the required "Update database structure" steps.
 4) Create user name and password to access the time tracker database. 
 5) Change $dsn value in /WEB-INF/config.php file to reflect your database connection parameters (user name and password).
