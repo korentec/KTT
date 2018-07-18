@@ -1,13 +1,17 @@
 <script>
-  function chLocation(newLocation) { document.location = newLocation; }
-  function checkAllApproved(){
-                          console.log("checkAllApproved");
 
-      var all=event.srcElement;
-      var approved=document.getElementsByName('approved[]');
-      for(var a=0;a<approved.length;a++)
-          approved[a].checked=all.checked;
+  function chLocation(newLocation) { 
+    document.location = newLocation; 
   }
+  
+  function checkAllApproved(bool) {
+    event.preventDefault();
+    const approveds = document.getElementsByName('approved[]');
+    approveds.forEach(approved => {
+      approved.checked = bool;
+    });
+  }
+
 </script>
 
 {$forms.reportForm.open}
@@ -58,9 +62,14 @@
   {if $bean->getAttribute('chnote')}<td class="tableHeader">{$i18n.label.note}</td>{/if}
   {if $bean->getAttribute('chcost')}<td class="tableHeaderCentered" width="5%">{$i18n.label.cost}</td>{/if}
   {if $bean->getAttribute('chinvoice')}<td class="tableHeader">{$i18n.label.invoice}</td>{/if}  
-  <td class="tableHeaderCentered">
-      {$i18n.label.approved}
-      {if $user->isCoManager() || $user->isManager()}<input type="checkbox" name="allApproved" onclick="checkAllApproved();" {if $is_all_items_approved}checked{/if}>{/if}
+  <td class="tableHeaderCentered"width="18%">
+      <div>{$i18n.label.approved}</div>
+      {if $user->isCoManager() || $user->isManager()}
+        <div style="font-weight: normal;">
+          <a href="#" onclick="checkAllApproved(true)">{$i18n.label.select_all}</a>&nbsp;/&nbsp;
+          <a href="#" onclick="checkAllApproved(false)">{$i18n.label.select_none}</a>
+        </div>
+      {/if}
   </td>
   </tr>
   {foreach $report_items as $item}
@@ -117,7 +126,7 @@
         {if 2 == $item.type}<td bgcolor="white"><input type="checkbox" name="item_id_{$item.id}"></td>{/if}
       {/if}
     {/if}
-    <td>
+    <td style="text-align: center;">
     {if $user->isCoManager() || $user->isManager()}    
         <input type="checkbox" name="approved[]" value="{$item.id}" {if 1==$item.approved}checked{/if}>
         <input type="hidden" name="hdn_log_id_{$item.id}">    
