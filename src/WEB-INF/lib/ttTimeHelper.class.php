@@ -429,10 +429,7 @@ class ttTimeHelper {
     $fields['finish_arr'] = ($finish_dirty) ? array($user_finish) : $att_finish;
     $fields['start_dirty'] = $start_dirty;
     $fields['duration_dirty'] = $finish_dirty;
-    return ttTimeHelper::insertMultiple($fields);  
-
-    
-      
+    return ttTimeHelper::insertMultiple($fields);   
   }
       
 private static function insertSingle($fields)    
@@ -632,8 +629,8 @@ private static function insertMultiple($fields)
     $date = $fields['date'];
     $user_id = $fields['user_id'];
     $client = $fields['client'];
-	$activity 		= $fields['activity'];
-  //  $subactivity 	= $fields['subactivity'];
+    $activity 		= $fields['activity'];
+    //  $subactivity 	= $fields['subactivity'];
     $location 		= $fields['location'];
     $project = $fields['project'];
     $task = $fields['task'];
@@ -643,17 +640,24 @@ private static function insertMultiple($fields)
     $note = $fields['note'];
     $attendance_note = $fields['attendance_note'];
     $billable = $fields['billable'];
+    $user_start = $fields['start'];
+    $user_finish = $fields['finish'];
+    $att_start = $fields['att_start'];
+    $att_finish = $fields['att_finish'];
     if ('00:00' == $finish) $finish = '24:00';
     if (!$billable) $billable = 0;
     if ($start) $duration = '';
+
+    $att_start_count = isset($att_start) ? count($att_start) : 0;
+    $att_finish_count = isset($att_finish) ? count($att_finish) : 0;
   
     //get current record from DB
     $curr = ttTimeHelper::getRecord($id, $user_id);
     if(!$curr)
         return false;
     if ($duration) {
-        $duration_dirty = boolval($curr['duration_dirty']) || ($curr['duration'] != $duration);
-        $approved = boolval($curr['approved']) && !boolval($duration_dirty);
+        $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+        $approved = !boolval($duration_dirty);
         $sql = "UPDATE tt_log set start = NULL, duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).",  al_activity_id = ".$mdb2->quote($activity).",
 	   al_location_id = ".$mdb2->quote($location).",task_id = ".$mdb2->quote($task).", ".
             "comment = ".$mdb2->quote($note).", comment_attendance = ".$mdb2->quote($attendance_note).", billable = $billable, date = '$date' WHERE id = $id";
@@ -668,9 +672,9 @@ private static function insertMultiple($fields)
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
       
-      $start_dirty = boolval($curr['start_dirty']) || ($curr['start'] != $start);
-      $duration_dirty = boolval($curr['duration_dirty']) || ($curr['finish'] != $finish);
-      $approved = boolval($curr['approved']) && !boolval($start_dirty) && !boolval($duration_dirty);
+      $start_dirty = ($att_start_count == 0) ? true : ($att_start[0] != $user_start);
+      $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+      $approved = !boolval($start_dirty) && !boolval($duration_dirty);
       $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
         "comment = ".$mdb2->quote($note).", comment_attendance = ".$mdb2->quote($attendance_note).", billable = $billable, date = '$date' WHERE id = $id";

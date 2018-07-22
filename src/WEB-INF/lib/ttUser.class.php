@@ -278,21 +278,21 @@ class ttUser {
   }
   
   // getAttInReports - returns an array of start time reports from att.
-  function getAttInReports($date)
+  function getAttInReports($date, $archived = 0)
   {
       $in_out = 0;
-      return $this->getAttReports($date, $in_out); 
+      return $this->getAttReports($date, $in_out, $archived); 
   }
   // getAttInReports - returns an array of start time reports from att.
-  function getAttOutReports($date)
+  function getAttOutReports($date, $archived = 0)
   {
       $in_out = 1;
-      return $this->getAttReports($date, $in_out); 
+      return $this->getAttReports($date, $in_out, $archived); 
   }
   
-  private function getAttReports($date, $in_out)
+  private function getAttReports($date, $in_out, $archived = 0)
   {
-      $result = array();
+    $result = array();
     $mdb2 = getConnection();
     
     // Do a query with inner join to get assigned projects.
@@ -301,7 +301,7 @@ class ttUser {
             " WHERE att_id=".$this->att_id.
             " AND in_out=".$in_out.
             " AND date=".$mdb2->quote($date).
-            "AND archived=0".
+            " AND archived=".$archived.
             " ORDER BY date";
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {

@@ -79,7 +79,7 @@ if ($request->getMethod() == 'POST') {
 	     // $cl_sub_activity = $time_rec["al_subactivity_id"];
 	      $cl_location = $time_rec["al_location_id"];
   $cl_duration = $time_rec['duration'];
-  $cl_date	= $item_date->toString($user->date_format);
+  $cl_date = $item_date->toString($user->date_format);
   $cl_note = $time_rec['comment'];
   $cl_attendance_note = $time_rec['comment_attendance'];
     
@@ -325,7 +325,12 @@ if ($request->getMethod() == 'POST') {
     if ($errors->isEmpty()) {
       if (ttTimeHelper::overlaps($user->getActiveUser(), $new_date->toString(DB_DATEFORMAT), $cl_start, $cl_finish, $cl_id))
         $errors->add($i18n->getKey('error.overlap'));
-    } 
+    }
+
+    $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
+    $att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
+    $att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+
     // Now, an update.
     if ($errors->isEmpty()) {
       $res = ttTimeHelper::update(array(
@@ -334,7 +339,7 @@ if ($request->getMethod() == 'POST') {
           'user_id'=>$user->getActiveUser(),
           'client'=>$cl_client,
           'project'=>$cl_project,
-		  'activity' => $cl_activity,
+		      'activity' => $cl_activity,
            // 'subactivity' => $cl_sub_activity,
           'location' => $cl_location,
           'task'=>$cl_task,
@@ -343,7 +348,9 @@ if ($request->getMethod() == 'POST') {
           'duration'=>$cl_duration,
           'note'=>$cl_note,
           'attendance_note'=>$cl_attendance_note,
-          'billable'=>$cl_billable));
+          'billable'=>$cl_billable,
+          'att_start' => $att_start_list,
+          'att_finish' => $att_finish_list));
       	
       // If we have custom fields - update values.
       if ($res && $custom_fields) {

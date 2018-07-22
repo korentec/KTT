@@ -303,6 +303,10 @@ if ($request->getMethod() == 'POST') {
         $errors->add($i18n->getKey('error.overlap'));
     }
 
+    $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
+    $att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
+    $att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+
     // Now, an update.
     if ($errors->isEmpty()) {
       $res = ttTimeHelper::update(array(
@@ -316,7 +320,9 @@ if ($request->getMethod() == 'POST') {
           'finish'=>$cl_finish,
           'duration'=>$cl_duration,
           'note'=>$cl_note,
-          'billable'=>$cl_billable));
+          'billable'=>$cl_billable,
+          'att_start'=>$att_start_list,
+          'att_finish'=>$att_finish_list));
       	
       // If we have custom fields - update values.
       if ($res && $custom_fields) {
