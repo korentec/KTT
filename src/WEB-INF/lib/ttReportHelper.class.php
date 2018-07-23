@@ -312,6 +312,10 @@ class ttReportHelper {
     // Add note.
     if ($bean->getAttribute('chnote'))
       array_push($fields, 'l.comment as note');
+
+    // Add note.
+    if ($bean->getAttribute('chattendance'))
+      array_push($fields, 'l.comment_attendance as attendance_note');
     
      if ($bean->getAttribute('chactivity'))
       array_push($fields, 't.a_name as a_name');
@@ -394,6 +398,9 @@ class ttReportHelper {
       // Use the note field to print item name.
       if ($bean->getAttribute('chnote'))
         array_push($fields, 'ei.name as note');
+      // Use the note field to print item name.
+      if ($bean->getAttribute('chattendance'))
+        array_push($fields, 'ei.comment_attendance as attendance_note');
       array_push($fields, 'ei.cost as cost');
       array_push($fields, 'ei.cost as expense');
       // Add invoice name if it is selected.
@@ -1226,6 +1233,8 @@ class ttReportHelper {
         $body .= '<td style="'.$tableHeaderCentered.'" width="5%">'.$i18n->getKey('label.duration').'</td>';
       if ($bean->getAttribute('chnote'))
         $body .= '<td style="'.$tableHeader.'">'.$i18n->getKey('label.note').'</td>';
+      if ($bean->getAttribute('chattendance'))
+        $body .= '<td style="'.$tableHeader.'">'.$i18n->getKey('label.attendance_note').'</td>';
       if ($bean->getAttribute('chcost'))
         $body .= '<td style="'.$tableHeaderCentered.'" width="5%">'.$i18n->getKey('label.cost').'</td>';
       if ($bean->getAttribute('chinvoice'))
@@ -1264,6 +1273,7 @@ class ttReportHelper {
               if ($bean->getAttribute('chfinish')) $body .= '<td></td>';
               if ($bean->getAttribute('chduration')) $body .= '<td style="'.$cellRightAlignedSubtotal.'">'.$subtotals[$prev_grouped_by]['time'].'</td>';
               if ($bean->getAttribute('chnote')) $body .= '<td></td>';
+              if ($bean->getAttribute('chattendance')) $body .= '<td></td>';
               if ($bean->getAttribute('chcost')) {
               	$body .= '<td style="'.$cellRightAlignedSubtotal.'">';
               	$body .= ($user->canManageTeam() || $user->isClient()) ? $subtotals[$prev_grouped_by]['cost'] : $subtotals[$prev_grouped_by]['expenses'];
@@ -1299,6 +1309,8 @@ class ttReportHelper {
             $body .= '<td style="'.$cellRightAligned.'">'.$record['duration'].'</td>';
           if ($bean->getAttribute('chnote'))
             $body .= '<td style="'.$cellLeftAligned.'">'.htmlspecialchars($record['note']).'</td>';
+          if ($bean->getAttribute('chattendance'))
+            $body .= '<td style="'.$cellLeftAligned.'">'.htmlspecialchars($record['attendance_note']).'</td>';
           if ($bean->getAttribute('chcost'))
             $body .= '<td style="'.$cellRightAligned.'">'.$record['cost'].'</td>';
           if ($bean->getAttribute('chinvoice'))
@@ -1325,6 +1337,7 @@ class ttReportHelper {
         if ($bean->getAttribute('chfinish')) $body .= '<td></td>';
         if ($bean->getAttribute('chduration')) $body .= '<td style="'.$cellRightAlignedSubtotal.'">'.$subtotals[$cur_grouped_by]['time'].'</td>';
         if ($bean->getAttribute('chnote')) $body .= '<td></td>';
+        if ($bean->getAttribute('chattendance')) $body .= '<td></td>';
         if ($bean->getAttribute('chcost')) {
           $body .= '<td style="'.$cellRightAlignedSubtotal.'">';
           $body .= ($user->canManageTeam() || $user->isClient()) ? $subtotals[$cur_grouped_by]['cost'] : $subtotals[$cur_grouped_by]['expenses'];
@@ -1347,6 +1360,7 @@ class ttReportHelper {
       if ($bean->getAttribute('chfinish')) $body .= '<td></td>';
       if ($bean->getAttribute('chduration')) $body .= '<td style="'.$cellRightAlignedSubtotal.'">'.$totals['time'].'</td>';
       if ($bean->getAttribute('chnote')) $body .= '<td></td>';
+      if ($bean->getAttribute('chattendance')) $body .= '<td></td>';
       if ($bean->getAttribute('chcost')) {
       	$body .= '<td nowrap style="'.$cellRightAlignedSubtotal.'">'.htmlspecialchars($user->currency).' ';
       	$body .= ($user->canManageTeam() || $user->isClient()) ? $totals['cost'] : $totals['expenses'];

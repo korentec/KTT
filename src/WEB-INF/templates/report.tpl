@@ -54,15 +54,16 @@
   {if $bean->getAttribute('chactivity')}<td class="tableHeaderCentered">פעילות</td>{/if}
   {if $bean->getAttribute('chtask')}<td class="tableHeaderCentered">{$i18n.label.task}</td>{/if}
   {if $bean->getAttribute('chcf_1')}<td class="tableHeaderCentered">{$custom_fields->fields[0]['label']|escape:'html'}</td>{/if}
-  {if $bean->getAttribute('chstart')}<td class="tableHeaderCentered" width="5%">{$i18n.label.start}</td>{/if}
-  {if $bean->getAttribute('chfinish')}<td class="tableHeaderCentered" width="5%">{$i18n.label.finish}</td>{/if}
-  {if $bean->getAttribute('chduration')}<td class="tableHeaderCentered" width="5%">{$i18n.label.duration}</td>{/if}
-  <td class="tableHeaderCentered" width="10%">{$i18n.label.location}</td>
- 
-  {if $bean->getAttribute('chnote')}<td class="tableHeader">{$i18n.label.note}</td>{/if}
-  {if $bean->getAttribute('chcost')}<td class="tableHeaderCentered" width="5%">{$i18n.label.cost}</td>{/if}
-  {if $bean->getAttribute('chinvoice')}<td class="tableHeader">{$i18n.label.invoice}</td>{/if}  
-  <td class="tableHeaderCentered"width="18%">
+  {if $bean->getAttribute('chstart')}<td class="tableHeaderCentered">{$i18n.label.start}</td>{/if}
+  {if $bean->getAttribute('chfinish')}<td class="tableHeaderCentered">{$i18n.label.finish}</td>{/if}
+  {if $bean->getAttribute('chduration')}<td class="tableHeaderCentered">{$i18n.label.duration}</td>{/if}
+  <td class="tableHeaderCentered">{$i18n.label.location}</td>
+
+  {if $bean->getAttribute('chnote')}<td class="tableHeaderCentered">{$i18n.label.note}</td>{/if}
+  {if $bean->getAttribute('chattendance')}<td class="tableHeaderCentered">{$i18n.label.attendanceNote}</td>{/if}
+  {if $bean->getAttribute('chcost')}<td class="tableHeaderCentered">{$i18n.label.cost}</td>{/if}
+  {if $bean->getAttribute('chinvoice')}<td class="tableHeaderCentered">{$i18n.label.invoice}</td>{/if}  
+  <td class="tableHeaderCentered">
       <div>{$i18n.label.approved}</div>
       {if $user->isCoManager() || $user->isManager()}
         <div style="font-weight: normal;">
@@ -92,6 +93,7 @@
         <td></td>
       
         {if $bean->getAttribute('chnote')}<td></td>{/if}
+        {if $bean->getAttribute('chattendance')}<td></td>{/if}
         {if $bean->getAttribute('chcost')}<td class="cellRightAlignedSubtotal">{if $user->canManageTeam() || $user->isClient()}{$subtotals[$prev_grouped_by]['cost']}{else}{$subtotals[$prev_grouped_by]['expenses']}{/if}</td>{/if}
         {if $bean->getAttribute('chinvoice')}<td></td>{/if}
       </tr>
@@ -118,6 +120,7 @@
     <td class="cellRightAligned">{$item.l_name}</td>
    
     {if $bean->getAttribute('chnote')}<td class="cellRightAligned">{$item.note|escape:'html'}</td>{/if}
+    {if $bean->getAttribute('chattendance')}<td class="cellRightAligned">{$item.attendance_note|escape:'html'}</td>{/if}
     {if $bean->getAttribute('chcost')}<td class="cellRightAligned">{if $user->canManageTeam() || $user->isClient()}{$item.cost}{else}{$item.expense}{/if}</td>{/if}
     {if $bean->getAttribute('chinvoice')}
         <td class="cellRightAligned">{$item.invoice|escape:'html'}</td>
@@ -151,7 +154,8 @@
     {if $bean->getAttribute('chfinish')}<td></td>{/if}
     {if $bean->getAttribute('chduration')}<td class="cellRightAlignedSubtotal">{$subtotals[$cur_grouped_by]['time']}</td>{/if}
        <td></td>
-    {if $bean->getAttribute('chnote')}<td></td>{/if}
+    {if $bean->getAttribute('chnote')}<td></td>{/if}.
+    {if $bean->getAttribute('chattendance')}<td></td>{/if}
     {if $bean->getAttribute('chcost')}<td class="cellRightAlignedSubtotal">{if $user->canManageTeam() || $user->isClient()}{$subtotals[$cur_grouped_by]['cost']}{else}{$subtotals[$cur_grouped_by]['expenses']}{/if}</td>{/if}
     {if $bean->getAttribute('chinvoice')}<td></td>{/if}
       </tr>
@@ -171,6 +175,7 @@
     {if $bean->getAttribute('chduration')}<td class="cellRightAlignedSubtotal">{$totals['time']}</td>{/if}
        <td></td>
     {if $bean->getAttribute('chnote')}<td></td>{/if}
+    {if $bean->getAttribute('chattendance')}<td></td>{/if}
     {if $bean->getAttribute('chcost')}<td nowrap class="cellRightAlignedSubtotal">{$user->currency|escape:'html'} {if $user->canManageTeam() || $user->isClient()}{$totals['cost']}{else}{$totals['expenses']}{/if}</td>{/if}
     {if $bean->getAttribute('chinvoice')}<td></td>{/if}
     <td></td>

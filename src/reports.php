@@ -217,6 +217,7 @@ if ((TYPE_START_FINISH == $user->record_type) || (TYPE_ALL == $user->record_type
 }
 $form->addInput(array('type'=>'checkbox','name'=>'chduration','data'=>1));
 $form->addInput(array('type'=>'checkbox','name'=>'chnote','data'=>1));
+$form->addInput(array('type'=>'checkbox','name'=>'chattendance','data'=>1));
 $form->addInput(array('type'=>'checkbox','name'=>'chactivity','data'=>1));
 if (defined('COST_ON_REPORTS') && isTrue(COST_ON_REPORTS))
   $form->addInput(array('type'=>'checkbox','name'=>'chcost','data'=>1));
@@ -271,6 +272,7 @@ if (($request->getMethod() == 'GET') && !$bean->isSaved()) {
   $form->setValueByElement('chtask', 1);
   $form->setValueByElement('chfinish', 1);
   $form->setValueByElement('chnote', 1);
+  $form->setValueByElement('chattendance', 1);
   $form->setValueByElement('chactivity', 1);
   $form->setValueByElement('chcf_1', 0);
   $form->setValueByElement('chtotalsonly', 0);

@@ -446,12 +446,15 @@ function handleCheckboxes() {
               	<td>{if ($smarty.const.MODE_PROJECTS_AND_TASKS == $user->tracking_mode)}<label>{$forms.reportForm.chtask.control}&nbsp;{$i18n.label.task}</label>{/if}</td>
               	<td>{if (($smarty.const.TYPE_START_FINISH == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}<label>{$forms.reportForm.chfinish.control}&nbsp;{$i18n.label.finish}</label>{/if}</td>
                 <td><label>{$forms.reportForm.chnote.control}&nbsp;{$i18n.label.note}</label></td>
-                <td><label>{$forms.reportForm.chactivity.control}&nbsp;פעילות</label></td>
+                <td><label>{$forms.reportForm.chattendance.control}&nbsp;{$i18n.label.attendanceNote}</label></td>          
 {if ($custom_fields && $custom_fields->fields[0])}
                 <td><label>{$forms.reportForm.chcf_1.control}&nbsp;{$custom_fields->fields[0]['label']|escape:'html'}</label></td>
 {else}
                 <td></td>
 {/if}
+              </tr>
+              <tr>
+                <td><label>{$forms.reportForm.chactivity.control}&nbsp;פעילות</label></td>
               </tr>
             </table>
           </td>
