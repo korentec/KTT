@@ -207,6 +207,7 @@ $i18n_key_words = array(
 'button.import' => 'ייבא צוות',
 'button.close' => 'סגור',
 'button.stop' => 'עצור',
+'button.att_time' => 'זמן שעון',
 
 
 

@@ -644,6 +644,7 @@ private static function insertMultiple($fields)
     $user_finish = $fields['finish'];
     $att_start = $fields['att_start'];
     $att_finish = $fields['att_finish'];
+    $row_index = $fields['row_index'];
     if ('00:00' == $finish) $finish = '24:00';
     if (!$billable) $billable = 0;
     if ($start) $duration = '';
@@ -656,7 +657,7 @@ private static function insertMultiple($fields)
     if(!$curr)
         return false;
     if ($duration) {
-        $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+        $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[$row_index] != $user_finish);
         $approved = !boolval($duration_dirty);
         $sql = "UPDATE tt_log set start = NULL, duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).",  al_activity_id = ".$mdb2->quote($activity).",
 	   al_location_id = ".$mdb2->quote($location).",task_id = ".$mdb2->quote($task).", ".
@@ -672,8 +673,8 @@ private static function insertMultiple($fields)
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
       
-      $start_dirty = ($att_start_count == 0) ? true : ($att_start[0] != $user_start);
-      $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+      $start_dirty = ($att_start_count == 0) ? true : ($att_start[$row_index] != $user_start);
+      $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[$row_index] != $user_finish);
       $approved = !boolval($start_dirty) && !boolval($duration_dirty);
       $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".

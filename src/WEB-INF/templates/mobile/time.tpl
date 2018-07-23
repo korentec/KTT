@@ -176,6 +176,12 @@ function get_date() {
   var date = new Date();
   return date.strftime("%Y-%m-%d");
 }
+
+function setAttTime(formField) {
+  const elem = eval("document.timeRecordForm." + formField);
+  elem.value = formField === 'start' ? "{$att_start}" : "{$att_finish}";
+}
+
 </script>
 <style>
 .not_billable td {
@@ -194,13 +200,13 @@ function get_date() {
   <td align="center">
     {if $time_records}
       <table border='0' cellpadding='4' cellspacing='1' width="100%">
-      {foreach $time_records as $record}
+      {foreach $time_records as $index => $record}
       <tr bgcolor="{cycle values="#ccccce,#f5f5f5"}" {if !$record.billable} class="not_billable" {/if}>
 {if ($smarty.const.MODE_PROJECTS == $user->tracking_mode || $smarty.const.MODE_PROJECTS_AND_TASKS == $user->tracking_mode)}
         <td valign='top'>{$record.project|escape:'html'}</td>
 {/if}
         <td align='right' valign='top'>{if $record.duration == '0:00'}<font color="#ff0000">{/if}{$record.duration}{if $record.duration == '0:00'}</font>{/if}
-        <td align='center'>{if $record.invoice_id}&nbsp;{else}<a href='time_edit.php?id={$record.id}'>{$i18n.label.edit}</a>{/if}</td>
+        <td align='center'>{if $record.invoice_id}&nbsp;{else}<a href='time_edit.php?id={$record.id}?index={$index}'>{$i18n.label.edit}</a>{/if}</td>
       </tr>
       {/foreach}
 	  </table>
@@ -243,9 +249,29 @@ function get_date() {
 {/if}
 {if (($smarty.const.TYPE_START_FINISH == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
     <tr><td>{$i18n.label.start}:</td></tr>
-    <tr><td>{$forms.timeRecordForm.start.control}&nbsp;<input onclick="setNow('start');" type="button" value="{$i18n.button.now}"></td></tr>
+    <tr>
+      <td>
+        {$forms.timeRecordForm.start.control}&nbsp;
+        <input onclick="setNow('start');" type="button" value="{$i18n.button.now}">
+        {if (isset($att_start))}
+          <input onclick="setAttTime('start');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+        {else}
+          <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+        {/if}
+      </td>
+    </tr>
     <tr><td>{$i18n.label.finish}:</td></tr>
-    <tr><td>{$forms.timeRecordForm.finish.control}&nbsp;<input onclick="setNow('finish');" type="button" value="{$i18n.button.now}"></td></tr>
+    <tr>
+      <td>
+        {$forms.timeRecordForm.finish.control}&nbsp;
+        <input onclick="setNow('finish');" type="button" value="{$i18n.button.now}">
+        {if (isset($att_start))}
+          <input onclick="setAttTime('finish');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+        {else}
+          <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+        {/if}
+      </td>
+    </tr>
 {/if}
 {if (($smarty.const.TYPE_DURATION == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
     <tr><td>{$i18n.label.duration}:</td></tr>

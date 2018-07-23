@@ -274,6 +274,12 @@ function get_time() {
   var date = new Date();
   return date.strftime("%H:%M");
 }
+
+function setAttTime(formField) {
+  const elem = eval("document.timeRecordForm." + formField);
+  elem.value = formField === 'start' ? "{$att_start}" : "{$att_finish}";
+}
+
 </script>
 <style>
 .not_billable td {
@@ -333,11 +339,27 @@ function get_time() {
 {if (($smarty.const.TYPE_START_FINISH == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
         <tr>
           <td align="right">{$i18n.label.start}:</td>
-          <td>{$forms.timeRecordForm.start.control}&nbsp;<input onclick="setNow('start');" type="button" tabindex="-1" value="{$i18n.button.now}"></td>
+          <td>
+            {$forms.timeRecordForm.start.control}&nbsp;
+            <input onclick="setNow('start');" type="button" tabindex="-1" value="{$i18n.button.now}">
+            {if (isset($att_start))}
+              <input onclick="setAttTime('start');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+            {else}
+              <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+            {/if}
+          </td>
         </tr>
         <tr>
           <td align="right">{$i18n.label.finish}:</td>
-          <td>{$forms.timeRecordForm.finish.control}&nbsp;<input onclick="setNow('finish');" type="button" tabindex="-1" value="{$i18n.button.now}"></td>
+          <td>
+            {$forms.timeRecordForm.finish.control}&nbsp;
+            <input onclick="setNow('finish');" type="button" tabindex="-1" value="{$i18n.button.now}">
+            {if (isset($att_start))}
+              <input onclick="setAttTime('finish');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+            {else}
+              <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+            {/if}
+          </td>
         </tr>
 {/if}
 {if (($smarty.const.TYPE_DURATION == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
@@ -395,7 +417,7 @@ function get_time() {
         <td class="tableHeaderCentered" width="5%">{$i18n.label.approved}</td>
         <td width="5%" class="tableHeaderCentered">{$i18n.label.edit}</td>
       </tr>
-      {foreach $time_records as $record}
+      {foreach $time_records as $index => $record}
       <tr bgcolor="{cycle values="#f5f5f5,#ccccce"}" {if !$record.billable} class="not_billable" {/if}>
 {if in_array('cl', explode(',', $user->plugins))}
         <td valign='top'>{$record.client|escape:'html'}</td>
@@ -425,7 +447,7 @@ function get_time() {
         {if $record.invoice_id}
           &nbsp;
         {else}
-          <a href='time_edit.php?id={$record.id}'>{$i18n.label.edit}</a>
+          <a href='time_edit.php?id={$record.id}&index={$index}'>{$i18n.label.edit}</a>
           {if $record.duration == '0:00'}
           <input type='hidden' name='record_id' value='{$record.id}'>
           <input type='hidden' name='browser_date' value=''>

@@ -44,24 +44,25 @@ if (in_array('cf', explode(',', $user->plugins))) {
   $smarty->assign('custom_fields', $custom_fields);
 }
 $cl_id = $request->getParameter('id');
+$row_index = $request->getParameter('index');
 // Get the time record we are editing.
 $time_rec = ttTimeHelper::getRecord($cl_id, $user->getActiveUser());
 // Prohibit editing invoiced records.
 if ($time_rec['invoice_id']) die($i18n->getKey('error.sys'));
 $item_date = new DateAndTime(DB_DATEFORMAT, $time_rec['date']);
-  
+
 // Initialize variables.
 $cl_start = $cl_finish = $cl_duration = $cl_date = $cl_note = $cl_attendance_note = $cl_project = $cl_task = $cl_billable = null;
 if ($request->getMethod() == 'POST') {
   $cl_start = trim($request->getParameter('start'));
   $cl_finish = trim($request->getParameter('finish'));
   $cl_duration = trim($request->getParameter('duration'));
+  global $cl_date;  
   $cl_date = $request->getParameter('date');
   $cl_note = trim($request->getParameter('note'));
   $cl_attendance_note = trim($request->getParameter('attendance_note'));
-  
-   $cl_activity	= $request->getParameter('activity');
-    $cl_location	= $request->getParameter('location');
+  $cl_activity	= $request->getParameter('activity');
+  $cl_location	= $request->getParameter('location');
   $cl_cf_1 = trim($request->getParameter('cf_1'));
   $cl_client = $request->getParameter('client');
   $cl_project = $request->getParameter('project');
@@ -75,10 +76,11 @@ if ($request->getMethod() == 'POST') {
   $cl_task = $time_rec['task_id'];
   $cl_start = $time_rec['start'];
   $cl_finish = $time_rec['finish'];
-   $cl_activity = $time_rec["al_activity_id"];
-	     // $cl_sub_activity = $time_rec["al_subactivity_id"];
-	      $cl_location = $time_rec["al_location_id"];
+  $cl_activity = $time_rec["al_activity_id"];
+  // $cl_sub_activity = $time_rec["al_subactivity_id"];
+  $cl_location = $time_rec["al_location_id"];
   $cl_duration = $time_rec['duration'];
+  global $cl_date;
   $cl_date = $item_date->toString($user->date_format);
   $cl_note = $time_rec['comment'];
   $cl_attendance_note = $time_rec['comment_attendance'];
@@ -133,7 +135,7 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
   ));
   
   
-  
+
   import('ActivityHelper');
 	$activity_list = ActivityHelper::findAllActivity($user);
 	//echo $activity_list[0]["a_id"] ;
@@ -232,6 +234,7 @@ if ($custom_fields && $custom_fields->fields[0]) {
 }
 // Hidden control for record id.
 $form->addInput(array('type'=>'hidden','name'=>'id','value'=>$cl_id));
+$form->addInput(array('type'=>'hidden','name'=>'index','value'=>$row_index));
 if (in_array('iv', explode(',', $user->plugins)))
   $form->addInput(array('type'=>'checkbox','name'=>'billable','data'=>1,'value'=>$cl_billable));
 $form->addInput(array('type'=>'hidden','name'=>'browser_today','value'=>'')); // User current date, which gets filled in on btn_save or btn_copy click.
@@ -350,7 +353,9 @@ if ($request->getMethod() == 'POST') {
           'attendance_note'=>$cl_attendance_note,
           'billable'=>$cl_billable,
           'att_start' => $att_start_list,
-          'att_finish' => $att_finish_list));
+          'att_finish' => $att_finish_list,
+          'row_index' => $row_index
+        ));
       	
       // If we have custom fields - update values.
       if ($res && $custom_fields) {
@@ -430,15 +435,24 @@ if ($request->getMethod() == 'POST') {
     exit();
   }
 } // End of if ($request->getMethod() == "POST")
+
+$formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
+$att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
+$att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+$att_start = isset($att_start_list[$row_index]) ? $att_start_list[$row_index] : null;
+$att_finish = isset($att_finish_list[$row_index]) ? $att_finish_list[$row_index] : null;
+
+$smarty->assign('att_start', $att_start);
+$smarty->assign('att_finish', $att_finish);
 $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign("activity_list", $activity_list );
-	$smarty->assign("location_list", $location_list );
+$smarty->assign("location_list", $location_list );
 $smarty->assign('task_list', $task_list);
 $smarty->assign('forms', array($form->getName()=>$form->toArray()));
 $smarty->assign('onload', 'onLoad="fillDropdowns()"');
 $smarty->assign('title', $i18n->getKey('title.edit_time_record'));
- $smarty->assign("onload","onLoad = \"document.timeRecordForm.project.focus();initForm();\"");
+$smarty->assign("onload","onLoad = \"document.timeRecordForm.project.focus();initForm();\"");
 $smarty->assign('content_page_name', 'time_edit.tpl');
 $smarty->display('index.tpl');
 ?>

@@ -48,6 +48,7 @@ if (in_array('cf', explode(',', $user->plugins))) {
 }
 
 $cl_id = $request->getParameter('id');
+$row_index = $request->getParameter('index');
 
 // Get the time record we are editing.
 $time_rec = ttTimeHelper::getRecord($cl_id, $user->getActiveUser());
@@ -63,6 +64,7 @@ if ($request->getMethod() == 'POST') {
   $cl_start = trim($request->getParameter('start'));
   $cl_finish = trim($request->getParameter('finish'));
   $cl_duration = trim($request->getParameter('duration'));
+  global $cl_date;  
   $cl_date = $request->getParameter('date');
   $cl_note = trim($request->getParameter('note'));
   $cl_cf_1 = trim($request->getParameter('cf_1'));
@@ -79,6 +81,7 @@ if ($request->getMethod() == 'POST') {
   $cl_start = $time_rec['start'];
   $cl_finish = $time_rec['finish'];
   $cl_duration = $time_rec['duration'];
+  global $cl_date;  
   $cl_date	= $item_date->toString($user->date_format);    
   $cl_note = $time_rec['comment'];
     
@@ -205,6 +208,7 @@ if ($custom_fields && $custom_fields->fields[0]) {
 }
 // Hidden control for record id.
 $form->addInput(array('type'=>'hidden','name'=>'id','value'=>$cl_id));
+$form->addInput(array('type'=>'hidden','name'=>'index','value'=>$row_index));
 if (in_array('iv', explode(',', $user->plugins)))
   $form->addInput(array('type'=>'checkbox','name'=>'billable','data'=>1,'value'=>$cl_billable));
 $form->addInput(array('type'=>'hidden','name'=>'browser_today','value'=>'')); // User current date, which gets filled in on btn_save click.
@@ -345,6 +349,14 @@ if ($request->getMethod() == 'POST') {
   }
 } // End of if ($request->getMethod() == 'POST')
 
+$formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
+$att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
+$att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+$att_start = isset($att_start_list[$row_index]) ? $att_start_list[$row_index] : null;
+$att_finish = isset($att_finish_list[$row_index]) ? $att_finish_list[$row_index] : null;
+
+$smarty->assign('att_start', $att_start);
+$smarty->assign('att_finish', $att_finish);
 $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign('task_list', $task_list);

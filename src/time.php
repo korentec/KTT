@@ -149,20 +149,24 @@ if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->t
         if(count($att_start_list) == 1)
         {
             $cl_start = $att_start_list[0];
+            $att_start = $att_start_list[0];
         }
         else if(count($att_start_list) >1)
         {
             //handle more than 1
             $cl_start = ttTimeHelper::$multiple;
+            $att_start = ttTimeHelper::$multiple;
         }
         if(count($att_finish_list) == 1)
         {
             $cl_finish = $att_finish_list[0];
+            $att_finish = $att_finish_list[0];
         }
         else if(count($att_finish_list) >1)
         {
             //handle more than 1
             $cl_finish = ttTimeHelper::$multiple;
+            $att_finish = ttTimeHelper::$multiple;
         }
    
         if(count($att_start_list) + count($att_finish_list) >0)
@@ -472,6 +476,8 @@ $smarty->assign('client_list', $client_list);
 $smarty->assign('project_list', $project_list);
 $smarty->assign('activity_list', $activity_list);
 $smarty->assign('task_list', $task_list);
+$smarty->assign('att_start', $att_start);
+$smarty->assign('att_finish', $att_finish);
 /*
 $smarty->assign("chart_href", "charts.php?r=".md5(uniqid("random"))."&period=".$cl_chperiod);
 $chart_data = ChartHelper::getActivityChartData($user->getUserId(), $cl_chperiod, $ud['u_pie_mode'] == 2 ? 'project' : '');

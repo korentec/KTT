@@ -177,6 +177,12 @@ function get_date() {
   var date = new Date();
   return date.strftime("%Y-%m-%d");
 }
+
+function setAttTime(formField) {
+  const elem = eval("document.timeRecordForm." + formField);
+  elem.value = formField === 'start' ? "{$att_start}" : "{$att_finish}";
+}
+
 </script>
 {$forms.timeRecordForm.open}
 <table cellspacing="4" cellpadding="7" border="0">
@@ -207,9 +213,30 @@ function get_date() {
 {/if}
 {if (($smarty.const.TYPE_START_FINISH == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
     <tr><td>{$i18n.label.start}:</td></tr>
-    <tr><td>{$forms.timeRecordForm.start.control}&nbsp;<input onclick="setNow('start');" type="button" value="{$i18n.button.now}"></td></tr>
+    <tr>
+      <td>
+        {$forms.timeRecordForm.start.control}&nbsp;
+        <input onclick="setNow('start');" type="button" value="{$i18n.button.now}">
+        <input onclick="setNow('start');" type="button" tabindex="-1" value="{$i18n.button.now}">
+        {if (isset($att_start))}
+          <input onclick="setAttTime('start');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+        {else}
+          <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+        {/if}
+      </td>
+    </tr>
     <tr><td>{$i18n.label.finish}:</td></tr>
-    <tr><td>{$forms.timeRecordForm.finish.control}&nbsp;<input onclick="setNow('finish');" type="button" value="{$i18n.button.now}"></td></tr>
+    <tr>
+      <td>
+        {$forms.timeRecordForm.finish.control}&nbsp;
+        <input onclick="setNow('finish');" type="button" value="{$i18n.button.now}">
+        {if (isset($att_start))}
+          <input onclick="setAttTime('finish');" type="button" tabindex="-1" value="{$i18n.button.att_time}">
+        {else}
+          <input type="button" tabindex="-1" value="{$i18n.button.att_time}" disabled>
+        {/if}
+      </td>
+    </tr>
 {/if}
 {if (($smarty.const.TYPE_DURATION == $user->record_type) || ($smarty.const.TYPE_ALL == $user->record_type))}
     <tr><td>{$i18n.label.duration}:</td></tr>

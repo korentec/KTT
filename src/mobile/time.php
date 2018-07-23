@@ -103,6 +103,40 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
 }
 
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
+  //att reports for user
+  $att_start_list = $user->getAttInReports($cl_date);   
+  $att_finish_list = $user->getAttOutReports($cl_date);
+  if(empty($cl_start) && empty($cl_finish) && empty($tt_records))
+  {
+      if(count($att_start_list) == 1)
+      {
+          $cl_start = $att_start_list[0];
+          $att_start = $att_start_list[0];
+      }
+      else if(count($att_start_list) >1)
+      {
+          //handle more than 1
+          $cl_start = ttTimeHelper::$multiple;
+          $att_start = ttTimeHelper::$multiple;
+      }
+      if(count($att_finish_list) == 1)
+      {
+          $cl_finish = $att_finish_list[0];
+          $att_finish = $att_finish_list[0];
+      }
+      else if(count($att_finish_list) >1)
+      {
+          //handle more than 1
+          $cl_finish = ttTimeHelper::$multiple;
+          $att_finish = ttTimeHelper::$multiple;
+      }
+ 
+      if(count($att_start_list) + count($att_finish_list) >0)
+      {
+          $cl_location = 6;//משרד צפון
+      }
+  }
+  
   // Dropdown for projects assigned to user.
   $project_list = $user->getAssignedProjects();
   $form->addInput(array('type'=>'combobox',
@@ -305,4 +339,6 @@ $smarty->assign('timestring', $selected_date->toString($user->date_format));
 $smarty->assign('title', $i18n->getKey('title.time'));
 $smarty->assign('content_page_name', 'mobile/time.tpl');
 $smarty->display('mobile/index.tpl');
+$smarty->assign('att_start', $att_start);
+$smarty->assign('att_finish', $att_finish);
 ?>
