@@ -918,7 +918,7 @@ private static function insertMultiple($fields)
         return $val;
 
     } catch (Exception $ex) {
-        return null;
+        throw new Exception("internal database query error");
     }
   }
 // insertAtt - inserts a time record into att log table. Does not deal with custom fields.

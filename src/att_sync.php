@@ -26,39 +26,70 @@ if(($from_str = trim($_POST['from'])) == ''){
     $errors = 'invalid from date. ' . $from_str;
 }else if(($to = (new DateAndTime(API_DATEFORMAT, $to_str))) == null){
     $errors = 'invalid to date. ' . $to_str;
-}else if(($lastSync = ttTimeHelper::getLastSyncDate()) !=null && $from->compare($lastSync)<0){
-    $errors = 'data was already imported from this date. data last syncronized on '.$lastSync->toString(API_DATEFORMAT);
-}else if($from->compare($to)>0){
-    $errors = 'invalid from date ' . $from_str . ' or to date ' . $to_str;
+}else {
+    try
+    {
+        $lastSync = ttTimeHelper::getLastSyncDate();
+    }
+    catch(Exception $ex) 
+    {
+        $errors  = $ex->getMessage();
+    }
+
+    if (strlen($errors) == 0) 
+    {
+        if ($lastSync !=null && $from->compare($lastSync) < 0) 
+        {
+            $errors = 'data was already imported from this date. data last synchronized on '.$lastSync->toString(API_DATEFORMAT);
+        }
+        else if ($from->compare($to)>0) 
+        {
+            $errors = 'invalid from date ' . $from_str . ' or to date ' . $to_str;
+        }
+    }
 }
-// validate data variable ========
-if (($data_str = trim($_POST['data'])) == '')
-  $errors = 'data is required.';
-else{
-    // Convert JSON string to Array
-    $res_arr = json_decode($data_str, true);
-    if(count($res_arr) ==0)
-        $errors = 'empty data.';
+
+if (strlen($errors) == 0) {
+    // validate data variable ========
+    if (($data_str = trim($_POST['data'])) == '')
+        $errors = 'data is required.';
+    else {
+        // Convert JSON string to Array
+        $res_arr = json_decode($data_str, true);
+        if(count($res_arr) ==0)
+            $errors = 'empty data.';
+    }
 }
+
+
 
 //if no errors, perform sync ==============
 if (strlen($errors) == 0)
 {
+    
     if(ttTimeHelper::insertAtt($from, $to, $res_arr) != count($res_arr))
-        $errors['data'] = 'writing to DB failed.';
+        $errors = 'writing to DB failed.';
 }
 
-// return a response ==============
-$data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(API_DATEFORMAT);
+try
+{
+    // return a response ==============
+    $data['lastSync'] = ttTimeHelper::getLastSyncDate()->toString(API_DATEFORMAT);
+}
+catch(Exception $ex)
+{
+    if (strlen($errors) == 0)
+        $data['errors']  = $ex->getMessage();
+}
 // response if there are errors
 if ( strlen($errors) > 0 ) {
-  // if there are items in our errors array, return those errors
-  $data['success'] = false;
-  $data['errors']  = $errors;
-} else {
-  // if there are no errors, return a message
-  $data['success'] = true;
-}
+    // if there are items in our errors array, return those errors
+    $data['success'] = false;
+    $data['errors']  = $errors;
+  } else {
+    // if there are no errors, return a message
+    $data['success'] = true;
+  }
 
 // return all our data to an AJAX call
 echo json_encode($data);
