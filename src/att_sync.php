@@ -56,7 +56,7 @@ if (strlen($errors) == 0) {
     else {
         // Convert JSON string to Array
         $res_arr = json_decode($data_str, true);
-        if(count($res_arr) ==0)
+        if(count($res_arr) == 0)
             $errors = 'empty data.';
     }
 }
