@@ -224,10 +224,8 @@ if ($request->getMethod() == 'POST') {
     if (!ttValidString($cl_cf_1, !$custom_fields->fields[0]['required'])) $errors->add($i18n->getKey('error.field'), $custom_fields->fields[0]['label']);
   }
   if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
-    if (!$cl_project) $errors->add($i18n->getKey('error.project'));    	
-  }
-  if (MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
-    if (!$cl_task) $errors->add($i18n->getKey('error.task'));
+    if (!$cl_project) $errors->add($i18n->getKey('error.project'));
+    if (!$cl_activity) $errors->add($i18n->getKey('error.activity'));	
   }
   if (!$cl_duration) {
     if ('0' == $cl_duration)

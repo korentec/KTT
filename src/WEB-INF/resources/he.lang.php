@@ -95,6 +95,7 @@ $i18n_key_words = array(
 // end time less than start time. For example: Start time: 09:00, End time: 08:00.
 // Then you should see the error on screen and the problems will be clearly visible.
 'error.project' => 'בחר פרוייקט',
+'error.activity' => 'בחר פעילות',
 'error.task' => 'בחר משימה',
 'error.client' => 'בחר לקוח',
 // TODO: translate the following string.
