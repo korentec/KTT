@@ -373,8 +373,8 @@ class ttTimeHelper {
     //single or no att reports (up to 1 for start and 1 for finish) - insert 1 record with start dirty flag according to user and att values
     if($att_start_count <=1 && $att_finish_count <=1)
     {
-        $fields['start_dirty'] = ($att_start_count == 0) ? true : ($att_start[0] != $user_start);
-        $fields['duration_dirty'] = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+        $fields['start_dirty'] = ($att_start_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_start[0]) != ttTimeHelper::to24HourFormat($user_start));
+        $fields['duration_dirty'] = ($att_finish_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_finish[0]) != ttTimeHelper::to24HourFormat($user_finish));
         return ttTimeHelper::insertSingle($fields);
     }
 
@@ -382,7 +382,7 @@ class ttTimeHelper {
     //check dirty state (compare user values with att values)
     $start_dirty = true;
     if(   ($att_start_count>1 && $user_start == ttTimeHelper::$multiple) ||
-          ($att_start_count==1 && $att_start[0] == $user_start))
+          ($att_start_count==1 && ttTimeHelper::to24HourFormat($att_start[0]) == ttTimeHelper::to24HourFormat($user_start)))
     {
         //more than 1 att start . if user value is multiple, dirty flag is false
         $start_dirty = false;
@@ -390,7 +390,7 @@ class ttTimeHelper {
 
     $finish_dirty = true;
     if(   ($att_finish_count>1 && $user_finish == ttTimeHelper::$multiple) ||
-          ($att_finish_count==1 && $att_finish[0] == $user_finish))
+          ($att_finish_count==1 && ttTimeHelper::to24HourFormat($att_finish[0]) == ttTimeHelper::to24HourFormat($user_finish)))
     {
         //in case more than 1 att finish . if user value is multiple, dirty flag is false
         //in case 1 att finish . if user value equals att value, dirty flag is false
@@ -673,8 +673,8 @@ private static function insertMultiple($fields)
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
       
-      $start_dirty = ($att_start_count == 0) ? true : ($att_start[$row_index] != $user_start);
-      $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[$row_index] != $user_finish);
+      $start_dirty = ($att_start_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_start[$row_index]) != ttTimeHelper::to24HourFormat($user_start));
+      $duration_dirty = ($att_finish_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_finish[$row_index]) != ttTimeHelper::to24HourFormat($user_finish));
       $approved = !boolval($start_dirty) && !boolval($duration_dirty);
       $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
