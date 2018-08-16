@@ -332,6 +332,35 @@ if ($request->getMethod() == 'POST') {
     $att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
     $att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
 
+    $new_att_start_list = [];
+    $new_att_finish_list = [];
+
+    foreach($att_start_list as $in) {
+      $isOut = false;
+      if (
+        count($new_att_finish_list) && $in < end($new_att_start_list) ||
+        count($new_att_finish_list) && $in < end($new_att_finish_list)
+      ) {
+        continue;
+      }
+
+      foreach($att_finish_list as $out) {
+        if ($in < $out) {
+          array_push($new_att_start_list, $in);
+          array_push($new_att_finish_list, $out);
+          $isOut = true;
+          break;
+        }
+      }
+
+      if (!$isOut) {
+        array_push($new_att_start_list, $in);      
+      }
+    }
+
+    $att_start_list = $new_att_start_list;   
+    $att_finish_list = $new_att_finish_list;
+
     // Now, an update.
     if ($errors->isEmpty()) {
       $res = ttTimeHelper::update(array(
