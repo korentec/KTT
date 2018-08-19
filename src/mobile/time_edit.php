@@ -306,37 +306,15 @@ if ($request->getMethod() == 'POST') {
     }
 
     $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
-    $att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
-    $att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
-
-    $new_att_start_list = [];
-    $new_att_finish_list = [];
-
-    foreach($att_start_list as $in) {
-      $isOut = false;
-      if (
-        count($new_att_finish_list) && $in < end($new_att_start_list) ||
-        count($new_att_finish_list) && $in < end($new_att_finish_list)
-      ) {
-        continue;
-      }
-
-      foreach($att_finish_list as $out) {
-        if ($in < $out) {
-          array_push($new_att_start_list, $in);
-          array_push($new_att_finish_list, $out);
-          $isOut = true;
-          break;
-        }
-      }
-
-      if (!$isOut) {
-        array_push($new_att_start_list, $in);     
-      }
-    }
-
-    $att_start_list = $new_att_start_list;   
-    $att_finish_list = $new_att_finish_list;
+    
+    //att reports for user
+    $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+      $user->getAttInReports($formatted_cl_date, 1), 
+      $user->getAttOutReports($formatted_cl_date, 1)
+    );
+    
+    $att_start_list = $optimized_att_reports->start_list;
+    $att_finish_list = $optimized_att_reports->finish_list;
 
     // Now, an update.
     if ($errors->isEmpty()) {

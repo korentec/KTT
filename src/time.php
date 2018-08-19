@@ -140,37 +140,13 @@ $tt_records = ttTimeHelper::getRecords($user->getActiveUser(), $cl_date);
 
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
     //att reports for user
-    $att_start_list = $user->getAttInReports($cl_date);   
-    $att_finish_list = $user->getAttOutReports($cl_date);
-
-    $new_att_start_list = [];
-    $new_att_finish_list = [];
-
-    foreach($att_start_list as $in) {
-      $isOut = false;
-      if (
-        count($new_att_finish_list) && $in < end($new_att_start_list) ||
-        count($new_att_finish_list) && $in < end($new_att_finish_list)
-      ) {
-        continue;
-      }
-
-      foreach($att_finish_list as $out) {
-        if ($in < $out) {
-          array_push($new_att_start_list, $in);
-          array_push($new_att_finish_list, $out);
-          $isOut = true;
-          break;
-        }
-      }
-
-      if (!$isOut) {
-        array_push($new_att_start_list, $in);
-      }
-    }
-
-    $att_start_list = $new_att_start_list;   
-    $att_finish_list = $new_att_finish_list;
+    $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+      $user->getAttInReports($cl_date), 
+      $user->getAttOutReports($cl_date)
+    );
+    
+    $att_start_list = $optimized_att_reports->start_list;
+    $att_finish_list = $optimized_att_reports->finish_list;
 
     if(empty($cl_start) && empty($cl_finish) && empty($tt_records))
     {
