@@ -990,24 +990,22 @@ private static function insertMultiple($fields)
     return $affected;
   }
 
-  // TBD: function refactoring
   static function optimizeAttReports($att_start_list, $att_finish_list) {
+    $isOut = false;
     $new_att_start_list = [];
     $new_att_finish_list = [];
-
+    
+    $from_index = 0;
     foreach($att_start_list as $in) {
-      $isOut = false;
-      if (
-        count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_start_list)) ||
-        count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_finish_list))
-      ) {
+      if (count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_finish_list))) {
         continue;
       }
 
-      foreach($att_finish_list as $out) {
-        if (strtotime($in) < strtotime($out)) {
+      for ($index = $from_index; $index < count($att_finish_list); $index++) {
+        if (strtotime($in) < strtotime($att_finish_list[$index])) {
           array_push($new_att_start_list, $in);
-          array_push($new_att_finish_list, $out);
+          array_push($new_att_finish_list, $att_finish_list[$index]);
+          $from_index = $index + 1;
           $isOut = true;
           break;
         }
