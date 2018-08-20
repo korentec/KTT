@@ -47,6 +47,7 @@ if (!ttAccessCheck(right_data_entry)) {
   header('Location: access_denied.php');
   exit();
 }
+
 // Initialize and store date in session.
 $cl_date = $request->getParameter('date', @$_SESSION['date']);
 $selected_date = new DateAndTime(DB_DATEFORMAT, $cl_date);
@@ -136,15 +137,18 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
     ));
   // Note: in other modes the client list is filtered to relevant clients only. See below.
 }
+
 $tt_records = ttTimeHelper::getRecords($user->getActiveUser(), $cl_date);
 
-if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
-    //att reports for user    
+$all_in_att_reports = $user->getAttInReports($cl_date);
+$all_out_att_reports = $user->getAttOutReports($cl_date);
+
+if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) { 
     $optimized_att_reports = ttTimeHelper::optimizeAttReports(
-      $user->getAttInReports($cl_date), 
-      $user->getAttOutReports($cl_date)
+      ttTimeHelper::filterAttReport($all_in_att_reports, 0), 
+      ttTimeHelper::filterAttReport($all_out_att_reports, 0)
     );
-    
+
     $att_start_list = $optimized_att_reports->start_list;
     $att_finish_list = $optimized_att_reports->finish_list;
 
@@ -412,8 +416,8 @@ if ($request->getMethod() == 'POST') {
       ));
 
       $optimized_att_reports = ttTimeHelper::optimizeAttReports(
-        $user->getAttInReports($cl_date, "all"),
-        $user->getAttOutReports($cl_date, "all")
+        ttTimeHelper::filterAttReport($all_in_att_reports, "all"), 
+        ttTimeHelper::filterAttReport($all_out_att_reports, "all")
       );
 
       ttTimeHelper::approvedValidation(

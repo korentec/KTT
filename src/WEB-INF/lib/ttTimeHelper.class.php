@@ -1059,6 +1059,17 @@ private static function insertMultiple($fields)
       $errors->add($i18n->getKey('error.db'));
     }
   }
+
+  static function filterAttReport($reports, $archived) {
+    $filtered_reports = [];
+    foreach($reports as $report) {
+      if ($archived === "all" || $report->archived == $archived) {
+        array_push($filtered_reports, $report->time);
+      }
+    }
+
+    return $filtered_reports;
+  }
   
 }
 ?>

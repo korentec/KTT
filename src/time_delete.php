@@ -77,9 +77,12 @@ if ($request->getMethod() == 'POST') {
       // Delete the record.
       $result = ttTimeHelper::delete($cl_id, $user->getActiveUser(), $user->getUserAttId());
 
-      $optimized_att_reports = ttTimeHelper::optimizeAttReports(
-        $user->getAttInReports($time_rec['date'], "all"),
-        $user->getAttOutReports($time_rec['date'], "all")
+      $all_in_att_reports = $user->getAttInReports($cl_date);
+      $all_out_att_reports = $user->getAttOutReports($cl_date);
+
+       $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        ttTimeHelper::filterAttReport($time_rec['date'], "all"), 
+        ttTimeHelper::filterAttReport($time_rec['date'], "all")
       );
 
       ttTimeHelper::approvedValidation(
