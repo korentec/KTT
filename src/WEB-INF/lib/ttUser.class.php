@@ -296,13 +296,20 @@ class ttUser {
     $mdb2 = getConnection();
     
     // Do a query with inner join to get assigned projects.
-    $sql = "SELECT TIME_FORMAT(time, '%k:%i') as time".
-            " FROM att_log".
-            " WHERE att_id=".$this->att_id.
-            " AND in_out=".$in_out.
-            " AND date=".$mdb2->quote($date).
-            " AND archived=".$archived.
-            " ORDER BY date";
+    $sql = $archived === 'all' ? 
+      "SELECT TIME_FORMAT(time, '%k:%i') as time".
+      " FROM att_log".
+      " WHERE att_id=".$this->att_id.
+      " AND in_out=".$in_out.
+      " AND date=".$mdb2->quote($date).
+      " ORDER BY date" :
+      "SELECT TIME_FORMAT(time, '%k:%i') as time".
+      " FROM att_log".
+      " WHERE att_id=".$this->att_id.
+      " AND in_out=".$in_out.
+      " AND date=".$mdb2->quote($date).
+      " AND archived=".$archived.
+      " ORDER BY date";
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
       while ($val = $res->fetchRow()) {

@@ -990,21 +990,22 @@ private static function insertMultiple($fields)
     return $affected;
   }
 
-  static function optimizationAttReports($att_start_list, $att_finish_list) {
+  // TBD: function refactoring
+  static function optimizeAttReports($att_start_list, $att_finish_list) {
     $new_att_start_list = [];
     $new_att_finish_list = [];
 
     foreach($att_start_list as $in) {
       $isOut = false;
       if (
-        count($new_att_finish_list) && $in < end($new_att_start_list) ||
-        count($new_att_finish_list) && $in < end($new_att_finish_list)
+        count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_start_list)) ||
+        count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_finish_list))
       ) {
         continue;
       }
 
       foreach($att_finish_list as $out) {
-        if ($in < $out) {
+        if (strtotime($in) < strtotime($out)) {
           array_push($new_att_start_list, $in);
           array_push($new_att_finish_list, $out);
           $isOut = true;
@@ -1018,12 +1019,48 @@ private static function insertMultiple($fields)
     }
 
     $optimized_att_reports = (object) [
-      'start_list' => $new_att_start_list,
-      'finish_list' => $new_att_finish_list
+      "start_list" => $new_att_start_list,
+      "finish_list" => $new_att_finish_list
     ];
 
     return $optimized_att_reports;
   }
-    
+
+  static function approvedValidation(
+    $user_id, 
+    $date,
+    $att_start_list, 
+    $att_finish_list
+  ) {
+    $userReports = array();
+    $mdb2 = getConnection();
+    $sql = "SELECT * FROM tt_log WHERE user_id = " . $user_id . " AND date = '" . $date . "'" . " AND status = 1";
+    $res = $mdb2->query($sql);
+    if (!is_a($res, 'PEAR_Error')) {
+      while ($val = $res->fetchRow()) {
+        $userReports[] = $val;
+      }
+    }
+
+    $totalClockTime = '';
+    foreach($att_start_list as $key => $in) {
+      $duration = date("H:i:s", (strtotime($att_finish_list[$key]) - strtotime($in)));
+      $totalClockTime = date("H:i:s", (strtotime($totalClockTime) + strtotime($duration)));
+    }
+
+    $totalUserTime = '';
+    foreach($userReports as $report) {
+      $totalUserTime = date("H:i:s", (strtotime($totalUserTime) + strtotime($report["duration"])));
+    }
+
+    $approved = $totalClockTime === $totalUserTime ? 1 : 0;
+    $sql = "UPDATE tt_log SET approved = " . $approved . " WHERE user_id = " . $user_id . " AND date = '" . $date . "'" . 
+      " AND status = 1" . " AND start_dirty + duration_dirty > 0";
+    $res = $mdb2->query($sql);
+    if (is_a($res, 'PEAR_Error')) {
+      $errors->add($i18n->getKey('error.db'));
+    }
+  }
+  
 }
 ?>

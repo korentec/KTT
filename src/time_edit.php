@@ -331,7 +331,7 @@ if ($request->getMethod() == 'POST') {
     $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
 
     //att reports for user
-    $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+    $optimized_att_reports = ttTimeHelper::optimizeAttReports(
       $user->getAttInReports($formatted_cl_date, 1), 
       $user->getAttOutReports($formatted_cl_date, 1)
     );
@@ -361,6 +361,18 @@ if ($request->getMethod() == 'POST') {
           'att_finish' => $att_finish_list,
           'row_index' => $row_index
         ));
+
+      $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        $user->getAttInReports($formatted_cl_date, "all"),
+        $user->getAttOutReports($formatted_cl_date, "all")
+      );
+
+      ttTimeHelper::approvedValidation(
+        $user->getActiveUser(),
+        $formatted_cl_date,
+        $optimized_att_reports->start_list,
+        $optimized_att_reports->finish_list
+      );
       	
       // If we have custom fields - update values.
       if ($res && $custom_fields) {

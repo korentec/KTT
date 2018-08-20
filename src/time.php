@@ -139,8 +139,8 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
 $tt_records = ttTimeHelper::getRecords($user->getActiveUser(), $cl_date);
 
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
-    //att reports for user
-    $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+    //att reports for user    
+    $optimized_att_reports = ttTimeHelper::optimizeAttReports(
       $user->getAttInReports($cl_date), 
       $user->getAttOutReports($cl_date)
     );
@@ -393,23 +393,35 @@ if ($request->getMethod() == 'POST') {
     // Insert record.
     if ($errors->isEmpty()) {
       $id = ttTimeHelper::insert(array(
-            'date' => $cl_date,
-            'user_id' => $user->getActiveUser(),
-            'att_id' => $user->getUserAttId(),
-            'client' => $cl_client,
-            'project' => $cl_project,
-            'activity' => $cl_activity,
-            'location' => $cl_location,
-            'task' => $cl_task,
-            'start' => $cl_start,
-            'att_start' => $att_start_list,
-            'finish' => $cl_finish,
-            'att_finish' => $att_finish_list,
-            'att_end' => $att_finish_list,
-            'note' => $cl_note,
-            'attendance_note' => $cl_attendance_note,
-            'billable' => $cl_billable
-        ));
+        'date' => $cl_date,
+        'user_id' => $user->getActiveUser(),
+        'att_id' => $user->getUserAttId(),
+        'client' => $cl_client,
+        'project' => $cl_project,
+        'activity' => $cl_activity,
+        'location' => $cl_location,
+        'task' => $cl_task,
+        'start' => $cl_start,
+        'att_start' => $att_start_list,
+        'finish' => $cl_finish,
+        'att_finish' => $att_finish_list,
+        'att_end' => $att_finish_list,
+        'note' => $cl_note,
+        'attendance_note' => $cl_attendance_note,
+        'billable' => $cl_billable
+      ));
+
+      $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        $user->getAttInReports($cl_date, "all"),
+        $user->getAttOutReports($cl_date, "all")
+      );
+
+      ttTimeHelper::approvedValidation(
+        $user->getActiveUser(),
+        $cl_date,
+        $optimized_att_reports->start_list,
+        $optimized_att_reports->finish_list
+      );
         	
       // Insert a custom field if we have it.
       $result = true;

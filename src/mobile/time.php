@@ -104,7 +104,7 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
 
 if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
   //att reports for user
-  $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+  $optimized_att_reports = ttTimeHelper::optimizeAttReports(
     $user->getAttInReports($cl_date), 
     $user->getAttOutReports($cl_date)
   );

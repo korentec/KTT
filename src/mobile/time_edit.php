@@ -308,7 +308,7 @@ if ($request->getMethod() == 'POST') {
     $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
     
     //att reports for user
-    $optimized_att_reports = ttTimeHelper::optimizationAttReports(
+    $optimized_att_reports = ttTimeHelper::optimizeAttReports(
       $user->getAttInReports($formatted_cl_date, 1), 
       $user->getAttOutReports($formatted_cl_date, 1)
     );
