@@ -104,6 +104,10 @@ if ($request->getMethod() == 'POST') {
     $messages->add($i18n->getKey('form.time_edit.uncompleted'));
   }
 }
+
+$formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
+$all_in_att_reports = $user->getAttInReports($formatted_cl_date);
+$all_out_att_reports = $user->getAttOutReports($formatted_cl_date);
   
 // Initialize elements of 'timeRecordForm'.
 $form = new Form('timeRecordForm');
@@ -328,9 +332,13 @@ if ($request->getMethod() == 'POST') {
         $errors->add($i18n->getKey('error.overlap'));
     }
 
-    $formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
-    $att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
-    $att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+    $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+      ttTimeHelper::filterAttReport($all_in_att_reports, 1), 
+      ttTimeHelper::filterAttReport($all_out_att_reports, 1)
+    );
+    
+    $att_start_list = $optimized_att_reports->start_list;
+    $att_finish_list = $optimized_att_reports->finish_list;
 
     // Now, an update.
     if ($errors->isEmpty()) {
@@ -354,6 +362,19 @@ if ($request->getMethod() == 'POST') {
           'att_finish' => $att_finish_list,
           'row_index' => $row_index
         ));
+
+
+      $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        ttTimeHelper::filterAttReport($all_in_att_reports, "all"), 
+        ttTimeHelper::filterAttReport($all_out_att_reports, "all")
+      );
+
+      ttTimeHelper::approvedValidation(
+        $user->getActiveUser(),
+        $formatted_cl_date,
+        $optimized_att_reports->start_list,
+        $optimized_att_reports->finish_list
+      );
       	
       // If we have custom fields - update values.
       if ($res && $custom_fields) {
@@ -434,9 +455,13 @@ if ($request->getMethod() == 'POST') {
   }
 } // End of if ($request->getMethod() == "POST")
 
-$formatted_cl_date = (new DateTime($cl_date))->format('Y-m-d');
-$att_start_list = $user->getAttInReports($formatted_cl_date, 1);   
-$att_finish_list = $user->getAttOutReports($formatted_cl_date, 1);
+$optimized_att_reports = ttTimeHelper::optimizeAttReports(
+  ttTimeHelper::filterAttReport($all_in_att_reports, 1), 
+  ttTimeHelper::filterAttReport($all_out_att_reports, 1)
+);
+
+$att_start_list = $optimized_att_reports->start_list;   
+$att_finish_list = $optimized_att_reports->finish_list;
 $att_start = isset($att_start_list[$row_index]) ? $att_start_list[$row_index] : null;
 $att_finish = isset($att_finish_list[$row_index]) ? $att_finish_list[$row_index] : null;
 

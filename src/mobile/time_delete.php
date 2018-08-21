@@ -78,6 +78,21 @@ if ($request->getMethod() == 'POST') {
       // Delete the record.
       $result = ttTimeHelper::delete($cl_id, $user->getActiveUser());
 
+      $all_in_att_reports = $user->getAttInReports($cl_date);
+      $all_out_att_reports = $user->getAttOutReports($cl_date);
+
+       $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        ttTimeHelper::filterAttReport($time_rec['date'], "all"), 
+        ttTimeHelper::filterAttReport($time_rec['date'], "all")
+      );
+
+      ttTimeHelper::approvedValidation(
+        $user->getActiveUser(),
+        $time_rec['date'],
+        $optimized_att_reports->start_list,
+        $optimized_att_reports->finish_list
+      );
+
       if ($result) {
         header('Location: time.php');
         exit();

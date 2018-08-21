@@ -373,8 +373,8 @@ class ttTimeHelper {
     //single or no att reports (up to 1 for start and 1 for finish) - insert 1 record with start dirty flag according to user and att values
     if($att_start_count <=1 && $att_finish_count <=1)
     {
-        $fields['start_dirty'] = ($att_start_count == 0) ? true : ($att_start[0] != $user_start);
-        $fields['duration_dirty'] = ($att_finish_count == 0) ? true : ($att_finish[0] != $user_finish);
+        $fields['start_dirty'] = ($att_start_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_start[0]) != ttTimeHelper::to24HourFormat($user_start));
+        $fields['duration_dirty'] = ($att_finish_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_finish[0]) != ttTimeHelper::to24HourFormat($user_finish));
         return ttTimeHelper::insertSingle($fields);
     }
 
@@ -382,7 +382,7 @@ class ttTimeHelper {
     //check dirty state (compare user values with att values)
     $start_dirty = true;
     if(   ($att_start_count>1 && $user_start == ttTimeHelper::$multiple) ||
-          ($att_start_count==1 && $att_start[0] == $user_start))
+          ($att_start_count==1 && ttTimeHelper::to24HourFormat($att_start[0]) == ttTimeHelper::to24HourFormat($user_start)))
     {
         //more than 1 att start . if user value is multiple, dirty flag is false
         $start_dirty = false;
@@ -390,7 +390,7 @@ class ttTimeHelper {
 
     $finish_dirty = true;
     if(   ($att_finish_count>1 && $user_finish == ttTimeHelper::$multiple) ||
-          ($att_finish_count==1 && $att_finish[0] == $user_finish))
+          ($att_finish_count==1 && ttTimeHelper::to24HourFormat($att_finish[0]) == ttTimeHelper::to24HourFormat($user_finish)))
     {
         //in case more than 1 att finish . if user value is multiple, dirty flag is false
         //in case 1 att finish . if user value equals att value, dirty flag is false
@@ -673,8 +673,8 @@ private static function insertMultiple($fields)
       if (!$duration && $uncompleted && ($uncompleted['id'] != $id))
         return false;
       
-      $start_dirty = ($att_start_count == 0) ? true : ($att_start[$row_index] != $user_start);
-      $duration_dirty = ($att_finish_count == 0) ? true : ($att_finish[$row_index] != $user_finish);
+      $start_dirty = ($att_start_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_start[$row_index]) != ttTimeHelper::to24HourFormat($user_start));
+      $duration_dirty = ($att_finish_count == 0) ? true : (ttTimeHelper::to24HourFormat($att_finish[$row_index]) != ttTimeHelper::to24HourFormat($user_finish));
       $approved = !boolval($start_dirty) && !boolval($duration_dirty);
       $sql = "UPDATE tt_log SET start = '$start', start_dirty = '$start_dirty', duration = '$duration', duration_dirty = '$duration_dirty', approved = '$approved', client_id = ".$mdb2->quote($client).", project_id = ".$mdb2->quote($project).", task_id = ".$mdb2->quote($task).", 
 	   al_activity_id = ".$mdb2->quote($activity).", al_location_id = ".$mdb2->quote($location).",".
@@ -989,6 +989,87 @@ private static function insertMultiple($fields)
 
     return $affected;
   }
+
+  static function optimizeAttReports($att_start_list, $att_finish_list) {
+    $isOut = false;
+    $new_att_start_list = [];
+    $new_att_finish_list = [];
     
+    $from_index = 0;
+    foreach($att_start_list as $in) {
+      if (count($new_att_finish_list) && strtotime($in) < strtotime(end($new_att_finish_list))) {
+        continue;
+      }
+
+      for ($index = $from_index; $index < count($att_finish_list); $index++) {
+        if (strtotime($in) < strtotime($att_finish_list[$index])) {
+          array_push($new_att_start_list, $in);
+          array_push($new_att_finish_list, $att_finish_list[$index]);
+          $from_index = $index + 1;
+          $isOut = true;
+          break;
+        }
+      }
+
+      if (!$isOut) {
+        array_push($new_att_start_list, $in);
+      }
+    }
+
+    $optimized_att_reports = (object) [
+      "start_list" => $new_att_start_list,
+      "finish_list" => $new_att_finish_list
+    ];
+
+    return $optimized_att_reports;
+  }
+
+  static function approvedValidation(
+    $user_id, 
+    $date,
+    $att_start_list, 
+    $att_finish_list
+  ) {
+    $userReports = array();
+    $mdb2 = getConnection();
+    $sql = "SELECT * FROM tt_log WHERE user_id = " . $user_id . " AND date = '" . $date . "'" . " AND status = 1";
+    $res = $mdb2->query($sql);
+    if (!is_a($res, 'PEAR_Error')) {
+      while ($val = $res->fetchRow()) {
+        $userReports[] = $val;
+      }
+    }
+
+    $totalClockTime = '';
+    foreach($att_start_list as $key => $in) {
+      $duration = date("H:i:s", (strtotime($att_finish_list[$key]) - strtotime($in)));
+      $totalClockTime = date("H:i:s", (strtotime($totalClockTime) + strtotime($duration)));
+    }
+
+    $totalUserTime = '';
+    foreach($userReports as $report) {
+      $totalUserTime = date("H:i:s", (strtotime($totalUserTime) + strtotime($report["duration"])));
+    }
+
+    $approved = $totalClockTime === $totalUserTime ? 1 : 0;
+    $sql = "UPDATE tt_log SET approved = " . $approved . " WHERE user_id = " . $user_id . " AND date = '" . $date . "'" . 
+      " AND status = 1" . " AND start_dirty + duration_dirty > 0";
+    $res = $mdb2->query($sql);
+    if (is_a($res, 'PEAR_Error')) {
+      $errors->add($i18n->getKey('error.db'));
+    }
+  }
+
+  static function filterAttReport($reports, $archived) {
+    $filtered_reports = [];
+    foreach($reports as $report) {
+      if ($archived === "all" || $report->archived == $archived) {
+        array_push($filtered_reports, $report->time);
+      }
+    }
+
+    return $filtered_reports;
+  }
+  
 }
 ?>

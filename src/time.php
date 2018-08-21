@@ -47,6 +47,7 @@ if (!ttAccessCheck(right_data_entry)) {
   header('Location: access_denied.php');
   exit();
 }
+
 // Initialize and store date in session.
 $cl_date = $request->getParameter('date', @$_SESSION['date']);
 $selected_date = new DateAndTime(DB_DATEFORMAT, $cl_date);
@@ -136,14 +137,21 @@ if (MODE_TIME == $user->tracking_mode && in_array('cl', explode(',', $user->plug
     ));
   // Note: in other modes the client list is filtered to relevant clients only. See below.
 }
+
 $tt_records = ttTimeHelper::getRecords($user->getActiveUser(), $cl_date);
 
-if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) {
-	
-	
-    //att reports for user
-    $att_start_list = $user->getAttInReports($cl_date);   
-    $att_finish_list = $user->getAttOutReports($cl_date);
+$all_in_att_reports = $user->getAttInReports($cl_date);
+$all_out_att_reports = $user->getAttOutReports($cl_date);
+
+if (MODE_PROJECTS == $user->tracking_mode || MODE_PROJECTS_AND_TASKS == $user->tracking_mode) { 
+    $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+      ttTimeHelper::filterAttReport($all_in_att_reports, 0), 
+      ttTimeHelper::filterAttReport($all_out_att_reports, 0)
+    );
+
+    $att_start_list = $optimized_att_reports->start_list;
+    $att_finish_list = $optimized_att_reports->finish_list;
+
     if(empty($cl_start) && empty($cl_finish) && empty($tt_records))
     {
         if(count($att_start_list) == 1)
@@ -389,23 +397,35 @@ if ($request->getMethod() == 'POST') {
     // Insert record.
     if ($errors->isEmpty()) {
       $id = ttTimeHelper::insert(array(
-            'date' => $cl_date,
-            'user_id' => $user->getActiveUser(),
-            'att_id' => $user->getUserAttId(),
-            'client' => $cl_client,
-            'project' => $cl_project,
-            'activity' => $cl_activity,
-            'location' => $cl_location,
-            'task' => $cl_task,
-            'start' => $cl_start,
-            'att_start' => $att_start_list,
-            'finish' => $cl_finish,
-            'att_finish' => $att_finish_list,
-            'att_end' => $att_finish_list,
-            'note' => $cl_note,
-            'attendance_note' => $cl_attendance_note,
-            'billable' => $cl_billable
-        ));
+        'date' => $cl_date,
+        'user_id' => $user->getActiveUser(),
+        'att_id' => $user->getUserAttId(),
+        'client' => $cl_client,
+        'project' => $cl_project,
+        'activity' => $cl_activity,
+        'location' => $cl_location,
+        'task' => $cl_task,
+        'start' => $cl_start,
+        'att_start' => $att_start_list,
+        'finish' => $cl_finish,
+        'att_finish' => $att_finish_list,
+        'att_end' => $att_finish_list,
+        'note' => $cl_note,
+        'attendance_note' => $cl_attendance_note,
+        'billable' => $cl_billable
+      ));
+
+      $optimized_att_reports = ttTimeHelper::optimizeAttReports(
+        ttTimeHelper::filterAttReport($all_in_att_reports, "all"), 
+        ttTimeHelper::filterAttReport($all_out_att_reports, "all")
+      );
+
+      ttTimeHelper::approvedValidation(
+        $user->getActiveUser(),
+        $cl_date,
+        $optimized_att_reports->start_list,
+        $optimized_att_reports->finish_list
+      );
         	
       // Insert a custom field if we have it.
       $result = true;

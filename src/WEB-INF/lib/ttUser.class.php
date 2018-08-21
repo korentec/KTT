@@ -278,37 +278,41 @@ class ttUser {
   }
   
   // getAttInReports - returns an array of start time reports from att.
-  function getAttInReports($date, $archived = 0)
+  function getAttInReports($date)
   {
       $in_out = 0;
-      return $this->getAttReports($date, $in_out, $archived); 
+      return $this->getAttReports($date, $in_out); 
   }
   // getAttInReports - returns an array of start time reports from att.
-  function getAttOutReports($date, $archived = 0)
+  function getAttOutReports($date)
   {
       $in_out = 1;
-      return $this->getAttReports($date, $in_out, $archived); 
+      return $this->getAttReports($date, $in_out); 
   }
   
-  private function getAttReports($date, $in_out, $archived = 0)
+  private function getAttReports($date, $in_out)
   {
     $result = array();
     $mdb2 = getConnection();
     
     // Do a query with inner join to get assigned projects.
-    $sql = "SELECT TIME_FORMAT(time, '%k:%i') as time".
-            " FROM att_log".
-            " WHERE att_id=".$this->att_id.
-            " AND in_out=".$in_out.
-            " AND date=".$mdb2->quote($date).
-            " AND archived=".$archived.
-            " ORDER BY date";
+    $sql = "SELECT TIME_FORMAT(time, '%k:%i') as time, archived".
+          " FROM att_log".
+          " WHERE att_id=".$this->att_id.
+          " AND in_out=".$in_out.
+          " AND date=".$mdb2->quote($date).
+          " ORDER BY date";
+
     $res = $mdb2->query($sql);
     if (!is_a($res, 'PEAR_Error')) {
       while ($val = $res->fetchRow()) {
-        $result[] = $val[time];
+        $result[] = (object) [
+          "time" => $val[time],
+          "archived" => $val["archived"]
+        ];
       }
     }
+
     return $result;
   }
    
